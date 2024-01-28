@@ -13,6 +13,7 @@ QuickHire is like an online marketplace where people can offer their skills and 
 ## Authors
 
 * [Hiteshkumar](ht643276@dal.ca) - *Backend Developer*
+* [Rahul Hambarde](rahul.hambarde@dal.ca) - *(Frontend, Backend Developer)*
 * [Name](email@dal.ca) - *(Role)*
 * [Name](email@dal.ca) - *(Role)*
 * [Name](email@dal.ca) - *(Role)*
