@@ -13,5 +13,5 @@ QuickHire is like an online marketplace where people can offer their skills and 
 - [Rahul Hambarde](rahul.hambarde@dal.ca) - _(Frontend, Backend Developer)_
 - [Parth Pinakin Modi](pr571545@dal.ca) - _(Frontend, Backend Developer)_
 - [Angel Christian](an321060@dal.ca) - _(Frontend, Backend Developer)_
-- [Name](email@dal.ca) - _(Role)_
+- [Tijilkumar Parmar](tj950701@dal.ca) - _(Frontend, Backend Developer)_
 - [Name](email@dal.ca) - _(Role)_
