@@ -1,0 +1,15 @@
+.grow {
+    flex-grow: 1;
+}
+.border-status{
+    border-radius: 12px;
+}
+.image-css {
+    width: 200px;
+}
+@media only screen and (max-width: 768px) {
+    .image-css {
+      display: none;
+    }
+  }
+  
