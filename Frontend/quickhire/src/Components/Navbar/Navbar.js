@@ -13,7 +13,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import './Navbar.css'
-import logo from "../../assets/logo-white.png"
+import logo from "../../assets/logo-white.svg"
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({

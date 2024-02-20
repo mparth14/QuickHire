@@ -1,9 +1,0 @@
-.blog-h2{
-    margin-top: 20px;
-    color: green;
-}
-.blog-card {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: space-evenly;
-}
