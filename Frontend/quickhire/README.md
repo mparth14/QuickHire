@@ -46,12 +46,12 @@ A step by step series of examples that tell you how to get a development env run
 
 Clone repository
 ```
-git clone https://git.cs.dal.ca/gupta2/csci_5709_assignments.git
+git clone https://git.cs.dal.ca/gupta2/csci_5709_grp-04/-/tree/main/Backend?ref_type=heads
 ```
 
 Change directory to app
 ```
-cd csci_5709_assignments
+cd csci_5709_grp-04
 cd Frontend
 cd quickhire
 ```
