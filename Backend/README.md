@@ -4,10 +4,8 @@
 
 QuickHire is like an online marketplace where people can offer their skills and services for others to hire or buy. Building an app or a website or even helping a person in developing something for your needs, QuickHire is the ideal platform for everyone.
 
-* *Date Created*: 29 Jan 2024
-* *Last Modification Date*: 19 Feb 2024
-* *Deployed URL*: <https://quickhire-b00954481.netlify.app>
-* *Git URL*: <https://git.cs.dal.ca/gupta2/csci_5709_grp-04>
+- _Date Created_: 27 Jan 2024
+- _Last Modification Date_: 20 Feb 2024
 
 ## Authors
 
@@ -18,7 +16,7 @@ QuickHire is like an online marketplace where people can offer their skills and 
 - [Tijilkumar Parmar](tj950701@dal.ca) - _(Frontend, Backend Developer)_
 - [Yashkumar Khorja](ys944579@dal.ca) - _(Frontend, Backend Developer)_
 
-
-## Frontend
-
-## Backend
+* *Date Created*: 29 Jan 2024
+* *Last Modification Date*: 19 Feb 2024
+* *Deployed URL*: <https://quickhire-b00954481.netlify.app>
+* *Git URL*: <https://git.cs.dal.ca/gupta2/csci_5709_assignments/-/tree/main/A1?ref_type=heads>
