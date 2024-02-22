@@ -10,6 +10,8 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import './Navbar.css'
@@ -35,10 +37,10 @@ const useStyles = makeStyles((theme) => ({
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: '100%',
+    width: '75%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
+      marginLeft: theme.spacing(26),
+      width: '50%',
     },
   },
   searchIcon: {
@@ -163,7 +165,7 @@ export default function Navbar() {
 
   return (
     <div className={"grow"}>
-      <AppBar className='border-status' position="static">
+      <AppBar className='nav-appbar' position="static">
         <Toolbar>
           <IconButton
             edge="start"
@@ -188,6 +190,16 @@ export default function Navbar() {
           </div>
           <div className={"grow"} />
           <div className={classes.sectionDesktop}>
+            <IconButton aria-label="show 4 new mails" color="inherit">
+              <Badge badgeContent={1} color="secondary">
+                <FavoriteIcon />
+              </Badge>
+            </IconButton>
+            <IconButton aria-label="show 4 new mails" color="inherit">
+              <Badge color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
