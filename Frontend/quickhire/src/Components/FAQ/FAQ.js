@@ -24,7 +24,7 @@ function FAQPage() {
               fontWeight: '700',
               fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.4rem' },
               maxWidth: '800px',
-              pl: { xs: 2, sm: 4, md: 12 },
+              pl: { xs: 1, sm: 2, md: 4, lg:37 },
             }}
             variant='h3'
           >
@@ -38,14 +38,10 @@ function FAQPage() {
                 variant='h6'
                 sx={{ fontFamily: font, color: '#717478' }}
               >
-                What is Lorem Ipsum?
+                Is my personal information safe?
               </Typography>
               <Typography style={{ textAlign: 'left', fontFamily: font }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                malesuada faucibus ex nec ultricies. Donec mattis egestas nisi
-                non pretium. Suspendisse nec eros ut erat facilisis maximus. In
-                congue et leo in varius. Vestibulum sit amet felis ornare,
-                commodo orci ut, feugiat lorem.
+                We care about your privacy. Your information is safe with us.
               </Typography>
               <hr style={{ border: '1px solid lightgrey', margin: '20px 0' }} />
             </Box>
@@ -54,14 +50,12 @@ function FAQPage() {
                 variant='h6'
                 sx={{ fontFamily: font, color: '#717478' }}
               >
-                What is Lorem Ipsum?
+                What is QuickHire?
               </Typography>
               <Typography style={{ textAlign: 'left', fontFamily: font }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                malesuada faucibus ex nec ultricies. Donec mattis egestas nisi
-                non pretium. Suspendisse nec eros ut erat facilisis maximus. In
-                congue et leo in varius. Vestibulum sit amet felis ornare,
-                commodo orci ut, feugiat lorem.
+                QuickHire is a platform where you can provide your services as 
+                a freelancer. You can also search for an expert for your work
+                and freelance them.
               </Typography>
               <hr style={{ border: '1px solid lightgrey', margin: '20px 0' }} />
             </Box>
@@ -70,14 +64,14 @@ function FAQPage() {
                 variant='h6'
                 sx={{ fontFamily: font, color: '#717478' }}
               >
-                What is Lorem Ipsum?
+                What can I do on QuickHire?
               </Typography>
               <Typography style={{ textAlign: 'left', fontFamily: font }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                malesuada faucibus ex nec ultricies. Donec mattis egestas nisi
-                non pretium. Suspendisse nec eros ut erat facilisis maximus. In
-                congue et leo in varius. Vestibulum sit amet felis ornare,
-                commodo orci ut, feugiat lorem.
+                You can:
+                <ul>
+                  <li>- Search for an expert for your work</li>
+                  <li>- Provide your skills to others in need</li>
+                </ul>
               </Typography>
               <hr style={{ border: '1px solid lightgrey', margin: '20px 0' }} />
             </Box>

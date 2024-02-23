@@ -9,6 +9,7 @@ import Checkout from './Components/Checkout/Checkout';
 import './App.css';
 import FAQPage from './Components/FAQ/FAQ';
 import PaymentPage from './Components/Payment/Payment.js';
+import Footer from './Components/Footer/Footer.js';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <FAQPage />
           </Route>
         </Switch>
+        <Footer/>
       </Router>
     </div>
   );
