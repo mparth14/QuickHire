@@ -10,6 +10,7 @@ import PaymentPage from "./Features/Payment/Payment.js";
 import Navbar from "./CommonComponents/Navbar/Navbar.js";
 import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
+import LandingPage from "./Features/LandingPage/LandingPage.js";
 
 function App() {
   return (
@@ -17,9 +18,12 @@ function App() {
       <Router>
         <Navbar />
         {/* <Header /> */}
-        <Switch className='remainingBody'>
-          <Route exact path='/'>
+        <Switch className="remainingBody">
+          <Route exact path="/">
             <Home />
+          </Route>
+          <Route exact path="/landing-page">
+            <LandingPage />
           </Route>
           <Route exact path="/signup">
             <SignUp />
