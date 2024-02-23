@@ -15,7 +15,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import './Navbar.css'
-import logo from "../../assets/logo-white.svg"
+import logo from "../../assets/logo-white.87a3fc68.png"
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({

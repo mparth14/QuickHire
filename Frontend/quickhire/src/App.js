@@ -17,7 +17,7 @@ function App() {
     <div>
       <Router>
         <Navbar />
-        <Header />
+        {/* <Header /> */}
         <Switch className="remainingBody">
           <Route exact path="/">
             <Home />
