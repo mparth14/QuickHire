@@ -16,9 +16,9 @@ function App() {
     <div>
       <Router>
         <Navbar />
-        <Header />
-        <Switch className="remainingBody">
-          <Route exact path="/">
+        {/* <Header /> */}
+        <Switch className='remainingBody'>
+          <Route exact path='/'>
             <Home />
           </Route>
           <Route exact path="/signup">
