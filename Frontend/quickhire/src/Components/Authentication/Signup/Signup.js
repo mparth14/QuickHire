@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import { Typography, Select, MenuItem, InputLabel } from '@mui/material';
-import { FaTimes, FaPlus } from 'react-icons/fa';
+import { Typography, InputLabel } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useHistory } from 'react-router-dom';
 
