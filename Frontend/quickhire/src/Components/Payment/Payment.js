@@ -16,7 +16,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import HomeIcon from '@mui/icons-material/Home';
 import Alert from '@mui/material/Alert';
 
-const PaymentPage = () => {
+export default function PaymentPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const [open, setOpen] = React.useState(false);
@@ -145,5 +145,4 @@ const PaymentPage = () => {
       </Snackbar>
     </Container>
   );
-};
-export default PaymentPage;
+}

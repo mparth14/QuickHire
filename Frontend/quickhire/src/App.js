@@ -6,8 +6,9 @@ import Home from './Components/Home/Home';
 import SignUp from './Components/Authentication/Signup/Signup';
 import SignUpSeller from './Components/SignUpSeller/signupseller';
 import Checkout from './Components/Checkout/Checkout';
-import Payment from './Components/Payment/Payment';
 import './App.css';
+import FAQPage from './Components/FAQ/FAQ';
+import PaymentPage from './Components/Payment/Payment.js';
 
 function App() {
   return (
@@ -15,12 +16,12 @@ function App() {
       <Router>
         <Navbar />
         <Header />
-        <Switch className="remainingBody">
+        <Switch className='remainingBody'>
           <Route exact path='/'>
             <Home />
           </Route>
           <Route exact path='/signup'>
-            <SignUp/>
+            <SignUp />
           </Route>
           <Route exact path='/signupseller'>
             <SignUpSeller />
@@ -29,7 +30,10 @@ function App() {
             <Checkout />
           </Route>
           <Route exact path='/payment'>
-            <Payment />
+            <PaymentPage />
+          </Route>
+          <Route exact path='/faqs'>
+            <FAQPage />
           </Route>
         </Switch>
       </Router>
