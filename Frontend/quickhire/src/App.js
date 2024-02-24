@@ -4,22 +4,27 @@ import Home from "./Features/Home/Home";
 import SignUp from "./Features/Authentication/Signup/Signup";
 import SignUpSeller from "./Features/SignUpSeller/signupseller";
 import Checkout from "./Features/Checkout/Checkout";
+import ContactUs from "./Features/ContactUs/ContactUs.js";
 import "./App.css";
 import FAQPage from "./Features/FAQ/FAQ";
 import PaymentPage from "./Features/Payment/Payment.js";
 import Navbar from "./CommonComponents/Navbar/Navbar.js";
 import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
+import LandingPage from "./Features/LandingPage/LandingPage.js";
 
 function App() {
   return (
     <div>
       <Router>
         <Navbar />
-        <Header />
+        {/* <Header /> */}
         <Switch className="remainingBody">
           <Route exact path="/">
             <Home />
+          </Route>
+          <Route exact path="/landing-page">
+            <LandingPage />
           </Route>
           <Route exact path="/signup">
             <SignUp />
@@ -35,6 +40,9 @@ function App() {
           </Route>
           <Route exact path="/faqs">
             <FAQPage />
+          </Route>
+          <Route exact path="/contact-us">
+            <ContactUs />
           </Route>
         </Switch>
         <Footer />
