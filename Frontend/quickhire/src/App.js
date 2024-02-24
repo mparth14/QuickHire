@@ -4,6 +4,7 @@ import Home from "./Features/Home/Home";
 import SignUp from "./Features/Authentication/Signup/Signup";
 import SignUpSeller from "./Features/SignUpSeller/signupseller";
 import Checkout from "./Features/Checkout/Checkout";
+import ContactUs from "./Features/ContactUs/ContactUs.js";
 import "./App.css";
 import FAQPage from "./Features/FAQ/FAQ";
 import PaymentPage from "./Features/Payment/Payment.js";
@@ -39,6 +40,9 @@ function App() {
           </Route>
           <Route exact path="/faqs">
             <FAQPage />
+          </Route>
+          <Route exact path="/contact-us">
+            <ContactUs />
           </Route>
         </Switch>
         <Footer />
