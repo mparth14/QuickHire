@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "40px",
     margin: "15%",
     borderRadius: "40px",
+    backgroundColor: "rgba(255,255,255,0.87)",
     [theme.breakpoints.down("sm")]: {
       margin: "5%",
     },
@@ -52,7 +53,7 @@ const ContactUs = () => {
   return (
     <Parallax
       bgImage={Background}
-      strength={250}
+      strength={10}
       style={{
         height: "100vh",
         display: "flex",
