@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
 import Home from "./Features/Home/Home";
 import SignUp from "./Features/Authentication/Signup/Signup";
 import SignUpSeller from "./Features/SignUpSeller/signupseller";
@@ -18,7 +18,7 @@ function App() {
     <div>
       <Router>
         <Navbar />
-        {/* <Header /> */}
+        <Header />
         <Switch className="remainingBody">
           <Route exact path="/">
             <Home />
