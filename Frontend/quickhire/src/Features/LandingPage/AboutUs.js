@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Card,
   CardContent,
@@ -5,21 +6,27 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import React from "react";
+import AboutUsImage from "../../assets/aboutUs.png";
 
 const useStyles = makeStyles((theme) => ({
   cardConatiner: {
-    backgroundColor: "rgb(224 236 255)",
+    marginTop: "2rem",
+    backgroundColor: "#a4a4a4",
+    color: "#fff",
     borderRadius: "8px",
     padding: "16px",
     [theme.breakpoints.down("sm")]: {},
   },
+  title: {
+    textAlign: "center",
+  },
   subContent: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
     [theme.breakpoints.down("sm")]: {
       overflow: "scroll",
-      flexDirection: "column-reverse",
+      flexDirection: "column",
       alignItems: "flex-start",
     },
   },
@@ -31,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   media: {
-    height: "23rem",
-    width: "35%",
+    height: "50vh",
+    width: "40vw",
     [theme.breakpoints.down("sm")]: {
-      width: "50%",
-      height: "11rem",
+      width: "60vw",
+      height: "20vh",
     },
   },
 }));
@@ -46,8 +53,11 @@ function AboutUs() {
   return (
     <Card className={classes.cardConatiner}>
       <CardContent className={classes.cardContent}>
-        <Typography variant="h4">About Us</Typography>
+        <Typography variant="h4" className={classes.title}>
+          About Us
+        </Typography>
         <div className={classes.subContent}>
+          <CardMedia image={AboutUsImage} className={classes.media} />
           <Typography variant="h6" className={classes.content}>
             QuickHire platform aims to provide a platform for users to rent out
             or provide services related to their own acquired skills. Whether a
@@ -56,10 +66,6 @@ function AboutUs() {
             Employers will find professional skilled freelancers within few
             clicks, streamlined for everyone.{" "}
           </Typography>
-          <CardMedia
-            image="https://cdni.iconscout.com/illustration/premium/thumb/hr-hiring-new-applicants-using-there-ratings-4452595-3702211.png?f=webp"
-            className={classes.media}
-          />
         </div>
       </CardContent>
     </Card>

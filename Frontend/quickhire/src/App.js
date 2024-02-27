@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./Features/Home/Home";
 import SignUp from "./Features/Authentication/Signup/Signup";
@@ -11,20 +11,16 @@ import PaymentPage from "./Features/Payment/Payment.js";
 import Navbar from "./CommonComponents/Navbar/Navbar.js";
 import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
-import LandingPage from "./Features/LandingPage/LandingPage.js";
 
 function App() {
   return (
     <div>
       <Router>
         <Navbar />
-        <Header />
+        {/* <Header /> */}
         <Switch className="remainingBody">
           <Route exact path="/">
             <Home />
-          </Route>
-          <Route exact path="/landing-page">
-            <LandingPage />
           </Route>
           <Route exact path="/signup">
             <SignUp />
