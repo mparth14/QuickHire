@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Container, Paper, Typography, makeStyles } from '@material-ui/core';
+import writingLogo from '../../assets/writing.png';
 import writingColorLogo from '../../assets/writingColor.png';
+import programmingLogo from '../../assets/programming.png';
 import programmingColorLogo from '../../assets/programmingColor.png';
+import photographyLogo from '../../assets/photography.png';
 import photographyColorLogo from '../../assets/photographyColor.png';
+import videoLogo from '../../assets/video.png';
 import videoColorLogo from '../../assets/videoColor.png';
+import marketingLogo from '../../assets/marketing.png';
 import marketingColorLogo from '../../assets/marketingColor.png';
-
+ 
 const useStyles = makeStyles(theme => ({
     categoryPaper: {
         display: 'flex',
@@ -29,11 +34,6 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
         marginBottom: theme.spacing(1),
         borderRadius: theme.shape.borderRadius,
-        filter: 'grayscale(70%)', 
-        transition: 'filter 0.3s', 
-        '&:hover': {
-            filter: 'grayscale(0%)', 
-        },
     },
     categoryName: {
         color: theme.palette.text.primary,
@@ -54,41 +54,49 @@ const useStyles = makeStyles(theme => ({
         borderBottomWidth: '2px',
     },
     categoriesHeading: {
-        fontWeight: 'bold',
-        color: 'black',
-        textAlign: 'center',
+        marginBottom: "1rem",
+ 
+    },
+    categoriesContainer: {
+        marginBottom: "3rem",
+        marginTop: "3rem",
     },
 }));
-
+ 
 const categories = [
     {
         name: 'Writing',
+        image: writingLogo,
         hoverImage: writingColorLogo,
     },
     {
         name: 'Programming',
+        image: programmingLogo,
         hoverImage: programmingColorLogo,
     },
     {
         name: 'Photography',
+        image: photographyLogo,
         hoverImage: photographyColorLogo,
     },
     {
         name: 'Video and Animation',
+        image: videoLogo,
         hoverImage: videoColorLogo,
     },
     {
         name: 'Digital Marketing',
+        image: marketingLogo,
         hoverImage: marketingColorLogo,
     },
 ];
-
+ 
 const CategorySection = () => {
     const classes = useStyles();
     const [hoveredCategory, setHoveredCategory] = useState(null);
-
+ 
     return (
-        <Container>
+        <Container className={classes.categoriesContainer}>
             <Typography variant="h4" className={classes.categoriesHeading}>
                 Categories
             </Typography>
@@ -102,7 +110,7 @@ const CategorySection = () => {
                         onMouseLeave={() => setHoveredCategory(null)}
                     >
                         <img
-                            src={category.hoverImage}
+                            src={hoveredCategory === category ? category.hoverImage : category.image}
                             alt={category.name}
                             className={classes.categoryImage}
                         />
@@ -119,5 +127,6 @@ const CategorySection = () => {
         </Container>
     );
 };
-
+ 
 export default CategorySection;
+ 
