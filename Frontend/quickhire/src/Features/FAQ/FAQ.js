@@ -1,80 +1,80 @@
 import React from 'react';
-import { Typography, Container, Box } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Box, Container, Typography } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const FAQS = [
+  {
+    question: 'How is my personal information secured?',
+    answer: 'We prioritize your privacy. Rest assured, your information is kept secure and confidential.',
+  },
+  {
+    question: 'What is QuickHire all about?',
+    answer: 'QuickHire is a versatile platform connecting freelancers with job providers. It facilitates the exchange of skills and services between users.',
+  },
+  {
+    question: 'What activities can I perform on QuickHire?',
+    answer: 'You can:\n- Search for skilled freelancers\n- Offer your expertise as a freelancer to those in need',
+  },
+  {
+    question: 'How do I reset my password if I forget it?',
+    answer: 'If you forget your password, you can easily reset it by clicking on the "Forgot Password" link on the login page. Follow the instructions sent to your registered email address to set a new password and regain access to your account.'
+  },
+  {
+    question: 'How can I ensure the quality of services?',
+    answer: 'QuickHire allows users to leave reviews and ratings for freelancers. You can check these reviews to assess the quality of services provided by freelancers on the platform.',
+  },
+  {
+    question: 'As a Service Provider, Can I edit my Services?',
+    answer: 'Yes, you can edit or disable your Services at any time. Simply go to your profile settings, make the necessary changes, and save.',
+  },
+];
 
 function FAQPage() {
-  const font =
-    'Helvetica Neue LT, Helvetica Neue, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif';
-
   return (
-    <Box sx={{ overflow: 'auto' }}>
+    <Box 
+    >
       <>
         <Box
           sx={{
-            backgroundColor: '#717478',
-            py: { xs: 6, md: 12 },
+            backgroundColor: 'white',
+            py: 3,
             px: { xs: 2, sm: 4, md: 6 },
             textAlign: 'left',
-            color: 'white',
+            color: 'red',
             marginBottom: '20px',
           }}
         >
+        </Box>
+        <Container maxWidth='md'>
           <Typography
-            sx={{
-              fontFamily: font,
-              fontWeight: '700',
-              fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.4rem' },
-              maxWidth: '800px',
-              pl: { xs: 1, sm: 2, md: 4, lg:37 },
-            }}
-            variant='h3'
+            variant='h4'
           >
             Frequently Asked Questions
           </Typography>
-        </Box>
-        <Container maxWidth='md'>
-          <Box sx={{ overflowY: 'auto', marginBottom: '20px' }}>
-            <Box>
-              <Typography
-                variant='h6'
-                sx={{ fontFamily: font, color: '#717478' }}
+          <Box 
+          sx={{ overflowY: 'auto', marginBottom: '20px', marginTop: '25px' }}
+          >
+            {FAQS.map((faq, index) => (
+              <Accordion key={index} 
               >
-                Is my personal information safe?
-              </Typography>
-              <Typography style={{ textAlign: 'left', fontFamily: font }}>
-                We care about your privacy. Your information is safe with us.
-              </Typography>
-              <hr style={{ border: '1px solid lightgrey', margin: '20px 0' }} />
-            </Box>
-            <Box>
-              <Typography
-                variant='h6'
-                sx={{ fontFamily: font, color: '#717478' }}
-              >
-                What is QuickHire?
-              </Typography>
-              <Typography style={{ textAlign: 'left', fontFamily: font }}>
-                QuickHire is a platform where you can provide your services as 
-                a freelancer. You can also search for an expert for your work
-                and freelance them.
-              </Typography>
-              <hr style={{ border: '1px solid lightgrey', margin: '20px 0' }} />
-            </Box>
-            <Box>
-              <Typography
-                variant='h6'
-                sx={{ fontFamily: font, color: '#717478' }}
-              >
-                What can I do on QuickHire?
-              </Typography>
-              <Typography style={{ textAlign: 'left', fontFamily: font }}>
-                You can:
-                <ul>
-                  <li>- Search for an expert for your work</li>
-                  <li>- Provide your skills to others in need</li>
-                </ul>
-              </Typography>
-              <hr style={{ border: '1px solid lightgrey', margin: '20px 0' }} />
-            </Box>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={index}
+                  id={index}
+                >
+                  <Typography variant='h6' 
+                  >
+                    {faq.question}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails 
+                >
+                  <Typography style={{ textAlign: 'left', fontFamily: 'inherit', color: '#444' }}>
+                    {faq.answer}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
           </Box>
         </Container>
       </>
