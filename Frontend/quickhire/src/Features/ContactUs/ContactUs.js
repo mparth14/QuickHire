@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core";
 import { Grid, Paper, Typography, TextField, Button } from "@material-ui/core";
 import ThumbsUp from "./ContactUsAssets/thumbs-up.png";
 import Background from "./ContactUsAssets/BackGround.png";
-import "./ContactUs.css";
 
 const useStyles = makeStyles((theme) => ({
   parentCard: {
@@ -35,14 +34,6 @@ const ContactUs = () => {
     setFormData({
       ...formData,
       [name]: value,
-    });
-  };
-
-  const handleUsageChange = (e) => {
-    const { value } = e.target;
-    setFormData({
-      ...formData,
-      usage: value,
     });
   };
 
