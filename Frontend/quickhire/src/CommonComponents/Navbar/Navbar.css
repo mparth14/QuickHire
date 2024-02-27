@@ -10,11 +10,11 @@
 }
 .nav-appbar {
     padding-right: 10px;
+    background-color: #1f91cc !important;
 }
 @media only screen and (max-width: 768px) {
     .image-css {
       display: none;
     }
-    
-  }
+}
   

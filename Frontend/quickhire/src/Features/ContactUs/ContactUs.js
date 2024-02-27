@@ -1,105 +1,40 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
 import { Parallax } from "react-parallax";
-import ThumbsUp from './ContactUsAssets/thumbs-up.png';
-import bgImg from "./ContactUsAssets/ContactUsWallpaper.png";
-import './ContactUs.css'
+import { makeStyles } from "@material-ui/core";
+import { Grid, Paper, Typography, TextField, Button } from "@material-ui/core";
+import ThumbsUp from "./ContactUsAssets/thumbs-up.png";
+import Background from "./ContactUsAssets/BackGround.png";
+import "./ContactUs.css";
 
-const Container = styled.div`
-  margin: 0 auto;
-  padding-left: 20%;
-  padding-right: 20%;
-  padding-top: 1%;
-  background-image: url('https://drive.google.com/file/d/1n6KvmOFwDX0yf_lG4x06FPxeFDuiD7ZE/view?usp=sharing');
-  background-size: cover;
-  background-position: center;
-`;
-
-const Title = styled.h1`
-  margin-top: 16px;
-  margin-bottom: 16px;
-  text-align: left;
-  color: #FFF;
-`;
-
-const SubTitle = styled.h3`
-  margin-top: 16px;
-  text-align: left;
-  margin 16px;
-  color: #FFF;
-`;
-
-const FieldParent = styled.h2`
-  margin-top: 20px;
-  text-align: left;
-  color: #FFF;
-`;
-
-const IssueReceivedText = styled.h3`
-  margin-top: 20px;
-  text-align: center;
-  color: #3F51B5;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-`;
-
-const Image = styled.img`
-  max-width: 30%;
-  max-height: 30%;
-`;
-
-const Input = styled.input`
-  padding: 8px;
-  margin-top: 8px;
-  font-size: 16px;
-  border: 1px solid #3F51B5;
-  border-radius: 4px;
-`;
-
-const TextArea = styled.textarea`
-  padding: 8px;
-  margin-top: 8px;
-  font-size: 16px;
-  border: 1px solid #3F51B5;
-  border-radius: 4px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #FFF;
-  color: #3F51B5;
-  border: none;
-  border-radius: 4px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: #F6F6F6;
-  }
-`;
+const useStyles = makeStyles((theme) => ({
+  parentCard: {
+    padding: "40px",
+    margin: "15%",
+    borderRadius: "40px",
+    [theme.breakpoints.down("sm")]: {
+      margin: "5%",
+    },
+  },
+}));
 
 const ContactUs = () => {
+  const classes = useStyles();
+
   const [formVisible, setFormVisible] = useState(false);
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    usage: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+    usage: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -107,108 +42,130 @@ const ContactUs = () => {
     const { value } = e.target;
     setFormData({
       ...formData,
-      usage: value
+      usage: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+      usage: "",
     });
     setFormVisible(true);
   };
 
   return (
-    <Parallax bgImage={bgImg} strength={800}>
-      <Container>
-      <Title style={{display:formVisible ? 'none' : 'block'}}>Get in touch..</Title>
-      <SubTitle style={{display:formVisible ? 'none' : 'block'}}>At QuickHire, customer satisfaction stands as our paramount priority. We prioritize every interaction, service, and product with an unwavering commitment to exceed our customers' expectations.</SubTitle>
-      <div></div>
-      <SubTitle style={{display:formVisible ? 'none' : 'block'}}>Our dedication to excellence permeates every aspect of our operations, ensuring that each client receives personalized attention, swift resolution of concerns, and exceptional quality in every service or product they encounter.</SubTitle>
-      <div style={{display:formVisible ? 'none' : 'block'}}>
-      <Form onSubmit={handleSubmit}>
-        <FieldParent>Your Name:</FieldParent>
-        <SubTitle>Please privide your name so we can identify you as a customer going forward.</SubTitle>
-          <Input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            placeholder='Your name'
-            onChange={handleChange} 
-            required 
-          />
-        <FieldParent>Your Email:</FieldParent>
-        <SubTitle>Please privide your email which would be exclusively used to contact you to solve your query.</SubTitle>
-          <Input 
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            placeholder='Email address'
-            required 
-          />
-          <FieldParent>How do you use QuickHire?</FieldParent>
-          <SubTitle>Please select one.</SubTitle>
-            <div className='radioBtns'>
-              <div className='radioBtnLabelDiv'>
-            <label className='radioBtnLabel'>
-              <input
-                type="radio"
-                name="usage"
-                value="consumer"
-                checked={formData.usage === 'consumer'}
-                onChange={handleUsageChange}
-              /> As a consumer
-            </label>
+    <Parallax
+      bgImage={Background}
+      strength={250}
+      style={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Paper className={classes.parentCard}>
+        <Grid container spacing={3}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            style={{ display: formVisible ? "none" : "block" }}
+          >
+            <Typography variant="h4" gutterBottom>
+              Get in touch..
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              At QuickHire, customer satisfaction stands as our paramount
+              priority. We prioritize every interaction, service, and product
+              with an unwavering commitment to exceed our customers'
+              expectations.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <div style={{ display: formVisible ? "none" : "block" }}>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Your Name"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Your Email"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Subject"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                />
+                <TextField
+                  label="Message"
+                  placeholder="Your Message here*"
+                  variant="outlined"
+                  style={{ width: "100%" }}
+                  name="message"
+                  fullWidth
+                  multiline
+                  maxRows={2}
+                  margin="normal"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  style={{
+                    backgroundColor: "#3f51b5",
+                    color: "#fff",
+                    width: "100%",
+                    marginTop: "16px",
+                  }}
+                >
+                  Submit
+                </Button>
+              </form>
             </div>
-            <div className='radioBtnLabelDiv'>
-            <label className='radioBtnLabel'>
-              <input
-                className='radioBtnLabel'
-                type="radio"
-                name="usage"
-                value="serviceProvider"
-                checked={formData.usage === 'serviceProvider'}
-                onChange={handleUsageChange}
-              /> As a Service Provider
-            </label>
-            </div>
-            </div>
-        <FieldParent>Subject:</FieldParent>
-        <SubTitle>Please enter the subject matter of you reaching out to us.</SubTitle>
-          <Input 
-            type="text" 
-            name="subject" 
-            value={formData.subject} 
-            onChange={handleChange} 
-            placeholder='Subject Matter'
-            required 
-          />
-        <SubTitle>Please describe the issue you are having below.</SubTitle>
-          <TextArea 
-            name="message" 
-            value={formData.message} 
-            onChange={handleChange} 
-            placeholder='Describe the issue you are facing'
-            rows={4}
-            required 
-          />
-        <Button type="submit">Submit</Button>
-      </Form>
-      </div>
-      <div style={{display:formVisible ? 'block' : 'none', textAlign:'center'}}>
-        <div>
-      <Image src={ThumbsUp} alt="Thumbs up" />
-        </div>
-        <IssueReceivedText>Your issue has been received. We will get back to you!</IssueReceivedText>
-      </div>
-    </Container>
+          </Grid>
+          <div
+            style={{
+              display: formVisible ? "block" : "none",
+              textAlign: "center",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img src={ThumbsUp} alt="Thumbs up" style={{ maxWidth: "100px" }} />
+            <Typography variant="h6" gutterBottom>
+              Your issue has been received. We will get back to you!
+            </Typography>
+          </div>
+        </Grid>
+      </Paper>
     </Parallax>
   );
 };
-
 export default ContactUs;
