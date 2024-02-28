@@ -4,18 +4,13 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import "./Navbar.css";
-import logo from "../../assets/Logo-White.svg";
+import logo from "../../assets/logo-white.svg";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -115,8 +110,8 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Sign Up</MenuItem>
     </Menu>
   );
 
@@ -131,33 +126,11 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <p>Sign In</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+        <p>Sign Up</p>
       </MenuItem>
     </Menu>
   );
@@ -190,26 +163,6 @@ export default function Navbar() {
           </div>
           <div className={"grow"} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={1} color="secondary">
-                <FavoriteIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
             <IconButton
               edge="end"
               aria-label="account of current user"

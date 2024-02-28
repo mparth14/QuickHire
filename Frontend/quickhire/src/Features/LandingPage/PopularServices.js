@@ -147,7 +147,7 @@ function PopularServices() {
 
   return (
     <div className={classes.popularServicesContainer}>
-      <Typography variant="h4" className={classes.text}>
+      <Typography variant="h4" className={classes.text} style={{display: "flex", justifyContent: "center", alignItems: "center", fontWeight: "900", marginTop: "28px", fontSize: "1.5rem"}}>
         Popular Services
       </Typography>
       <Carousel
