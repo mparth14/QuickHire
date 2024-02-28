@@ -10,7 +10,7 @@ import {
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/Logo.svg";
 import { Link as RouterLink } from "react-router-dom";
 
 const Footer = () => {
