@@ -11,7 +11,7 @@ QuickHire is like an online marketplace where people can offer their skills and 
 
 ## Authors
 
-- [Hiteshkumar](ht643276@dal.ca) - _(Frontend, Backend Developer)_
+- [Hiteshkumar Gupta](ht643276@dal.ca) - _(Frontend, Backend Developer)_
 - [Rahul Hambarde](rahul.hambarde@dal.ca) - _(Frontend, Backend Developer)_
 - [Parth Pinakin Modi](pr571545@dal.ca) - _(Frontend, Backend Developer)_
 - [Angel Christian](an321060@dal.ca) - _(Frontend, Backend Developer)_
@@ -29,8 +29,6 @@ node: v14.21.3
 npm: v6.14.18
 react: ^17.0.1
 ```
-
-To have a local copy of this project up and running on your local machine, you will first need to install the following software:
 
 Download Install node from node website
 ```
@@ -583,6 +581,22 @@ export default function PrimarySearchAppBar() {
 [5] “Bullhorn free icon,” Flaticon. [Online]. Available: https://www.flaticon.com/free-icon/bullhorn_1998087?term=digital+marketing&related_id=1998087. [Accessed On: Feb 27, 2024].
 
 [6] “Shopping Online free icon,” Flaticon. [Online]. Available: https://www.flaticon.com/free-icon/shopping-online_1260235?term=digital+marketing&page=1&position=13&origin=search&related_id=1260235. [Accessed On: Feb 27, 2024].
+
+[7] Flatworldsolutions.com. [Online]. Available: https://cdn.flatworldsolutions.com/featured-images/top-10-online-video-editing-tools.jpg. [Accessed On: Feb 27, 2024].
+
+[8] Com.ph. [Online]. Available: https://www.truelogic.com.ph/wp-content/uploads/2021/09/dynamic_website.png. [Accessed On: Feb 27, 2024].
+
+[9] Ctfassets.net. [Online]. Available: https://images.ctfassets.net/ooa29xqb8tix/22yB0fxGdusPYvjeHt0tIc/5e8425645473fbfc465de26fff504c89/Metadata_the_Figma_Handbook.jpg. [Accessed On: Feb 27, 2024].
+
+[10] Berkeley.edu. [Online]. Available: https://multimedia.journalism.berkeley.edu/wp-content/uploads/stand_up_vo-main.jpg. [Accessed On: Feb 27, 2024].
+
+[11] Medium.com. [Online]. Available: https://miro.medium.com/v2/resize:fit:1400/1*MirlZnbuS9Cs9bVxxSPbjg.jpeg. [Accessed On: Feb 27, 2024].
+
+[12] Seo-hacker.com. [Online]. Available: https://seo-hacker.com/wp-content/uploads/2019/07/Cover-Photo-New-Website-SEO-A-Comprehensive-Guide-1024x768.jpg. [Accessed On: Feb 27, 2024].
+
+[13] Buffer.com. [Online]. Available: https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2022/10/thought-catalog-505eectW54k-unsplash.jpg. [Accessed On: Feb 27, 2024].
+
+
 
 ## Acknowledgments
 - Created React application using template [create-react-app](https://create-react-app.dev/docs/getting-started)
