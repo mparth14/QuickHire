@@ -6,7 +6,7 @@
 }
 .image-css {
     width: 250px;
-    margin-top: 8px;
+    padding-bottom: 8px;
 }
 .nav-appbar {
     padding-right: 10px;
@@ -14,7 +14,11 @@
 }
 @media only screen and (max-width: 768px) {
     .image-css {
+      width: 175px;
+    }
+}
+@media only screen and (max-width: 568px) {
+    .image-css {
       display: none;
     }
 }
-  
