@@ -19,10 +19,11 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     textAlign: "center",
+    fontWeight: "900",
   },
   subContent: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     [theme.breakpoints.down("sm")]: {
       overflow: "scroll",

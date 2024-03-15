@@ -59,11 +59,11 @@ const SERVICES = [
 
 const useStyles = makeStyles((theme) => ({
   serviceCard: {
-    width: "20vw",
+    width: "90%",
     marginBottom: "1rem",
     position: "relative",
     textAlign: "center",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("500")]: {
       width: "100%",
     },
   },
@@ -147,7 +147,17 @@ function PopularServices() {
 
   return (
     <div className={classes.popularServicesContainer}>
-      <Typography variant="h4" className={classes.text} style={{display: "flex", justifyContent: "center", alignItems: "center", fontWeight: "900", marginTop: "28px", fontSize: "1.5rem"}}>
+      <Typography
+        variant="h4"
+        className={classes.text}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontWeight: "900",
+          marginTop: "28px",
+          fontSize: "1.5rem",
+        }}>
         Popular Services
       </Typography>
       <Carousel
@@ -156,8 +166,7 @@ function PopularServices() {
         additionalTransfrom={0}
         arrows
         autoPlaySpeed={3000}
-        centerMode={true}
-        className={classes.carousel}
+        centerMode={false}
         containerClass="container-with-dots"
         dotListClass=""
         draggable
@@ -168,7 +177,6 @@ function PopularServices() {
         minimumTouchDrag={80}
         pauseOnHover
         renderArrowsWhenDisabled={false}
-        renderButtonGroupOutside={true}
         renderDotsOutside={false}
         responsive={{
           desktop: {
@@ -176,23 +184,32 @@ function PopularServices() {
               max: 3000,
               min: 1024,
             },
-            items: 3,
+            items: 4,
+            centerMode: true,
             partialVisibilityGutter: 40,
           },
-          mobile: {
+          anotherTablet: {
             breakpoint: {
-              max: 464,
-              min: 0,
+              max: 1024,
+              min: 800,
             },
-            items: 1,
+            items: 3,
             partialVisibilityGutter: 30,
           },
           tablet: {
             breakpoint: {
-              max: 1024,
-              min: 464,
+              max: 800,
+              min: 500,
             },
             items: 2,
+            partialVisibilityGutter: 30,
+          },
+          mobile: {
+            breakpoint: {
+              max: 500,
+              min: 0,
+            },
+            items: 1,
             partialVisibilityGutter: 30,
           },
         }}
