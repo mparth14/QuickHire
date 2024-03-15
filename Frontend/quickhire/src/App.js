@@ -9,8 +9,9 @@ import "./App.css";
 import FAQPage from "./Features/FAQ/FAQ";
 import PaymentPage from "./Features/Payment/Payment.js";
 import Navbar from "./CommonComponents/Navbar/Navbar.js";
-import Header from "./CommonComponents/Header/Header.js";
+// import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
+import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
           </Route>
           <Route exact path="/contact-us">
             <ContactUs />
+          </Route>
+          <Route exact path="/service-orders">
+            <ServiceOrdersView />
           </Route>
         </Switch>
         <Footer />
