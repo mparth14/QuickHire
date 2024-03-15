@@ -19,6 +19,10 @@
 }
 @media only screen and (max-width: 568px) {
     .image-css {
-      display: none;
+        content: url('../../assets/logo-mobile.svg');
+        width: 30px;
+        margin-right: 25px;
+        align-items: center;
+        margin-top: 14px;
     }
 }

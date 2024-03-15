@@ -11,6 +11,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import "./Navbar.css";
 import logo from "../../assets/logo-white.svg";
+import mobileLogo from "../../assets/logo-mobile.svg";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -108,8 +109,7 @@ export default function Navbar() {
       keepMounted
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
+      onClose={handleMenuClose}>
       <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
       <MenuItem onClick={handleMenuClose}>Sign Up</MenuItem>
     </Menu>
@@ -124,8 +124,7 @@ export default function Navbar() {
       keepMounted
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
+      onClose={handleMobileMenuClose}>
       <MenuItem onClick={handleProfileMenuOpen}>
         <p>Sign In</p>
       </MenuItem>
@@ -143,8 +142,7 @@ export default function Navbar() {
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="open drawer"
-          ></IconButton>
+            aria-label="open drawer"></IconButton>
           <Link to="/">
             <img src={logo} className="image-css" alt="Logo" />
           </Link>
@@ -169,8 +167,7 @@ export default function Navbar() {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
+              color="inherit">
               <AccountCircle />
             </IconButton>
           </div>
@@ -180,8 +177,7 @@ export default function Navbar() {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
+              color="inherit">
               <MoreIcon />
             </IconButton>
           </div>
