@@ -8,8 +8,7 @@ import {
 } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { makeStyles } from "@material-ui/core";
-import { getAllPlacedServiceOrders } from "./serviceOrdersSlice";
-import { useSelector } from "react-redux";
+import { serviceOrdersData } from "./OrdersDummyData";
 
 const useStyles = makeStyles(() => ({
   order: {
@@ -25,7 +24,7 @@ const useStyles = makeStyles(() => ({
 
 function ServiceOrdersPlaced() {
   const classes = useStyles();
-  const placedOrders = useSelector(getAllPlacedServiceOrders);
+  const placedOrders = serviceOrdersData;
 
   return (
     <div
