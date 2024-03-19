@@ -5,7 +5,11 @@ const categorySchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true 
+    },
+    subcategories: {
+        type: [String],
+        default: []
     }
 });
 
-export default  mongoose.model('categories', categorySchema);
+export default mongoose.model('categories', categorySchema);
