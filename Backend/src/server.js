@@ -27,12 +27,16 @@ app.use(cookieParser())
 //routes import
 import dummyData from "./routes/v1/dummy.routes.js";
 import servicesData from "./routes/v1/services.routes.js";
+import categoriesData from "./routes/v1/categories.routes.js";
+
 
 
 
 //routes declaration
 app.use("/api/v1/dummyData", dummyData);
 app.use('/api/v1/services', servicesData);
+app.use('/api/v1/categories', categoriesData);
+
 
 connectDB()
 .then(() => {
