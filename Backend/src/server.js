@@ -27,11 +27,12 @@ app.use(cookieParser())
 //routes import
 import dummyData from "./routes/v1/dummy.routes.js";
 import servicesRoutes from "./routes/v1/service.routes.js"; // Update the import path
+import userRoutes from "./routes/v1/user.routes.js";
 
 //routes declaration
 app.use("/api/v1/dummyData", dummyData);
 app.use("/api/v1/services", servicesRoutes); // Update the route path
-
+app.use("/api/v1/user", userRoutes); 
 
 connectDB()
 .then(() => {
