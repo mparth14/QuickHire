@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./Features/Home/Home";
 import SignUp from "./Features/Authentication/Signup/Signup";
 import SignUpSeller from "./Features/SignUpSeller/signupseller";
@@ -12,6 +14,7 @@ import Navbar from "./CommonComponents/Navbar/Navbar.js";
 // import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
 import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
+import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
 
 function App() {
   return (
@@ -44,9 +47,13 @@ function App() {
           <Route exact path="/service-orders">
             <ServiceOrdersView />
           </Route>
+          <Route exact path="/service-creation">
+            <ServiceCreationPage />
+          </Route>
         </Switch>
         <Footer />
       </Router>
+      <ToastContainer />
     </div>
   );
 }
