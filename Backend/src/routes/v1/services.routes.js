@@ -4,11 +4,11 @@ import { createService, getAllServices, getServiceById, updateService, deleteSer
 const router = express.Router();
 
 
+router.get('/search', getServicesByPartialTitle); // New route for searching by partial title
 router.post('/', createService);
 router.get('/', getAllServices);
 router.get('/:id', getServiceById);
 router.put('/:id', updateService);
 router.delete('/:id', deleteService);
-router.get('/search', getServicesByPartialTitle); // New route for searching by partial title
 
 export default router;

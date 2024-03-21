@@ -70,9 +70,9 @@ export const deleteService = async (req, res) => {
 export const getServicesByPartialTitle = async (req, res) => {
     try {
       const { title } = req.query;
-      const regex = new RegExp(title, 'i'); // 'i' for case-insensitive search
-      const services = await Service.find({ title: regex });
-      res.status(200).json(services);
+      const regex = new RegExp(title, 'i');
+      const service = await services.find({ title: regex });
+      res.status(200).json(service);
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
