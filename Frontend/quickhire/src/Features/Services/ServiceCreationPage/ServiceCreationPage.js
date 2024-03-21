@@ -174,7 +174,7 @@ const ServiceCreationPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ backgroundColor: '#f7f7f7', height: '100vh' }}>
+      <div style={{ backgroundColor: 'white', height: '100vh' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '5%' }}>
           <Container maxWidth="md" style={{ backgroundColor: 'white', padding: 20, borderRadius: 8 }}>
             <Typography variant="h4" align="center" gutterBottom>
