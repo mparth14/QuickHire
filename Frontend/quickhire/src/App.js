@@ -11,17 +11,21 @@ import "./App.css";
 import FAQPage from "./Features/FAQ/FAQ";
 import PaymentPage from "./Features/Payment/Payment.js";
 import Navbar from "./CommonComponents/Navbar/Navbar.js";
-// import Header from "./CommonComponents/Header/Header.js";
+import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
 import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
 import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
+
+import CategoryCard from './Features/CategoryCard/CategoryCard'
+import Blog from './Features/Blog/Blog';
+import SubCategoryService from './Features/SubCategoryService/SubCategoryService';
 
 function App() {
   return (
     <div>
       <Router>
         <Navbar />
-        {/* <Header /> */}
+        <Header />
         <Switch className="remainingBody">
           <Route exact path="/">
             <Home />
@@ -49,6 +53,13 @@ function App() {
           </Route>
           <Route exact path="/service-creation">
             <ServiceCreationPage />
+          </Route>
+          <Route exact path ="/category/:name">
+            <CategoryCard />
+            <Blog />
+          </Route>
+          <Route exact path ="/subcategory/:name">
+            <SubCategoryService />
           </Route>
         </Switch>
         <Footer />
