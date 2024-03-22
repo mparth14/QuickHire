@@ -13,6 +13,12 @@ import "./Navbar.css";
 import logo from "../../assets/logo-white.svg";
 import mobileLogo from "../../assets/logo-mobile.svg";
 import { Link } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import { SearchBar } from "./searchComponents/SearchBar";
+import { SearchResultsList } from "./searchComponents/SearchResultsList";
+import { useState } from "react";
+
+
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -27,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    backgroundColor: alpha(theme.palette.common.white, 0.50),
     "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
@@ -36,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     width: "75%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(26),
-      width: "50%",
+      width: "45%",
     },
   },
   searchIcon: {
@@ -50,6 +56,8 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: "inherit",
+    width: "100%",
+    paddingLeft: theme.spacing(1), // Adjust padding here
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -76,12 +84,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  const [results, setResults] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [searchResults, setSearchResults] = React.useState([]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -134,6 +144,23 @@ export default function Navbar() {
     </Menu>
   );
 
+  let debounceTimeout;
+
+  const handleSearchInputChange = (event) => {
+    const searchTerm = event.target.value;
+
+    // Clear the previous timeout to prevent multiple API calls
+    clearTimeout(debounceTimeout);
+
+    // Set a new timeout to execute the API call after 300 milliseconds of inactivity
+    debounceTimeout = setTimeout(() => {
+      // Fetch search results from the API
+      fetch(`http://localhost:4000/api/v1/services/search?title=${searchTerm}`)
+        .then((response) => response.json())
+        .then((data) => setSearchResults(data))
+        .catch((error) => console.error("Error fetching search results:", error));
+    }, 300);
+  };
   return (
     <div className={"grow"}>
       <AppBar className="nav-appbar" position="static">
@@ -146,7 +173,9 @@ export default function Navbar() {
           <Link to="/">
             <img src={logo} className="image-css" alt="Logo" />
           </Link>
-          <div className={classes.search}>
+
+
+          {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -157,8 +186,38 @@ export default function Navbar() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onChange={handleSearchInputChange}
             />
           </div>
+          {searchResults.length > 0 && (
+            <div>
+              {searchResults.map((result) => (
+                <div key={result.id}>
+                  <div className="dropdown">
+                    <ul>
+                      <li>{result.title}</li>
+                      </ul>
+                  </div>
+                </div>
+              ))}
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/search-results"
+              >
+                View All Results
+              </Button>
+            </div>
+          )} */}
+
+          <div className={classes.search}>
+            <SearchBar setResults={setResults} />
+            {results && results.length > 0 && <SearchResultsList results={results} />}
+          </div>
+
+
           <div className={"grow"} />
           <div className={classes.sectionDesktop}>
             <IconButton

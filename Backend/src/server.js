@@ -26,15 +26,17 @@ app.use(cookieParser())
 
 //routes import
 import dummyData from "./routes/v1/dummy.routes.js";
-import servicesRoutes from "./routes/v1/service.routes.js"; // Update the import path
-import userRoutes from "./routes/v1/user.routes.js";
-import authRoutes from "./routes/v1/auth.routes.js";
+import authData from "./routes/v1/auth.routes.js";
+import userData from "./routes/v1/user.routes.js";
+import servicesData from "./routes/v1/services.routes.js";
+import categoriesData from "./routes/v1/categories.routes.js";
 
 //routes declaration
 app.use("/api/v1/dummyData", dummyData);
-app.use("/api/v1/auth", authRoutes); 
-app.use("/api/v1/services", servicesRoutes); // Update the route path
-app.use("/api/v1/user", userRoutes); 
+app.use("/api/v1/auth", authData);
+app.use("/api/v1/user", userData); 
+app.use('/api/v1/services', servicesData);
+app.use('/api/v1/categories', categoriesData);
 
 connectDB()
 .then(() => {
