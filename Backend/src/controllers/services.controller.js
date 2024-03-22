@@ -67,11 +67,19 @@ export const deleteService = async (req, res) => {
     }
 };
 
-export const getServicesByPartialTitle = async (req, res) => {
+export const getServicesByPartialHint = async (req, res) => {
     try {
-      const { title } = req.query;
-      const regex = new RegExp(title, 'i');
-      const service = await services.find({ title: regex });
+      const { value } = req.query;
+      console.log(value);
+      const regex = new RegExp(value, 'i');
+      const service = await services.find({
+        $or: [
+            { title: regex },
+            { category: regex },
+            { subCategory: regex },
+            { description: regex }
+        ]
+    });
       res.status(200).json(service);
     } catch (err) {
       console.error(err);
