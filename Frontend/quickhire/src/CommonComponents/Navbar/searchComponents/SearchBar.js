@@ -3,26 +3,33 @@ import { FaSearch } from "react-icons/fa";
 
 import "./SearchBar.css";
 
+const debounce = (func, delay) => {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+};
+
 export const SearchBar = ({ setResults }) => {
   const [input, setInput] = useState("");
 
-  const fetchData = (value) => {
+  const fetchData = debounce((value) => {
     console.log(value);
     if (!value) {
-      setResults([]); 
-      return; 
+      setResults([]);
+      return;
     }
     fetch(`http://localhost:4000/api/v1/services/search?title=${value}`)
       .then((response) => response.json())
       .then((json) => {
-        const results = json.filter((service) => {
-          return (
-            service.title
-          );
-        });
-        setResults(results);
+        const filteredResults = json.map((service) => ({
+          id: service._id,
+          title: service.title,
+        }));
+        setResults(filteredResults);
       });
-  };
+  }, 300);
 
   const handleChange = (value) => {
     setInput(value);

@@ -105,7 +105,8 @@ const CategorySection = () => {
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   return (
-    <Container className={classes.categoriesContainer} maxWidth="false">
+    <Container className={classes.categoriesContainer} maxWidth="false"
+    >
       <Typography
         variant="h4"
         className={classes.categoriesHeading}
