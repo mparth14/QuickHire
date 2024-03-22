@@ -174,44 +174,6 @@ export default function Navbar() {
             <img src={logo} className="image-css" alt="Logo" />
           </Link>
 
-
-          {/* <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search here ..."
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-              onChange={handleSearchInputChange}
-            />
-          </div>
-          {searchResults.length > 0 && (
-            <div>
-              {searchResults.map((result) => (
-                <div key={result.id}>
-                  <div className="dropdown">
-                    <ul>
-                      <li>{result.title}</li>
-                      </ul>
-                  </div>
-                </div>
-              ))}
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="primary"
-                component={Link}
-                to="/search-results"
-              >
-                View All Results
-              </Button>
-            </div>
-          )} */}
-
           <div className={classes.search}>
             <SearchBar setResults={setResults} />
             {results && results.length > 0 && <SearchResultsList results={results} />}
