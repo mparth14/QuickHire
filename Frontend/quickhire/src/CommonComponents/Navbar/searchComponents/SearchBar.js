@@ -20,7 +20,7 @@ export const SearchBar = ({ setResults }) => {
       setResults([]);
       return;
     }
-    fetch(`http://localhost:4000/api/v1/services/search?title=${value}`)
+    fetch(`http://localhost:4000/api/v1/services/search?value=${value}`)
       .then((response) => response.json())
       .then((json) => {
         const filteredResults = json.map((service) => ({
