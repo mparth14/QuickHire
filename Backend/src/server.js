@@ -39,15 +39,19 @@ app.use('/api/v1/services', servicesData);
 app.use('/api/v1/categories', categoriesData);
 
 connectDB()
-.then(() => {
+  .then(() => {
     app.listen(process.env.PORT || 4000, () => {
-        console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+      console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
     })
-})
-.catch((err) => {
+  })
+  .catch((err) => {
     console.log("MONGO db connection failed !!! ", err);
-})
+  })
 
 app.get("/", (req, res) => {
     res.send("Server is running!")
 })
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
