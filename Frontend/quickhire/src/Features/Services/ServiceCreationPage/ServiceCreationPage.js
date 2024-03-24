@@ -46,16 +46,13 @@ const ServiceCreationPage = () => {
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const [wholeCategoryOptions, setWholeCategoryOptions] = useState([]);
   const [subcategoryOptions, setSubcategoryOptions] = useState([]);
 
-   const uploadImageToFirebase = async (image) => {
+  const uploadImageToFirebase = async (image) => {
     const imageUUID = v4();
     const imageRef = ref(imageStorage, `files/${imageUUID}`);
     await uploadBytes(imageRef, image);
-    const imageURL = await getDownloadURL(
-      ref(imageStorage, `files/${imageUUID}`)
-    );
+    const imageURL = await getDownloadURL(ref(imageStorage, `files/${imageUUID}`));
     return imageURL;
   };
 
@@ -64,8 +61,7 @@ const ServiceCreationPage = () => {
     fetch('http://localhost:4000/api/v1/categories')
       .then(response => response.json())
       .then(({ data }) => {
-        setCategoryOptions(data.map(category => category.name));
-        setWholeCategoryOptions(data)
+        setCategoryOptions(data);
       })
       .catch(error => console.error('Error fetching categories:', error));
   }, []);
@@ -74,16 +70,11 @@ const ServiceCreationPage = () => {
     const selectedCategory = event.target.value;
     setCategory(selectedCategory);
 
-    const selectedCategoryObject = categoryOptions.find(cat => cat === selectedCategory);
-    if (selectedCategoryObject) {
-      const categoryData = wholeCategoryOptions.find(cat => cat.name === selectedCategory);
-      if (categoryData) {
-        setSubcategoryOptions(categoryData.subcategories);
-      } else {
-        console.error(`Subcategories for ${selectedCategory} not found.`);
-      }
+    const categoryData = categoryOptions.find(cat => cat.name === selectedCategory);
+    if (categoryData) {
+      setSubcategoryOptions(categoryData.subcategories);
     } else {
-      console.error(`Category ${selectedCategory} not found.`);
+      console.error(`Subcategories for ${selectedCategory} not found.`);
     }
 
     setSubcategory('');
@@ -112,52 +103,43 @@ const ServiceCreationPage = () => {
       toast.warning('Description should be a minimum of 120 characters.');
       return;
     }
-    const profilePictureURL = await uploadImageToFirebase(selectedFile);
-
-    try{
+    
+    try {
       const profilePictureURL = await uploadImageToFirebase(selectedFile);
 
-    const response = await fetch('http://localhost:4000/api/v1/services', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        category,
-        subCategory: subcategory,
-        price: parseFloat(price),
-        sellerId: '1', // Hardcoded for testing
-        imgUrl: profilePictureURL,
-      }),
-    });
-
-    const responseData = await response.json();
-    console.log("responseData",responseData);
-
-    if (response.ok) {
-      toast.success('Service Created Successfully!', {
-        style: {
-          backgroundColor: '#5DA3A0',
-          color: '#ffffff',
+      const response = await fetch('http://localhost:4000/api/v1/services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          title,
+          description,
+          category,
+          subCategory: subcategory,
+          price: parseFloat(price),
+          sellerId: '1', // Hardcoded for testing
+          imgUrl: profilePictureURL,
+        }),
       });
 
-      // Reset form fields
-      event.target.reset();
-      setSelectedFile(null);
-      setCategory('');
-      setSubcategory('');
-  
-    } else {
-      toast.error('Error creating service. Please try again.');
+      const responseData = await response.json();
+
+      if (response.ok) {
+        toast.success('Service Created Successfully!');
+
+        // Reset form fields
+        event.target.reset();
+        setSelectedFile(null);
+        setCategory('');
+        setSubcategory('');
+      } else {
+        toast.error('Error creating service. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating service:', error);
+      toast.error('An unexpected error occurred. Please try again later.');
     }
-  } catch (error) {
-    console.error('Error creating service:', error);
-    toast.error('An unexpected error occurred. Please try again later.');
-  }
- 
   };
 
   const handleFileChange = (event) => {
@@ -202,9 +184,9 @@ const ServiceCreationPage = () => {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {categoryOptions.map((category, index) => (
-                      <MenuItem key={index} value={category}>
-                        {category}
+                    {categoryOptions.map((category) => (
+                      <MenuItem key={category._id} value={category.name}>
+                        {category.name}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -224,9 +206,10 @@ const ServiceCreationPage = () => {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {subcategoryOptions.map((subcategory, index) => (
-                      <MenuItem key={index} value={subcategory}>
-                        {subcategory}
+                    {subcategoryOptions.map((subcategory) => (
+                      <MenuItem key={subcategory._id} value={subcategory.name}>
+                       
+                       {subcategory.name}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -280,4 +263,3 @@ const ServiceCreationPage = () => {
 };
 
 export default ServiceCreationPage;
-
