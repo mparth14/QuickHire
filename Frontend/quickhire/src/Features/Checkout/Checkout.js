@@ -11,6 +11,7 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { loadStripe } from '@stripe/stripe-js';
 
 const services = [
   {
@@ -38,6 +39,17 @@ const services = [
 ];
 
 const CheckoutPage = () => {
+  const stripePromise = loadStripe(
+    'pk_test_51OpaEIEESxxIMUb2yF1IhG32GJV16TiGcwKKJnQgz4X726DbQscGQRRHqe5TzKoqftbBHxiQgrVPq6pebSNDfsaR00mrbuYE1E',
+  );
+
+  // Initialize total cost to 0
+  let totalCost = 0;
+
+  // Loop through each service and add its cost to the totalCost
+  for (const service of services) {
+    totalCost += service.cost;
+  }
   const cardStyle = {
     transition: 'transform 0.3s ease',
   };
@@ -48,6 +60,30 @@ const CheckoutPage = () => {
 
   const handleHoverEnd = (event) => {
     event.currentTarget.style.transform = 'scale(1)';
+  };
+
+  const handleCheckout = async () => {
+    const stripe = await stripePromise;
+
+    // Call your backend to create a Stripe Checkout Session
+    const response = await fetch('http://localhost:4000/api/v1/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ items: services }),
+    });
+
+    const session = await response.json();
+
+    // Redirect to Stripe Checkout
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      console.error(result.error.message);
+    }
   };
 
   return (
@@ -121,7 +157,12 @@ const CheckoutPage = () => {
         </Typography>
       </Box>
       <Box mt={4} display='flex' justifyContent='center'>
-        <Button variant='contained' color='primary' size='large'>
+        <Button
+          onClick={handleCheckout}
+          variant='contained'
+          color='primary'
+          size='large'
+        >
           Checkout
         </Button>
       </Box>
