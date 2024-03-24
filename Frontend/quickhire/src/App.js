@@ -15,6 +15,7 @@ import Navbar from "./CommonComponents/Navbar/Navbar.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
 import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
 import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
+import ManageService from "./Features/Services/ManageService/ManageService.js";
 
 function App() {
   return (
@@ -50,8 +51,11 @@ function App() {
           <Route exact path="/service-creation">
             <ServiceCreationPage />
           </Route>
+          <Route exact path="/service-manage">
+            <ManageService />
+          </Route>
         </Switch>
-        <Footer />
+        <Footer/>
       </Router>
       <ToastContainer />
     </div>
