@@ -1,0 +1,32 @@
+.grow {
+    flex-grow: 1;
+}
+.border-status{
+    border-radius: 12px;
+}
+.image-css {
+    width: 250px;
+    padding-bottom: 8px;
+}
+.nav-appbar {
+    padding-right: 10px;
+    background-color: #1f91cc !important;
+}
+.search-bar-container{
+    margin-left: 300px;
+    width: 600px;
+}
+@media only screen and (max-width: 768px) {
+    .image-css {
+      width: 175px;
+    }
+}
+@media only screen and (max-width: 568px) {
+    .image-css {
+        content: url('../../assets/logo-mobile.svg');
+        width: 30px;
+        margin-right: 25px;
+        align-items: center;
+        margin-top: 14px;
+    }
+}
