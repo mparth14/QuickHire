@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
@@ -21,10 +21,13 @@ import {
     DialogContent,
     DialogActions,
     CardActionArea,
-    CardMedia
+    CardMedia,
+    Tooltip
 } from '@material-ui/core';
 
+import { green } from '@material-ui/core/colors';
 import { Close, Edit, Delete, Block, CheckCircle } from '@material-ui/icons';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { imageStorage } from '../../../utils/firebaseConfig.js';
@@ -55,10 +58,10 @@ const useStyles = makeStyles((theme) => ({
     media: {
         height: 140,
         width: '100%',
-        objectFit: 'cover', 
+        objectFit: 'cover',
     },
     cardContent: {
-        flex: '1', 
+        flex: '1',
         padding: `${theme.spacing(2)}px !important`,
         display: 'flex',
         flexDirection: 'column',
@@ -71,14 +74,14 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'nowrap',
     },
     cardDescription: {
-        flex: '1', 
+        flex: '1',
         marginBottom: theme.spacing(1),
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
     cardActions: {
-        marginTop: 'auto', 
-        justifyContent: 'flex-end', 
+        marginTop: 'auto',
+        justifyContent: 'flex-end',
     },
 }));
 
@@ -127,7 +130,11 @@ const ManageService = () => {
     const [editedService, setEditedService] = useState({});
     const [confirmDisableDialogOpen, setConfirmDisableDialogOpen] = useState(false);
     const [disableServiceId, setDisableServiceId] = useState('');
+    const fileInputRef = useRef(null);
+    const [confirmEnableDialogOpen, setConfirmEnableDialogOpen] = useState(false);
+    const [enableServiceId, setEnableServiceId] = useState('');
 
+    // Function to upload image to Firebase
     const uploadImageToFirebase = async (image) => {
         const imageUUID = v4();
         const imageRef = ref(imageStorage, `files/${imageUUID}`);
@@ -136,16 +143,25 @@ const ManageService = () => {
         return imageURL;
     };
 
+    // Function to handle enabling service
+    const handleEnableService = (serviceId) => {
+        setEnableServiceId(serviceId);
+        setConfirmEnableDialogOpen(true);
+    };
+
+    // Function to fetch categories from API
     const fetchCategories = () => {
         fetch('http://localhost:4000/api/v1/categories')
             .then((response) => response.json())
             .then(({ data }) => {
-                setCategoryOptions(data.map((category) => category.name));
                 setWholeCategoryOptions(data);
+                const categories = data.map((category) => category.name);
+                setCategoryOptions(categories);
             })
             .catch((error) => console.error('Error fetching categories:', error));
     };
 
+    // Function to fetch services from API
     const fetchServices = () => {
         fetch('http://localhost:4000/api/v1/services')
             .then((response) => response.json())
@@ -160,18 +176,15 @@ const ManageService = () => {
         fetchServices();
     }, []);
 
+    // Function to handle category change
     const handleCategoryChange = (event) => {
         const selectedCategory = event.target.value;
         setCategory(selectedCategory);
 
-        const selectedCategoryObject = categoryOptions.find((cat) => cat === selectedCategory);
+        const selectedCategoryObject = wholeCategoryOptions.find((cat) => cat.name === selectedCategory);
         if (selectedCategoryObject) {
-            const categoryData = wholeCategoryOptions.find((cat) => cat.name === selectedCategory);
-            if (categoryData) {
-                setSubcategoryOptions(categoryData.subcategories);
-            } else {
-                console.error(`Subcategories for ${selectedCategory} not found.`);
-            }
+            const subcategoryNames = selectedCategoryObject.subcategories.map(subcategory => subcategory.name);
+            setSubcategoryOptions(subcategoryNames || []);
         } else {
             console.error(`Category ${selectedCategory} not found.`);
         }
@@ -179,22 +192,31 @@ const ManageService = () => {
         setSubcategory('');
     };
 
+    // Function to handle tab change
     const handleTabChange = (event, newValue) => {
         setActiveTabIndex(newValue);
     };
 
+    // Function to handle editing service
     const handleEditService = (service) => {
         setEditedService(service);
-        console.log("Edited Category:", service.category);
-console.log("Edited Subcategory:", service.subCategory);
+        if (service) {
+            setCategory(service.category)
+            setSubcategory(service.subCategory)
+            const selectedCategoryObject = wholeCategoryOptions.find((cat) => cat.name === service.category);
+            const subcategoryNames = selectedCategoryObject.subcategories.map(subcategory => subcategory.name);
+            setSubcategoryOptions(subcategoryNames || []);
+        }
         setEditModalOpen(true);
     };
 
+    // Function to handle disabling service
     const handleDisableService = (serviceId) => {
         setDisableServiceId(serviceId);
         setConfirmDisableDialogOpen(true);
     };
 
+    // Function to confirm disabling service
     const handleConfirmDisableService = async () => {
         try {
             const response = await fetch(`http://localhost:4000/api/v1/services/${disableServiceId}`, {
@@ -219,14 +241,17 @@ console.log("Edited Subcategory:", service.subCategory);
         }
     };
 
+    // Function to handle form submission
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const title = event.target.elements.title.value;
         const price = event.target.elements.price.value;
         const description = event.target.elements.description.value;
+        const category = event.target.elements.Category.value;
+        const subcategory = event.target.elements.Subcategory.value;
 
-        if (!title || !price || !category || !subcategory || !description || !selectedFile) {
+        if (!title || !price || !category || !subcategory || !description || !editedService.imgUrl) {
             toast.warning('Please fill in all required fields and upload an image.');
             return;
         }
@@ -237,9 +262,14 @@ console.log("Edited Subcategory:", service.subCategory);
         }
 
         try {
-            const profilePictureURL = await uploadImageToFirebase(selectedFile);
+            let profilePictureURL
+            if (!selectedFile) {
+                profilePictureURL = editedService.imgUrl
+            } else {
+                profilePictureURL = await uploadImageToFirebase(selectedFile);
+            }
 
-            const response = await fetch('http://localhost:4000/api/v1/services', {
+            const response = await fetch(`http://localhost:4000/api/v1/services/${editedService._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -250,11 +280,12 @@ console.log("Edited Subcategory:", service.subCategory);
                     category,
                     subCategory: subcategory,
                     price: parseFloat(price),
-                    sellerId: '1', 
+                    sellerId: '1',
                     imgUrl: profilePictureURL,
                 }),
             });
             if (response.ok) {
+                setEditModalOpen(false)
                 toast.success('Service Updated Successfully!');
                 event.target.reset();
                 setSelectedFile(null);
@@ -270,13 +301,55 @@ console.log("Edited Subcategory:", service.subCategory);
         }
     };
 
+    // Function to handle file change
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file && file.type.includes('image')) {
             setSelectedFile(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                setEditedService(prevState => ({
+                    ...prevState,
+                    imgUrl: reader.result 
+                }));
+            };
         } else {
-            toast.warning('Invalid file type. Please select an image.');
-            event.target.value = null;
+            if (!editedService.imgUrl) {
+                setSelectedFile(null);
+                setEditedService(prevState => ({ ...prevState, imgUrl: '' }));
+                toast.warning('Invalid file type. Please select an image.');
+            } else {
+                setSelectedFile(null);
+            }
+            if (fileInputRef.current) {
+                fileInputRef.current.value = null; 
+            }
+        }
+    };
+
+    const handleConfirmEnableService = async () => {
+        try {
+            const response = await fetch(`http://localhost:4000/api/v1/services/${enableServiceId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    isActive: true,
+                }),
+            });
+            if (response.ok) {
+                toast.success('Service enabled successfully.');
+                fetchServices();
+            } else {
+                toast.error('Error enabling service. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error enabling service:', error);
+            toast.error('An unexpected error occurred. Please try again later.');
+        } finally {
+            setConfirmEnableDialogOpen(false);
         }
     };
 
@@ -319,7 +392,7 @@ console.log("Edited Subcategory:", service.subCategory);
                                                     :
                                                     <CardMedia
                                                         className={classes.media}
-                                                        image="https://firebasestorage.googleapis.com/v0/b/quickhire-d317e.appspot.com/o/images%2Fplaceholder.png?alt=media&token=07b5ea18-a770-44e2-8745-8e7239f25b50" 
+                                                        image="https://firebasestorage.googleapis.com/v0/b/quickhire-d317e.appspot.com/o/images%2Fplaceholder.png?alt=media&token=07b5ea18-a770-44e2-8745-8e7239f25b50"
                                                         title="Placeholder Image"
                                                     />}
                                                 <CardContent className={classes.cardContent}>
@@ -351,17 +424,18 @@ console.log("Edited Subcategory:", service.subCategory);
                                                 <Typography variant="body2" color="textSecondary" component="p" style={{ marginRight: 'auto' }}>
                                                     ${service.price.toFixed(2)} per hour
                                                 </Typography>
-                                                <IconButton onClick={() => handleEditService(service)}>
-                                                    <Edit />
-                                                </IconButton>
-                                                <IconButton onClick={() => handleDisableService(service._id)}>
-                                                    <Block color="secondary" />
-                                                </IconButton>
+                                                <Tooltip title="Edit Service">
+                                                    <IconButton onClick={() => handleEditService(service)}>
+                                                        <Edit />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Disable Service">
+                                                    <IconButton onClick={() => handleDisableService(service._id)}>
+                                                        <Block color="secondary" />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </CardActions>
                                         </Card>
-
-
-
                                     </Grid>
                                 ))}
                         </Grid>
@@ -389,7 +463,7 @@ console.log("Edited Subcategory:", service.subCategory);
                                                 ) : (
                                                     <CardMedia
                                                         className={classes.media}
-                                                        image="https://firebasestorage.googleapis.com/v0/b/quickhire-d317e.appspot.com/o/images%2Fplaceholder.png?alt=media&token=07b5ea18-a770-44e2-8745-8e7239f25b50" 
+                                                        image="https://firebasestorage.googleapis.com/v0/b/quickhire-d317e.appspot.com/o/images%2Fplaceholder.png?alt=media&token=07b5ea18-a770-44e2-8745-8e7239f25b50"
                                                         title="Placeholder Image"
                                                     />
                                                 )}
@@ -403,9 +477,11 @@ console.log("Edited Subcategory:", service.subCategory);
                                                 </CardContent>
                                             </CardActionArea>
                                             <CardActions className={classes.cardActions}>
-                                                <IconButton onClick={() => handleEditService(service)}>
-                                                    <Edit />
-                                                </IconButton>
+                                                <Tooltip title="Enable Service">
+                                                    <IconButton onClick={() => handleEnableService(service._id)}>
+                                                        <VisibilityIcon style={{ color: green[500] }} />
+                                                    </IconButton>
+                                                </Tooltip>
                                             </CardActions>
                                         </Card>
                                     </Grid>
@@ -452,7 +528,7 @@ console.log("Edited Subcategory:", service.subCategory);
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         className={classes.focusedInput}
-                                        value={editedService.category} 
+                                        value={category}
                                         name="Category"
                                         onChange={handleCategoryChange}
                                         variant="outlined"
@@ -473,14 +549,13 @@ console.log("Edited Subcategory:", service.subCategory);
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         className={classes.focusedInput}
-                                        value={editedService.subCategory}  
+                                        value={subcategory}
                                         onChange={(e) => setSubcategory(e.target.value)}
                                         variant="outlined"
                                         label="Subcategory"
                                         name="Subcategory"
                                         fullWidth
                                         select
-                                        disabled={!category}
                                     >
                                         <MenuItem value="">
                                             <em>None</em>
@@ -492,7 +567,6 @@ console.log("Edited Subcategory:", service.subCategory);
                                         ))}
                                     </TextField>
                                 </Grid>
-
                                 <Grid item xs={12}>
                                     <TextField
                                         name="description"
@@ -511,6 +585,7 @@ console.log("Edited Subcategory:", service.subCategory);
                                         accept="image/*"
                                         id="contained-button-file"
                                         type="file"
+                                        ref={fileInputRef}
                                         style={{ display: 'none' }}
                                         onChange={handleFileChange}
                                     />
@@ -522,6 +597,23 @@ console.log("Edited Subcategory:", service.subCategory);
                                             {selectedFile ? selectedFile.name : 'Choose Image'}
                                         </Button>
                                     </label>
+                                    {editedService.imgUrl && (
+                                        <>
+                                            <Box mt={2}>
+                                                <Typography variant="body2">Current Image:</Typography>
+                                                <img src={editedService.imgUrl} alt="Current Service Image" style={{ maxWidth: '100%', maxHeight: '200px', marginTop: '8px' }} />
+                                            </Box>
+                                            <Button variant="outlined" color="secondary" onClick={() => {
+                                                setSelectedFile(null);
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = null; 
+                                                }
+                                                setEditedService(prevState => ({ ...prevState, imgUrl: '' }))
+                                            }}>
+                                                Remove Image
+                                            </Button>
+                                        </>
+                                    )}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Button
@@ -537,6 +629,8 @@ console.log("Edited Subcategory:", service.subCategory);
                         </form>
                     </Box>
                 </Modal>
+
+                {/* Confirmation Dialogs */}
                 <Dialog open={confirmDisableDialogOpen} onClose={() => setConfirmDisableDialogOpen(false)}>
                     <DialogTitle>Confirm Disable Service</DialogTitle>
                     <DialogContent>
@@ -553,10 +647,25 @@ console.log("Edited Subcategory:", service.subCategory);
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Dialog open={confirmEnableDialogOpen} onClose={() => setConfirmEnableDialogOpen(false)}>
+                    <DialogTitle>Confirm Enable Service</DialogTitle>
+                    <DialogContent>
+                        <Typography variant="body1">
+                            Are you sure you want to enable this service?
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setConfirmEnableDialogOpen(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleConfirmEnableService} color="secondary">
+                            Enable
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Container>
         </ThemeProvider>
     );
 };
 
 export default ManageService;
-
