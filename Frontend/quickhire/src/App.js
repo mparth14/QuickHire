@@ -4,7 +4,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Home from './Features/Home/Home';
 import SignUp from './Features/Authentication/Signup/Signup';
-import SignUpSeller from './Features/SignUpSeller/signupseller';
 import Checkout from './Features/Checkout/Checkout';
 import ContactUs from './Features/ContactUs/ContactUs.js';
 import './App.css';
@@ -21,6 +20,7 @@ import Blog from './Features/Blog/Blog';
 import SubCategoryService from './Features/SubCategoryService/SubCategoryService';
 import PaymentSuccess from './Features/Payment/PaymentSuccess.js';
 import PaymentFailure from './Features/Payment/PaymentFailure.js';
+import SignUpFreelancer from './Features/SignUpFreelancer/SignUpFreelancer.js';
 
 function App() {
   return (
@@ -35,8 +35,8 @@ function App() {
           <Route exact path='/signup'>
             <SignUp />
           </Route>
-          <Route exact path='/signupseller'>
-            <SignUpSeller />
+          <Route exact path='/register-freelancer'>
+            <SignUpFreelancer />
           </Route>
           <Route exact path='/checkout'>
             <Checkout />

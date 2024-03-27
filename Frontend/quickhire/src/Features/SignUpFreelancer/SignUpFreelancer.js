@@ -8,22 +8,55 @@ import { FaTimes, FaPlus } from 'react-icons/fa';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useHistory } from 'react-router-dom';
 
-const SignUpComponent = () => {
+const SignUpFreelancer = () => {
   const navigate = useHistory();
   const [skills, setSkills] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedProfileFile, setSelectedProfileFile] = useState(null);
+  const [selectedResumeFile, setSelectedResumeFile] = useState(null);
   const [fullNameError, setFullNameError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [primaryOccupationError, setPrimaryOccupationError] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [yearsOfExperienceError, setYearsOfExperienceError] = useState('');
 
-  const handleFileChange = (event) => {
+  const handleProfileFileChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
-    document.getElementById(
-      'selectedFileName',
-    ).innerText = `Selected File: ${file.name}`;
+    const allowedFormats = ['image/jpeg', 'image/jpg', 'image/png'];
+
+    if (file && allowedFormats.includes(file.type)) {
+      setSelectedProfileFile(file);
+      document.getElementById(
+        'selectedProfileFileName',
+      ).innerText = `Selected Profile Picture: ${file.name}`;
+    } else {
+      setSelectedProfileFile(null);
+      const errorText = document.getElementById('selectedProfileFileName');
+      errorText.innerText =
+        'Please select a valid image file (jpg, jpeg, or png).';
+      errorText.style.color = 'red';
+    }
+  };
+
+  const handleResumeFileChange = (event) => {
+    const file = event.target.files[0];
+    const allowedFormats = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
+    if (file && allowedFormats.includes(file.type)) {
+      setSelectedResumeFile(file);
+      document.getElementById(
+        'selectedResumeFileName',
+      ).innerText = `Selected Resume: ${file.name}`;
+    } else {
+      // Reset the selected file and display an error message
+      setSelectedResumeFile(null);
+      const errorText = document.getElementById('selectedResumeFileName');
+      errorText.innerText = 'Please select a valid file (PDF, DOC, or DOCX).';
+      errorText.style.color = 'red'; // Applying inline CSS for red color
+    }
   };
 
   const handleAddSkill = () => {
@@ -86,6 +119,21 @@ const SignUpComponent = () => {
   return (
     <Container maxWidth='md' sx={{ paddingY: 4 }}>
       <div>
+        <Typography
+          variant='h3'
+          align='center'
+          gutterBottom
+          style={{
+            fontFamily: 'Arial, sans-serif',
+            fontWeight: 'bolder',
+            color: 'black',
+            letterSpacing: '1px',
+            marginBottom: '20px',
+          }}
+        >
+          Register as a Freelancer
+        </Typography>
+
         <Typography variant='h4' gutterBottom color='primary'>
           Personal Information
         </Typography>
@@ -134,10 +182,11 @@ const SignUpComponent = () => {
             id='profilePicture'
             type='file'
             style={{ display: 'none' }}
-            onChange={handleFileChange}
+            onChange={handleProfileFileChange}
+            accept='.jpg,.jpeg,.png'
           />
         </Button>
-        <div id='selectedFileName' className='selected-file'></div>
+        <div id='selectedProfileFileName' className='selected-file'></div>
 
         <Typography variant='h5' gutterBottom color='primary'>
           Professional Information
@@ -234,10 +283,11 @@ const SignUpComponent = () => {
             id='resume'
             type='file'
             style={{ display: 'none' }}
-            onChange={handleFileChange}
+            onChange={handleResumeFileChange}
+            accept='.pdf,.doc,.docx'
           />
         </Button>
-        <div id='selectedFileName' className='selected-file'></div>
+        <div id='selectedResumeFileName' className='selected-file'></div>
         <div
           style={{
             display: 'flex',
@@ -254,4 +304,4 @@ const SignUpComponent = () => {
   );
 };
 
-export default SignUpComponent;
+export default SignUpFreelancer;
