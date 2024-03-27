@@ -45,15 +45,15 @@ app.use('/api/v1/services', servicesData);
 app.use('/api/v1/categories', categoriesData);
 app.use('/api/v1', paymentRoutes);
 
-// connectDB()
-//   .then(() => {
-//     app.listen(process.env.PORT || 4000, () => {
-//       console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
-//     });
-//   })
-//   .catch((err) => {
-//     console.log('MONGO db connection failed !!! ', err);
-//   });
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 4000, () => {
+      console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log('MONGO db connection failed !!! ', err);
+  });
 
 app.get('/', (req, res) => {
   res.send('Server is running!');
