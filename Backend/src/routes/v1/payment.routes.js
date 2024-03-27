@@ -1,8 +1,12 @@
+// Author: Parth Modi
+
 import express from 'express';
 const router = express.Router();
 import Stripe from 'stripe';
 
-const stripe = Stripe('sk_test_51OpaEIEESxxIMUb2qqXQpcSqLoxrYyCJKof5zYBFTCxiUnUtYcVofHdVhEJDbbXFtutZRd36XwbqSdbgtVET0N4W00vB933MHY');
+const stripe = Stripe(
+  'sk_test_51OpaEIEESxxIMUb2qqXQpcSqLoxrYyCJKof5zYBFTCxiUnUtYcVofHdVhEJDbbXFtutZRd36XwbqSdbgtVET0N4W00vB933MHY',
+);
 
 router.post('/create-checkout-session', async (req, res) => {
   const { items } = req.body;

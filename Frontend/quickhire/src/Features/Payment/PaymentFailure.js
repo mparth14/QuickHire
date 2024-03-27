@@ -1,3 +1,5 @@
+// Author: Parth Modi
+
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';

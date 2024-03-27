@@ -1,3 +1,5 @@
+// Author: Parth Modi
+
 import React from 'react';
 import {
   Box,
@@ -66,13 +68,16 @@ const CheckoutPage = () => {
     const stripe = await stripePromise;
 
     // Call your backend to create a Stripe Checkout Session
-    const response = await fetch('http://localhost:4000/api/v1/create-checkout-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      'http://localhost:4000/api/v1/create-checkout-session',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: services }),
       },
-      body: JSON.stringify({ items: services }),
-    });
+    );
 
     const session = await response.json();
 
