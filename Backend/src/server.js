@@ -75,7 +75,3 @@ app.post('/api/v1/checkout', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});

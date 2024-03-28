@@ -23,13 +23,27 @@ export const register = async (req, res) => {
         address: req.body.address,
         profilePictureUrl: req.body.profilePictureUrl
     });
+    const username = req.body.username;
+    const email = req.body.email;
     try {
-      const newUser = await user.save();
-      const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, {
-        expiresIn: '1 hour'
-      });
+      const usernameExists = await User.find({username});
+      const emailExists = await User.find({email});
 
-      res.status(201).json({user: newUser, token: token});
+      if(emailExists.length > 0){
+        res.status(409).json({error:"Email already registered"});
+      }
+      else if(usernameExists.length > 0){
+        res.status(409).json({error:"Username already exists"});
+      }
+      else{
+        const newUser = await user.save();
+        const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, {
+          expiresIn: '1 hour'
+        });
+
+        res.status(201).json({user: newUser, token: token});
+      }
+      
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
