@@ -20,7 +20,8 @@ export const register = async (req, res) => {
         email: req.body.email,
         mobile: req.body.mobile,
         password: hash,
-        address: req.body.address
+        address: req.body.address,
+        profilePictureUrl: req.body.profilePictureUrl
     });
     try {
       const newUser = await user.save();

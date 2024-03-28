@@ -40,7 +40,7 @@ export const updateUser = async (req, res) => {
     res.user.address = req.body.address == null ? res.user.address :  req.body.address;
     res.user.isFreelancer = req.body.isFreelancer == null ? res.user.isFreelancer :  req.body.isFreelancer;
     res.user.password = req.body.password == null ? res.user.password :  await bcrypt.hash(req.body.password, 10);
-
+    res.user.profilePictureUrl = req.body.profilePictureUrl == null ? res.user.profilePictureUrl : req.body.profilePictureUrl;
     try {
         const updatedUser = await res.user.save();
         res.json(updatedUser);

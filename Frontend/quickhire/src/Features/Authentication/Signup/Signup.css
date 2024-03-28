@@ -1,0 +1,22 @@
+.signup-content {
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-content {
+    height: 125vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-button {
+    background-color: #3f51b5 !important;
+    color: #fff !important;
+    width: 100% !important;
+    margin-top: 16px !important;
+}
+
+.selected-file {
+    
+}

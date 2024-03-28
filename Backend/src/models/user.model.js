@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   address: String,
   password: String,
+  profilePictureUrl: String,
   isFreelancer: {
     type: Boolean,
     default: false,
