@@ -15,7 +15,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <Box component="footer" bgcolor="#f5f5f5" pb={4} boxShadow={2} mt={4}>
+    <Box component="footer" bgcolor="#e6f1ed" pb={4} boxShadow={2} mt={4}>
       <Container>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={4}>

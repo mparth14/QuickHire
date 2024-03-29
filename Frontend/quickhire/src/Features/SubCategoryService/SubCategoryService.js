@@ -14,6 +14,8 @@ import RatingFilter from '../Filters/RatingFilters';
 import BudgetFilter from '../Filters/BudgetFilter';
 import PopularFilter from '../Filters/PopularFilter';
 import { CONFIG } from '../../config';
+import { useHistory } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -34,11 +36,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleClick(event) {
-  event.preventDefault();
-  console.info('You clicked a breadcrumb.');
-}
 const SubCategoryService = () => {
+  const history = useHistory(); // Initialize useHistory
   const classes = useStyles();
   const [state, setState] = React.useState(0);
   const [filterState, setFilterState] = useState([]);
@@ -49,6 +48,15 @@ const SubCategoryService = () => {
   const [totalServices, setTotalServices] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (event.target.tagName === "svg") {
+    history.push('/');
+  } else {
+    history.push(`/category/${category}`);
+  }
+  };
 
 
   useEffect(() => {
@@ -179,14 +187,14 @@ const SubCategoryService = () => {
     <div style={{ marginLeft: "5%", marginRight: "5%" }}>
       <div className='breadcrumbs-css' style={{ marginLeft: "8px" }}>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link href="/" onClick={handleClick} className={classes.link}>
+          <Link onClick={handleClick} className={classes.link}>
             <HomeIcon className={classes.icon} />
           </Link>
-          <Link color="inherit" href="subcategory" onClick={handleClick} className="link-deco" style={{textTransform: "capitalize"}} > {category} </Link>
+          <Link color="inherit" onClick={handleClick} style={{textTransform: "capitalize"}} > {category} </Link>
         </Breadcrumbs>
       </div>
       <div >
-        <h2 style={{ marginLeft: "8px", marginTop: "20px", marginBottom: "20px" }}>{subCategory}</h2>
+        <h2 style={{ marginLeft: "8px", marginTop: "20px", marginBottom: "20px", color: "#3f51b5" }}>{subCategory}</h2>
         <div>
           {currentItems.length > 0 && (
             <div>
@@ -198,7 +206,7 @@ const SubCategoryService = () => {
         </div>
 
         <br />
-        <h3 style={{ marginLeft: "8px" }}>{totalServices} Services available</h3>
+        <h3 style={{ marginLeft: "8px", color:"#3f51b5" }}>{totalServices} Services available</h3>
       </div>
       <div>
         <div className='sub-cat' style={{ display: 'flex', justifyContent: 'center' }}>

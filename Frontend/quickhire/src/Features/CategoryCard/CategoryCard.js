@@ -69,7 +69,7 @@ export default function MediaCard() {
   return (
     <div style={{marginLeft: "5%", marginRight: "5%"}}>
       <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
-      <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "green"}}>Explore {categoryFromURL}</h2>
+      <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "#3f51b5"}}>Explore {categoryFromURL}</h2>
     </div>
     <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
       <div className='card-design'>
