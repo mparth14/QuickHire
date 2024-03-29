@@ -3,6 +3,7 @@
 import express from 'express';
 const router = express.Router();
 import Stripe from 'stripe';
+import CartItem from '../../models/cart.model.js';
 
 const stripe = Stripe(
   'sk_test_51OpaEIEESxxIMUb2qqXQpcSqLoxrYyCJKof5zYBFTCxiUnUtYcVofHdVhEJDbbXFtutZRd36XwbqSdbgtVET0N4W00vB933MHY',
@@ -11,17 +12,16 @@ const stripe = Stripe(
 router.post('/create-checkout-session', async (req, res) => {
   const { items } = req.body;
 
-  // Create a list of line items for the Checkout Session
   const lineItems = items.map((item) => ({
     price_data: {
       currency: 'cad',
       product_data: {
         name: item.title,
-        images: [item.image],
+        images: [item.imgUrl],
       },
-      unit_amount: item.cost * 100, // Stripe requires amount in cents
+      unit_amount: item.price * 100,
     },
-    quantity: item.quantity,
+    quantity: 1,
   }));
 
   // Create a Stripe Checkout Session
@@ -30,8 +30,8 @@ router.post('/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: 'http://localhost:3000/payment-success', // Redirect after successful payment
-      cancel_url: 'http://localhost:3000/payment-failure', // Redirect if payment is canceled
+      success_url: 'http://localhost:3000/payment-success',
+      cancel_url: 'http://localhost:3000/payment-failure',
     });
 
     res.json({ id: session.id });
@@ -39,5 +39,40 @@ router.post('/create-checkout-session', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.post('/webhook', async (req, res) => {
+  const event = req.body;
+
+  try {
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      await clearCartItems(session.customer);
+    }
+
+    res.status(200).send();
+  } catch (error) {
+    console.error('Error processing webhook:', error);
+    res.status(500).send('Webhook Error');
+  }
+});
+
+async function clearCartItems(userId) {
+  try {
+    // Find all cart items associated with the user ID
+    const cartItems = await CartItem.find({ userId });
+
+    console.log(`Found ${cartItems.length} cart items for user ${userId}`);
+
+    // Remove all cart items found
+    const deletionResult = await CartItem.deleteMany({ userId });
+
+    console.log(
+      `Deleted ${deletionResult.deletedCount} cart items for user ${userId}`,
+    );
+  } catch (error) {
+    console.error('Error clearing cart items:', error);
+    throw error; // Throw the error to handle it in the calling function
+  }
+}
 
 export default router;
