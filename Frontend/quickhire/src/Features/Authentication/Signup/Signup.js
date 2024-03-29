@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { InputLabel, IconButton, InputAdornment } from '@mui/material';
 import { Grid, Paper, Typography, TextField, Button, makeStyles } from "@material-ui/core";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -8,6 +8,7 @@ import Background from "../../../assets/BackGround.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { BACKEND_URL, BACKEND_PORT, SIGNUP_PATH } from '../../../constants/common-constants';
+import { AuthContext } from '../../AuthContext';
 
 import "./Signup.css";
 
@@ -35,6 +36,7 @@ const Singup = () => {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { setToken } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -114,7 +116,6 @@ const Singup = () => {
 
     if (isValid) {
       signupUser();
-      //navigate('/success');
     }
   };
 
@@ -130,15 +131,20 @@ const Singup = () => {
     axios.post(BACKEND_URL + BACKEND_PORT + SIGNUP_PATH, signupRequest)
     .then((response) => {
       console.log(response);
-      //TODO: Store profile picture and route to home page
+      if(response.status == 200){
+        //TODO: route to home page
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+        navigate.push("/home");
+      }
     })
     .catch(function (error) {
       if(error.response.status == 409){
-        if(error.response.data.error == "Email already registered"){
-          setEmailError(error.response.data.error);
+        if(error.response.data.message == "Email already registered"){
+          setEmailError(error.response.data.message);
         }
-        if(error.response.data.error == "Username already exists"){
-          setUserNameError(error.response.data.error);
+        if(error.response.data.message == "Username already exists"){
+          setUserNameError(error.response.data.message);
         }
       }
       else{
@@ -151,7 +157,7 @@ const Singup = () => {
     <Parallax
       bgImage={Background}
       strength={10}
-      className='parallax-content'
+      className='signup-parallax-content'
     >
       <Paper className={classes.parentCard}>
         <Grid container className='signup-content'>
