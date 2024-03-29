@@ -16,7 +16,6 @@ import ServiceOrdersView from './Features/Services/ServiceOrders/ServiceOrdersVi
 import ServiceCreationPage from './Features/Services/ServiceCreationPage/ServiceCreationPage.js';
 
 import CategoryCard from './Features/CategoryCard/CategoryCard';
-import Blog from './Features/Blog/Blog';
 import SubCategoryService from './Features/SubCategoryService/SubCategoryService';
 import PaymentSuccess from './Features/Payment/PaymentSuccess.js';
 import PaymentFailure from './Features/Payment/PaymentFailure.js';
@@ -58,7 +57,6 @@ function App() {
           </Route>
           <Route exact path='/category/:name'>
             <CategoryCard />
-            <Blog />
           </Route>
           <Route exact path='/subcategory/:name'>
             <SubCategoryService />
