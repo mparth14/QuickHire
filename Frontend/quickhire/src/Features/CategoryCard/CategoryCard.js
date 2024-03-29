@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import "./CategoryCard.css";
+import { CONFIG } from '../../config';
 
 
 const useStyles = makeStyles({
@@ -25,7 +26,7 @@ export default function MediaCard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/categories');
+        const response = await fetch(`${CONFIG.BASE_PATH}categories`);
         const data = await response.json();
         console.log(data);
         if (data.success) {

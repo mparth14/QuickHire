@@ -13,6 +13,7 @@ import Select from '@material-ui/core/Select';
 import RatingFilter from '../Filters/RatingFilters';
 import BudgetFilter from '../Filters/BudgetFilter';
 import PopularFilter from '../Filters/PopularFilter';
+import { CONFIG } from '../../config';
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -60,7 +61,7 @@ const SubCategoryService = () => {
           console.error('Service parameter is missing');
           return;
         }
-        const response = await fetch(`http://localhost:4000/api/v1/services/search?value=${serviceValue}`);
+        const response = await fetch(`${CONFIG.BASE_PATH}services/search?value=${serviceValue}`);
         const data = await response.json();
         // Extracting categoryx and subcategory from the first item in the response (assuming they are the same for all items)
         const pathname = window.location.pathname;
