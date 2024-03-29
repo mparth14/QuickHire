@@ -38,6 +38,7 @@ export const updateUser = async (req, res) => {
     res.user.email = req.body.first_name == null ? res.user.first_name :  req.body.first_name;
     res.user.mobile = req.body.mobile == null ? res.user.mobile :  req.body.mobile;
     res.user.address = req.body.address == null ? res.user.address :  req.body.address;
+    res.user.isFreelancer = req.body.isFreelancer == null ? res.user.isFreelancer :  req.body.isFreelancer;
     res.user.password = req.body.password == null ? res.user.password :  await bcrypt.hash(req.body.password, 10);
 
     try {

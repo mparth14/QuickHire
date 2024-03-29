@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './db/index.js';
 import Stripe from 'stripe';
+import paymentController from './controllers/payment.controller.js';
 
 dotenv.config();
 dotenv.config({
@@ -11,7 +12,7 @@ dotenv.config({
 });
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = 5000;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
@@ -36,6 +37,7 @@ import userData from './routes/v1/user.routes.js';
 import servicesData from './routes/v1/services.routes.js';
 import categoriesData from './routes/v1/categories.routes.js';
 import paymentRoutes from './routes/v1/payment.routes.js';
+import cartRoutes from './routes/v1/cart.routes.js';
 
 //routes declaration
 app.use('/api/v1/dummyData', dummyData);
@@ -44,38 +46,19 @@ app.use('/api/v1/user', userData);
 app.use('/api/v1/services', servicesData);
 app.use('/api/v1/categories', categoriesData);
 app.use('/api/v1', paymentRoutes);
+app.use('/api/v1/cart', cartRoutes);
+app.post('/api/v1/checkout', paymentController.checkout);
 
-// connectDB()
-//   .then(() => {
-//     app.listen(process.env.PORT || 4000, () => {
-//       console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
-//     });
-//   })
-//   .catch((err) => {
-//     console.log('MONGO db connection failed !!! ', err);
-//   });
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 4000, () => {
+      console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log('MONGO db connection failed !!! ', err);
+  });
 
 app.get('/', (req, res) => {
   res.send('Server is running!');
-});
-
-app.post('/api/v1/checkout', async (req, res) => {
-  const { items, success_url, cancel_url } = req.body;
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: items,
-      success_url,
-      cancel_url,
-    });
-
-    res.json({ id: session.id });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
 });
