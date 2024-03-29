@@ -70,7 +70,6 @@ export const deleteService = async (req, res) => {
 export const getServicesByPartialHint = async (req, res) => {
     try {
       const { value } = req.query;
-      console.log(value);
       const regex = new RegExp(value, 'i');
       const service = await services.find({
         $or: [
