@@ -15,9 +15,8 @@ export const createService = async (req, res) => {
 };
 
 export const getAllServices = async (req, res) => {
-    console.log("in get all services");
     try {
-        const allServices = await services.find();
+        const allServices = await services.find({ isActive: true });
         res.status(200).json({ success: true, data: allServices });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -26,7 +25,7 @@ export const getAllServices = async (req, res) => {
 
 export const getServiceById = async (req, res) => {
     try {
-        const service = await services.findById(req.params.id);
+        const service = await services.findById({ _id: req.params.id, isActive: true });
         if (!service) {
             return res.status(404).json({ success: false, error: 'Service not found' });
         }
@@ -70,9 +69,9 @@ export const deleteService = async (req, res) => {
 export const getServicesByPartialHint = async (req, res) => {
     try {
       const { value } = req.query;
-      console.log(value);
       const regex = new RegExp(value, 'i');
       const service = await services.find({
+        isActive: true,
         $or: [
             { title: regex },
             { category: regex },

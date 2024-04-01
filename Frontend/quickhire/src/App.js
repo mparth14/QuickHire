@@ -16,7 +16,6 @@ import ServiceOrdersView from './Features/Services/ServiceOrders/ServiceOrdersVi
 import ServiceCreationPage from './Features/Services/ServiceCreationPage/ServiceCreationPage.js';
 
 import CategoryCard from './Features/CategoryCard/CategoryCard';
-import Blog from './Features/Blog/Blog';
 import SubCategoryService from './Features/SubCategoryService/SubCategoryService';
 import PaymentSuccess from './Features/Payment/PaymentSuccess.js';
 import PaymentFailure from './Features/Payment/PaymentFailure.js';
@@ -51,6 +50,9 @@ function App() {
             </Route>
             <Route exact path='/register-freelancer'>
               <SignUpFreelancer />
+            </Route>
+            <Route exact path='/profile'>
+              <UserProfile />
             </Route>
             <Route exact path='/checkout'>
               <Checkout />
@@ -88,6 +90,53 @@ function App() {
         </Router>
         <ToastContainer />
       </AuthProvider>
+      <Router>
+        <Navbar />
+        <Header />
+        <Switch className='remainingBody'>
+          <Route exact path='/'>
+            <Home />
+          </Route>
+          <Route exact path='/signup'>
+            <SignUp />
+          </Route>
+          <Route exact path='/register-freelancer'>
+            <SignUpFreelancer />
+          </Route>
+          <Route exact path='/checkout'>
+            <Checkout />
+          </Route>
+          <Route exact path='/payment'>
+            <PaymentPage />
+          </Route>
+          <Route exact path='/faqs'>
+            <FAQPage />
+          </Route>
+          <Route exact path='/contact-us'>
+            <ContactUs />
+          </Route>
+          <Route exact path='/service-orders'>
+            <ServiceOrdersView />
+          </Route>
+          <Route exact path='/service-creation'>
+            <ServiceCreationPage />
+          </Route>
+          <Route exact path='/category/:name'>
+            <CategoryCard />
+          </Route>
+          <Route exact path='/subcategory/:name'>
+            <SubCategoryService />
+          </Route>
+          <Route exact path='/payment-success'>
+            <PaymentSuccess />
+          </Route>
+          <Route exact path='/payment-failure'>
+            <PaymentFailure />
+          </Route>
+        </Switch>
+        <Footer />
+      </Router>
+      <ToastContainer />
     </div>
   );
 }

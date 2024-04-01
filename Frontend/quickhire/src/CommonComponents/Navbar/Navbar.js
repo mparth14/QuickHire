@@ -17,6 +17,7 @@ import Button from "@material-ui/core/Button";
 import { SearchBar } from "./searchComponents/SearchBar";
 import { SearchResultsList } from "./searchComponents/SearchResultsList";
 import { useState } from "react";
+import { CONFIG } from "../../config";
 
 
 
@@ -155,7 +156,7 @@ export default function Navbar() {
     // Set a new timeout to execute the API call after 300 milliseconds of inactivity
     debounceTimeout = setTimeout(() => {
       // Fetch search results from the API
-      fetch(`http://localhost:4000/api/v1/services/search?title=${searchTerm}`)
+      fetch(`${CONFIG.BASE_PATH}services/search?title=${searchTerm}`)
         .then((response) => response.json())
         .then((data) => setSearchResults(data))
         .catch((error) => console.error("Error fetching search results:", error));

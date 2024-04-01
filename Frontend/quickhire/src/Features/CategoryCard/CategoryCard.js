@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import "./CategoryCard.css";
+import { CONFIG } from '../../config';
 
 
 const useStyles = makeStyles({
@@ -25,7 +26,7 @@ export default function MediaCard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/categories');
+        const response = await fetch(`${CONFIG.BASE_PATH}categories`);
         const data = await response.json();
         console.log(data);
         if (data.success) {
@@ -68,7 +69,7 @@ export default function MediaCard() {
   return (
     <div style={{marginLeft: "5%", marginRight: "5%"}}>
       <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
-      <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "green"}}>Explore {categoryFromURL}</h2>
+      <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "#3f51b5"}}>Explore {categoryFromURL}</h2>
     </div>
     <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
       <div className='card-design'>

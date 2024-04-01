@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 import "./SearchBar.css";
+import { CONFIG } from "../../../config";
 
 const debounce = (func, delay) => {
   let timeoutId;
@@ -20,7 +21,7 @@ export const SearchBar = ({ setResults }) => {
       setResults([]);
       return;
     }
-    fetch(`http://localhost:4000/api/v1/services/search?value=${value}`)
+    fetch(`${CONFIG.BASE_PATH}services/search?value=${value}`)
       .then((response) => response.json())
       .then((json) => {
         const filteredResults = json.map((service) => ({
