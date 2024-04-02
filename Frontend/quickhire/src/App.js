@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,12 +26,48 @@ import ForgotPassword from './Features/Authentication/ForgotPassword/ForgotPassw
 import ChangePassword from './Features/Authentication/ChangePassword/ChangePassword.js';
 import UserProfile from './Features/UserProfile/UserProfile.js';
 
+import axios from "axios";
+import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
+import { CONFIG } from './config.js';
+
 function App() {
+  const [user, setUser] = useState(null);
+  const [userLoaded, setUserLoaded] = useState(false);
+  const storedToken = localStorage.getItem("token");
+
+  useEffect(()=>{
+    if(storedToken){
+      getUserDetails();
+    }
+    else{
+      setUserLoaded(true);
+    }
+      
+  }, [])
+
+  const getUserDetails = () => {
+    axios.get(CONFIG.BASE_PATH + CONFIG.USER_PATH,
+        {
+            headers: {'Authorization': 'Bearer '+ storedToken }
+        } )
+    .then((response) => {
+      console.log(response);
+      if(response.status === 200){
+        setUser(response.data);
+        setUserLoaded(true);
+      }
+    })
+    .catch(function (error) {
+        toast.error("Issue with authentication");
+    });
+  }
+
   return (
     <div>
       
         <Router>
-          <Navbar />
+          <Navbar user={user} onload={userLoaded}/>
           <Header />
           <Switch className='remainingBody'>
           <AuthProvider>
@@ -42,7 +78,7 @@ function App() {
               <SignUp />
             </Route>
             <Route exact path='/login'>
-              <Login />
+              <Login/>
             </Route>
             <Route exact path='/forgot-password/'>
               <ForgotPassword />
@@ -51,10 +87,10 @@ function App() {
               <ChangePassword />
             </Route>
             <Route exact path='/register-freelancer'>
-              <SignUpFreelancer />
+              <SignUpFreelancer user={user} onload={userLoaded} />
             </Route>
             <Route exact path='/profile'>
-              <UserProfile />
+              <UserProfile user={user} onload={userLoaded}/>
             </Route>
             <Route exact path='/checkout'>
               <Checkout />

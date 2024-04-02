@@ -135,7 +135,7 @@ const Singup = () => {
         //TODO: route to home page
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
-        navigate.push("/home");
+        window.location.href = "/profile";
       }
     })
     .catch(function (error) {
