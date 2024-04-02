@@ -17,15 +17,13 @@ import Service from './Services/Service.js'
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
-import { toast } from 'react-toastify';
-import { CONFIG } from '../../config.js';
-import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     parentCard: {
       backgroundColor: "rgba(255,255,255,0.87)",
     }
-  }));
+}));
+
 
 const EditProfilePicButton = ({ visibility }) => {
     return (
@@ -38,7 +36,7 @@ const EditProfilePicButton = ({ visibility }) => {
                     transform: "translate(-50%, -50%)",
                     width: "100%",
                     height: "100%",
-                    backgroundColor: 'rgba(52, 52, 52, 0.7)'
+                    backgroundColor: 'rgba(52, 52, 52, 0.4)'
                 }}
                 sx={{"&:hover": {backgroundColor: "black"}}}
                 
@@ -49,25 +47,23 @@ const EditProfilePicButton = ({ visibility }) => {
     );
 };
 
-const UserProfile = () => {  
+const UserProfile = ({user, onload}) => {  
   const classes = useStyles();
   const navigate = useHistory();
-  const token = localStorage.getItem("token");
-  const [ user, setUser ] = useState(null);
+  const { loading} = useContext(AuthContext);
   const [ visibility, setVisibility ] = useState("invisible");
   const [ selectInfoEdit, setSelectInfoEdit] = useState(false);
   const [ selectLeftMenuEdit, setSelectLeftMenuEdit] = useState(false);
 
-  useEffect(()=>{
-    if(!token) {
-        navigate.push("/login");
-    }
-    getUserDetails();
-  }, []);
+    useEffect(() =>{
+        if(!user && onload){
+            navigate.push("/login");
+        }
+    }, [onload, user])
 
-//   if (loading) {
-//     return null;
-//   }
+    if (!user || loading) {
+        return null;
+    }
 
     const showButton = (e) => {
         e.preventDefault();
@@ -79,26 +75,10 @@ const UserProfile = () => {
         setVisibility("invisible");
     };
 
-  
+    const signupFreelancer = () => {
+        navigate.push("/register-freelancer");
+    }
 
-  const getUserDetails = () => {
-    axios.get(CONFIG.BASE_PATH + CONFIG.USER_PATH,
-        {
-            headers: {'Authorization': 'Bearer '+ token}
-        } )
-    .then((response) => {
-      console.log(response);
-      if(response.status === 200){
-        setUser(response.data);
-      }
-    })
-    .catch(function (error) {
-        toast.error("Issue with authentication");
-        setTimeout(() => {
-            navigate.push("/login");
-        }, 1000)
-    });
-  }
 
   return (
         <Container maxWidth="xl">
@@ -108,7 +88,7 @@ const UserProfile = () => {
                         <Avatar variant='square'onMouseEnter={(e) => showButton(e)}
                         onMouseLeave={(e) => hideButton(e)}
                             sx={{
-                                backgroundColor: 'primary.main',
+                                backgroundColor: '#1F91CC',
                                 width: { xs: 110, sm: 130, md: 135, lg: 150 },
                                 height: { xs: 110, sm: 130, md: 135, lg: 150 },
                                 borderRadius: 2.5,
@@ -204,9 +184,6 @@ const UserProfile = () => {
                             <Typography component="p" variant="body2" sx={{marginBottom: '5px'}}>
                                 {user?.experience}
                             </Typography>
-                            {/* <Typography component="p" variant="body2" sx={{marginBottom: '5px', color: "grey"}}>
-                                Add your experience, earn more trust!
-                            </Typography> */}
                             {!user || !user.experience ? <Typography component="p" variant="body2" sx={{marginBottom: '5px', color: "grey"}}>
                             Add your experience, earn more trust!
                             </Typography> : <></>}
@@ -235,6 +212,7 @@ const UserProfile = () => {
                     </Grid>
                     <Grid item xs={12} sm={9} md={9}>
                         {/* Services section */}
+                        {user?.isFreelancer ?
                         <div>
                             <Typography component="h1" variant="h6">
                                 <b>Services</b>
@@ -245,22 +223,34 @@ const UserProfile = () => {
                                 <Service/>
                                 <Service/>
                             </Stack>
-                        </div>
+                        </div> : 
+                        <div>
+                            <Paper elevation={1} sx={{ my: 4, p: 4, 
+                                minHeight: "250px", alignItems: 'center', display: 'flex', flexWrap: 'wrap', flexDirection: 'column', justifyContent: 'center' }}>
+                                <Typography component="h1" variant="h4">
+                                    Want to get hired?
+                                </Typography>
+                                <Button onClick={signupFreelancer} size='large' variant='contained' style={{ backgroundColor: '#1F91CC', color: '#fff', marginTop: 20 }}>
+                                    Become a freelancer
+                                </Button>
+                            </Paper>   
+                        </div>}
                         
                     </Grid>
                 </Grid>
-                <Divider/>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <Typography component="h1" variant="h6">
-                            <b>Reviews</b>
-                        </Typography>
-                    </Grid>
-                    
-                </Grid>
+                {user?.isFreelancer ? 
+                    <>
+                    <Divider/>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography component="h1" variant="h6">
+                                    <b>Reviews</b>
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </> : <></>}
             </Paper>
         </Container>
-    
   );
 }
 
