@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Parallax } from "react-parallax";
 import Background from "../../../assets/BackGround.png";
 import axios from 'axios';
-import { BACKEND_URL, BACKEND_PORT, FORGOT_PASSWORD_PATH } from '../../../constants/common-constants';
+import { CONFIG } from '../../../config.js';
 import { toast } from 'react-toastify';
 
 import "./ForgotPassword.css";
@@ -46,7 +46,7 @@ const ForgotPassword = () => {
     const forgotPasswordRequest = {
       email: email,
     };
-    axios.post(BACKEND_URL + BACKEND_PORT + FORGOT_PASSWORD_PATH, forgotPasswordRequest)
+    axios.post(CONFIG.BASE_PATH + CONFIG.FORGOT_PASSWORD_PATH, forgotPasswordRequest)
     .then((response) => {
       console.log(response);
       if(response.status === 200){

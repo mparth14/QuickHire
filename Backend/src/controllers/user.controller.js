@@ -21,6 +21,16 @@ export const getAllUsers = async (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
+export const getLoggedInUser = async (req, res) => {
+    res.json(req.user);
+}
+
+
+/**
+ * Get a single user stored in database using id
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const getOneUser = async (req, res) => {
     res.json(res.user);
 }
@@ -41,6 +51,16 @@ export const updateUser = async (req, res) => {
     res.user.isFreelancer = req.body.isFreelancer == null ? res.user.isFreelancer :  req.body.isFreelancer;
     res.user.password = req.body.password == null ? res.user.password :  await bcrypt.hash(req.body.password, 10);
     res.user.profilePictureUrl = req.body.profilePictureUrl == null ? res.user.profilePictureUrl : req.body.profilePictureUrl;
+    res.user.linkedInLink = req.body.linkedInLink == null ? res.user.linkedInLink :  req.body.linkedInLink;
+    res.user.instagramLink = req.body.instagramLink == null ? res.user.instagramLink :  req.body.instagramLink;
+    res.user.facebookLink = req.body.facebookLink == null ? res.user.facebookLink :  req.body.facebookLink;
+    res.user.occupation = req.body.occupation == null ? res.user.occupation :  req.body.occupation;
+    res.user.description = req.body.description == null ? res.user.description :  req.body.description;
+    res.user.experience = req.body.experience == null ? res.user.experience :  req.body.experience;
+    res.user.skills = req.body.skills == null ? res.user.skills :  req.body.skills;
+    res.user.education = req.body.education == null ? res.user.education :  req.body.education;
+    
+    
     try {
         const updatedUser = await res.user.save();
         res.json(updatedUser);

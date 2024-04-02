@@ -7,7 +7,7 @@ import Background from "../../../assets/BackGround.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { AuthContext } from '../../AuthContext';
-import { BACKEND_URL, BACKEND_PORT, LOGIN_PATH } from '../../../constants/common-constants';
+import { CONFIG } from '../../../config.js';
 import { Link } from "react-router-dom";
 import "./Login.css";
 
@@ -76,14 +76,14 @@ const Login = () => {
       username: formData.username,
       password: formData.password
     };
-    axios.post(BACKEND_URL + BACKEND_PORT + LOGIN_PATH, loginRequest)
+    axios.post(CONFIG.BASE_PATH + CONFIG.LOGIN_PATH, loginRequest)
     .then((response) => {
       console.log(response);
       if(response.status === 200){
         //TODO: route to home page
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
-        navigate.push("/home");
+        navigate.push("/profile");
       }
     })
     .catch(function (error) {

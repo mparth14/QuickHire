@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Parallax } from "react-parallax";
 import Background from "../../../assets/BackGround.png";
 import axios from 'axios';
-import { BACKEND_URL, BACKEND_PORT, CHANGE_PASSWORD_PATH, VALIDATE_TOKEN_PATH } from '../../../constants/common-constants';
+import { CONFIG } from '../../../config.js'
 import { toast } from 'react-toastify';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton, InputAdornment } from '@mui/material';
@@ -57,7 +57,7 @@ const ChangePassword = () => {
   };
 
   const validateToken = () => {
-    const url = BACKEND_URL + BACKEND_PORT + VALIDATE_TOKEN_PATH + user_id + "/" + token;
+    const url = CONFIG.BASE_PATH + CONFIG.VALIDATE_TOKEN_PATH + user_id + "/" + token;
     axios.get(url)
     .then((response) => {
       console.log(response);
@@ -74,7 +74,7 @@ const ChangePassword = () => {
     const changePasswordRequest = {
       password: password,
     };
-    const url = BACKEND_URL + BACKEND_PORT + CHANGE_PASSWORD_PATH + user_id + "/" + token;
+    const url = CONFIG.BASE_PATH + CONFIG.CHANGE_PASSWORD_PATH + user_id + "/" + token;
     axios.post(url, changePasswordRequest)
     .then((response) => {
       console.log(response);

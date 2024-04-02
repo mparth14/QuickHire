@@ -7,7 +7,7 @@ import { Parallax } from "react-parallax";
 import Background from "../../../assets/BackGround.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
-import { BACKEND_URL, BACKEND_PORT, SIGNUP_PATH } from '../../../constants/common-constants';
+import { CONFIG } from '../../../config.js';
 import { AuthContext } from '../../AuthContext';
 
 import "./Signup.css";
@@ -128,7 +128,7 @@ const Singup = () => {
       password: formData.password,
       profilePictureUrl: ""
     };
-    axios.post(BACKEND_URL + BACKEND_PORT + SIGNUP_PATH, signupRequest)
+    axios.post(CONFIG.BASE_PATH + CONFIG.SIGNUP_PATH, signupRequest)
     .then((response) => {
       console.log(response);
       if(response.status == 200){
