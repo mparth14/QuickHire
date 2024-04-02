@@ -1,0 +1,37 @@
+.profile-parallax-content {
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.profile-paper {
+    background: linear-gradient(162deg, rgba(248, 248, 248, 1) 0%, rgb(190 220 235) 94%) !important;
+}
+
+.svg_icons {
+    transform: scale(3);
+}
+
+.invisible {
+    display: none;
+  }
+  
+.visible {
+    display: block;  
+}
+    
+
+@media screen and (max-width: 768px) {
+    .profile-parallax-content {
+        height: 90vh;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .svg_icons {
+        transform: scale(2);
+    }
+}
+
+
