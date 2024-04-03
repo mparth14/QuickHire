@@ -132,7 +132,7 @@ function App() {
               <CategoryCard />
             </Route>
             <Route exact path="/subcategory/:name">
-              <SubCategoryService />
+              <SubCategoryService user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/payment-success">
               <PaymentSuccess />

@@ -38,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     top: "10px",
     right: "10px",
     zIndex: 1, // Ensure the heart icon appears above the CardMedia
-    backgroundColor:  "rgba(255, 255, 255, 0.8)", // Red color for the heart icon
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Red color for the heart icon
     padding: "6px",
     borderRadius: "100px",
-    cursor: "pointer", // Add cursor pointer for indicating clickability
+    cursor: "pointer",
   },
 }));
 
@@ -50,12 +50,16 @@ export default function SubServiceCard(props) {
   const [iconColors, setIconColors] = useState(Array(props.cardData.length).fill("#fff")); // Array of icon colors
 
   const cardData = props.cardData;
+  const user = props.user;
+  const onload = props.onload;
 
   const toggleIconColor = (index) => {
     const newIconColors = [...iconColors]; // Create a copy of iconColors array
     newIconColors[index] = newIconColors[index] === "#fff" ? "#f44336" : "#fff"; // Toggle icon color
     setIconColors(newIconColors); // Update icon colors state
   };
+  console.log(user);
+  console.log(onload);
 
   return (
     <div style={{ justifyContent: "center" }}>
@@ -65,17 +69,25 @@ export default function SubServiceCard(props) {
             <Card className={classes.card}>
               <CardActionArea>
                 <CardMedia className={"media"} image={data.image} />
-                {iconColors[index] === "#fff" ? (
+                {!user && onload ? 
+                (
                   <FavoriteBorderIcon
                     className={classes.heartIcon}
-                    onClick={() => toggleIconColor(index)}
+                    onClick={() => alert("Login required")}
                   />
-                ) : (
-                  <FavoriteIcon
-                    className={classes.heartIcon}
-                    style={{ color: iconColors[index] }}
-                    onClick={() => toggleIconColor(index)}
-                  />
+                ): (
+                  iconColors[index] === "#fff" ? (
+                    <FavoriteBorderIcon
+                      className={classes.heartIcon}
+                      onClick={() => toggleIconColor(index)}
+                    />
+                  ) : (
+                    <FavoriteIcon
+                      className={classes.heartIcon}
+                      style={{ color: iconColors[index] }}
+                      onClick={() => toggleIconColor(index)}
+                    />
+                  )
                 )}
                 <CardContent>
                   <InfoCard cardInfo={data} />
