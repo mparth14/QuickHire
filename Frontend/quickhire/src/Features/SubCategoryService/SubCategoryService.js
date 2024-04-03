@@ -94,11 +94,13 @@ const SubCategoryService = ({user, onload}) => {
           "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022161.png",
           "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022170.png"
         ];
+        console.log(data);
         const newData = data.map((service, index) => {
           let trimmedDescription = service.description.split(' ').slice(0, 21).join(' ');
           if (service.description.split(' ').length > 21)
             trimmedDescription += '...';
           return {
+            id: service._id,
             image: service.imgUrl,
             name: service.sellerName,
             jobTitle: service.jobTitle,
