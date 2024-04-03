@@ -28,7 +28,6 @@ import UserProfile from './Features/UserProfile/UserProfile.js';
 
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
 import { CONFIG } from './config.js';
 
 function App() {
@@ -90,7 +89,7 @@ function App() {
               <SignUpFreelancer user={user} onload={userLoaded} />
             </Route>
             <Route exact path='/profile'>
-              <UserProfile user={user} onload={userLoaded}/>
+              <UserProfile user={user} onload={userLoaded} onUserUpdate={setUser}/>
             </Route>
             <Route exact path='/checkout'>
               <Checkout />

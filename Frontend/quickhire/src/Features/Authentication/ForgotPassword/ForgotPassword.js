@@ -6,6 +6,7 @@ import Background from "../../../assets/BackGround.png";
 import axios from 'axios';
 import { CONFIG } from '../../../config.js';
 import { toast } from 'react-toastify';
+import { Link } from "react-router-dom";
 
 import "./ForgotPassword.css";
 
@@ -98,6 +99,9 @@ const ForgotPassword = () => {
                   error={Boolean(emailError)}
                   helperText={emailError}
                 />
+                <Link to="/login">
+                      Login instead?
+                </Link>
                 <Button
                   variant="contained"
                   className='forgot-password-button'
