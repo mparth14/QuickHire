@@ -1,4 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
+
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import { makeStyles } from "@material-ui/core";
@@ -23,6 +28,9 @@ import { toast } from 'react-toastify';
 import { CONFIG } from '../../config.js';
 import { FaTimes, FaPlus } from 'react-icons/fa';
 import IconButton from '@mui/material/IconButton';
+import { v4 } from "uuid";
+import { imageStorage }  from "../../utils/firebaseConfig.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const useStyles = makeStyles((theme) => ({
     parentCard: {
@@ -44,7 +52,6 @@ const EditProfilePicButton = ({ visibility }) => {
                     height: "100%",
                     backgroundColor: 'rgba(52, 52, 52, 0.4)'
                 }}
-                sx={{"&:hover": {backgroundColor: "black"}}}
                 
             >
                 <AddAPhotoIcon fontSize='large'/>
@@ -61,6 +68,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
     const [ selectInfoEdit, setSelectInfoEdit] = useState(false);
     const [ selectLeftMenuEdit, setSelectLeftMenuEdit] = useState(false);
     const storedToken = localStorage.getItem("token");
+    const inputFile = useRef(null) 
 
     const [formData, setFormData] = useState({
         first_name: "",
@@ -167,6 +175,33 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         }
       };
 
+    const onProfileButtonClick = () => {
+        inputFile.current.click();
+      };
+
+    const handleProfileFileChange = async(event) => {
+        event.preventDefault();
+        const file = event.target.files[0];
+        if (file) {
+            const profilePictureUrl = await uploadImageToFirebase(file);
+            setFormData({
+                ...formData,
+                "profilePictureUrl": profilePictureUrl,
+            });
+            updateUserDetails();
+        }
+    }
+
+    const uploadImageToFirebase = async (image) => {
+        const imageUUID = v4();
+        const imageRef = ref(imageStorage, `files/${imageUUID}`);
+        await uploadBytes(imageRef, image);
+        const imageURL = await getDownloadURL(
+          ref(imageStorage, `files/${imageUUID}`)
+        );
+        return imageURL;
+      };
+
     const convertLink = link => {
         if(link){
             return link.startsWith("http://") || link.startsWith("https://") ?
@@ -178,21 +213,6 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
     const updateUserDetails = () => {
         setSelectInfoEdit(false);
         setSelectLeftMenuEdit(false);
-        // const req = {
-        //         _id: user._id,
-        //         first_name: formData.first_name,
-        //         last_name: formData.last_name,
-        //         occupation: formData.occupation,
-        //         description: formData.description,
-        //         skills: formData.skills,
-        //         education: formData.education.length > 0 ? formData.education : user.education,
-        //         experience: formData.experience !== "" ? formData.experience : user.experience,
-        //         linkedInLink: formData.linkedInLink !== "" ? formData.linkedInLink : user.linkedInLink,
-        //         instagramLink: formData.instagramLink !== "" ? formData.instagramLink : user.instagramLink,
-        //         facebookLink: formData.facebookLink !== "" ? formData.facebookLink : user.facebookLink,
-        //         isFreelancer: user.isFreelancer,
-        //         email: user.email
-        //     };
         onUserUpdate(formData);
 
         axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, formData,
@@ -218,8 +238,9 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
             <Paper elevation={2} sx={{ my: 4, p: 4 }} className='profile-paper'>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={3} md={3}>
-                        <Avatar variant='square'onMouseEnter={(e) => showButton(e)}
-                        onMouseLeave={(e) => hideButton(e)}
+                        <Avatar variant='square' onMouseEnter={(e) => showButton(e)}
+                            onMouseLeave={(e) => hideButton(e)}
+                            onClick={onProfileButtonClick}
                             sx={{
                                 backgroundColor: '#1F91CC',
                                 width: { xs: 110, sm: 130, md: 135, lg: 150 },
@@ -228,6 +249,15 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             }}>
                             <AccountCircle className='svg_icons' fontSize="large" />
                             <EditProfilePicButton visibility={visibility}/>
+                            <input
+                                id='profilePicture'
+                                type='file'
+                                style={{ display: 'none' }}
+                                ref={inputFile}
+                                onChange={handleProfileFileChange}
+                                accept='.jpg,.jpeg,.png'
+                            />
+
                         </Avatar>
                     </Grid>
                     <Grid item xs={12} sm={9} md={9}>
@@ -500,7 +530,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 placeholder="LinkedIn url"
                                 name="linkedInLink" onChange={handleChange} 
                                 size='small'
-                                value={formData.linkedInLink === "" ? user?.linkedInLink : formData.linkedInLink} 
+                                value={formData.linkedInLink} 
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             <TextField label='Instagram url' id='instagramLink' 
@@ -508,7 +538,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 placeholder="Instagram url"
                                 size='small'
                                 name="instagramLink" onChange={handleChange} 
-                                value={formData.instagramLink === "" ? user?.instagramLink : formData.instagramLink} 
+                                value={formData.instagramLink} 
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             <TextField label='Facebook url' id='facebookLink' 
@@ -516,7 +546,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 placeholder="Facebook url"
                                 size='small'
                                 name="facebookLink" onChange={handleChange} 
-                                value={formData.facebookLink === "" ? user?.facebookLink : formData.facebookLink} 
+                                value={formData.facebookLink} 
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             </>}
@@ -530,12 +560,6 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             <Typography component="h1" variant="h6">
                                 <b>Services</b>
                             </Typography>
-                            <Stack spacing={{ xs: 0.5, sm: 1 }} direction="row" useFlexGap flexWrap="wrap">
-                                <Service/>
-                                <Service/>
-                                <Service/>
-                                <Service/>
-                            </Stack>
                         </div> : 
                         <div>
                             <Paper elevation={2} sx={{ mb: 4, p: 4,
