@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -18,6 +18,7 @@ import { SearchBar } from "./searchComponents/SearchBar";
 import { SearchResultsList } from "./searchComponents/SearchResultsList";
 import { useState } from "react";
 import { CONFIG } from "../../config";
+
 
 
 
@@ -84,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+export default function Navbar({user, onload}) {
   const [results, setResults] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -111,8 +112,16 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const logout = () => {
+    if(localStorage.getItem("token")){
+      localStorage.removeItem("token");
+    }
+    window.location.href = "/";
+  }
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
+    !onload || !user ?
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -121,13 +130,25 @@ export default function Navbar() {
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}>
-      <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Sign Up</MenuItem>
+        <MenuItem onClick={handleMenuClose}><Link to="/login" className="menu-link">Sign In</Link></MenuItem>
+        <MenuItem onClick={handleMenuClose}><Link to="/signup" className="menu-link">Sign Up</Link></MenuItem>
+    </Menu> :
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}>
+      <MenuItem onClick={handleMenuClose}><Link to="/profile" className="menu-link">Profile</Link></MenuItem>
+      <MenuItem onClick={handleMenuClose}><p onClick={logout} className="menu-link">Sign Out</p></MenuItem>
     </Menu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
+    !onload || !user ?
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -136,11 +157,26 @@ export default function Navbar() {
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>Sign In</p>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/login">Sign In</Link>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>Sign Up</p>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/signup">Sign Up</Link>
+      </MenuItem>
+    </Menu> :
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/profile">Profile</Link>
+      </MenuItem>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <p className="menu-link" onClick={logout}>Sign Out</p>
       </MenuItem>
     </Menu>
   );

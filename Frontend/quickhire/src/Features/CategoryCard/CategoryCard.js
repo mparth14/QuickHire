@@ -8,54 +8,19 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import "./CategoryCard.css";
 import { CONFIG } from "../../config";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
+  gridContainer: {
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    alignItems: "center",
+    alignContent: "center",
+  },
   card: {
-    width: "345px", // Default width
+    minWidth: "300px", // Default width
     borderRadius: "10px",
     margin: "10px",
-    [theme.breakpoints.down(390)]: {
-      width: "320px", // Adjusted width for screens up to 600px wide (e.g., mobile devices)
-    },
-    [theme.breakpoints.between(430, 530)]: {
-      width: "400px", // Adjusted width for screens up to 600px wide (e.g., mobile devices)
-    },
-    [theme.breakpoints.between(531, 726)]: {
-      width: "500px", // Adjusted width for screens up to 600px wide (e.g., mobile devices)
-    },
-    [theme.breakpoints.between(727, 875)]: {
-      width: "700px", // Adjusted width for screens between 601px and 1024px wide (e.g., tablets)
-    },
-    [theme.breakpoints.between(876, 1024)]: {
-      width: "370px", // Adjusted width for screens between 601px and 1024px wide (e.g., tablets)
-    },
-    [theme.breakpoints.between(1025, 1110)]: {
-      width: "400px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1111, 1185)]: {
-      width: "450px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1186, 1346)]: {
-      width: "500px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1347, 1445)]: {
-      width: "570px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1445, 1457)]: {
-      width: "400px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1458, 1508)]: {
-      width: "400px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1509, 1575)]: {
-      width: "420px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.between(1576, 1655)]: {
-      width: "435px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
-    },
-    [theme.breakpoints.up(1656)]: {
-      width: "338px", // Adjusted width for screens wider than 1440px (e.g., large monitors)
-    },
   },
 }));
 
@@ -130,46 +95,44 @@ export default function MediaCard() {
           Explore {categoryFromURL}
         </h2>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}>
-        <div className="card-design">
+      {/* <div className='card-design'> */}
+      <div style={{ justifyContent: "center" }}>
+        <Grid container spacing={5} className={classes.gridContainer}>
           {cardData.map((data, index) => (
-            <Link
-              key={index}
-              to={`/subcategory/${name}?service=${encodeURIComponent(
-                data.title
-              )}`}
-              className="category-link-deco">
-              <Card key={index} className={classes.card}>
-                <CardActionArea>
-                  <CardMedia
-                    className={"media"}
-                    image={data.image}
-                    title={data.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {data.title}
-                    </Typography>
-                    <Typography>
-                      <ul>
-                        {data.content.map((item, i) => (
-                          <li key={i}>{item}</li>
-                        ))}
-                      </ul>
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Link>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Link
+                key={index}
+                to={`/subcategory/${name}?service=${encodeURIComponent(
+                  data.title
+                )}`}
+                className="category-link-deco">
+                <Card key={index} className={classes.card}>
+                  <CardActionArea>
+                    <CardMedia
+                      className={"media"}
+                      image={data.image}
+                      title={data.title}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {data.title}
+                      </Typography>
+                      <Typography>
+                        <ul>
+                          {data.content.map((item, i) => (
+                            <li key={i}>{item}</li>
+                          ))}
+                        </ul>
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Link>
+            </Grid>
           ))}
-        </div>
+        </Grid>
       </div>
+      {/* </div> */}
     </div>
   );
 }

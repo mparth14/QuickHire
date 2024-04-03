@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -23,7 +23,8 @@ import UserIcon from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import RatingsAndReviews from "./RatingsAndReviews";
 import { CONFIG } from "../../../config";
-import { useParams } from "react-router-dom/cjs/react-router-dom";
+import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom";
+import { AuthContext } from "../../AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,22 +111,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const IndividualServicePage = () => {
+const IndividualServicePage = ({ user, onload }) => {
   const classes = useStyles();
   const [service, setService] = useState(null);
   const { id } = useParams();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("600"));
+  const { loading } = useContext(AuthContext);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!user && onload) {
+      history.push("/login");
+    }
+  }, [onload, user, history]);
 
   useEffect(() => {
     const getServiceByID = async () => {
       const response = await fetch(`${CONFIG.BASE_PATH}services/${id}`);
       const serviceInfo = await response.json();
+      console.log({ serviceInfo });
       setService(serviceInfo);
     };
 
     getServiceByID();
   }, [id]);
+
+  if (!user || loading) {
+    return null;
+  }
 
   return (
     <div className={classes.root}>
