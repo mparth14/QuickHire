@@ -233,10 +233,14 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
             return;
         }
       
-        onUserUpdate(formData);
+        const newFormData = {...formData};
+        delete newFormData.password;
+        setFormData(newFormData);
+        onUserUpdate(newFormData);
+
         setSelectInfoEdit(false);
         setSelectLeftMenuEdit(false);
-        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, formData,
+        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, newFormData,
             {
                 headers: {'Authorization': 'Bearer '+ storedToken }
             } )
@@ -260,10 +264,13 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         setFormData(user);
       }
     const updateProfilePicture = (profilePictureUrl, oldProfilePicture) => {
-        onUserUpdate(formData);
+        const newFormData = {...formData};
+        delete newFormData.password;
+        setFormData(newFormData);
+        onUserUpdate(newFormData);
 
         axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, 
-            {...formData,
+            {...newFormData,
             "profilePictureUrl": profilePictureUrl},
             {
                 headers: {'Authorization': 'Bearer '+ storedToken }
