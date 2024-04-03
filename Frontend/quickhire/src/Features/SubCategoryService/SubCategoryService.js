@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SubCategoryService = () => {
+const SubCategoryService = ({user, onload}) => {
   const history = useHistory();
   const classes = useStyles();
   const [state, setState] = React.useState(0);
@@ -216,7 +216,7 @@ const SubCategoryService = () => {
               <p>Loading...</p>
             ) : (
               currentItems.length > 0 ? (
-                <SubServiceCard state={state} cardData={currentItems} />
+                <SubServiceCard state={state} cardData={currentItems} user={user} onload={onload}/>
               ) : (
                 <div style={{ textAlign: 'center' }}>
                   <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711127194~exp=1711130794~hmac=1229dd34750bfe08aa5b1ead640f1dfb81bd096024f35b53f4e97025df00c596&w=1380" alt="No data found"
