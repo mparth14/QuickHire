@@ -5,7 +5,7 @@ import Service from '../models/services.model.js';
 
 /**
  * Adds a service to the user's cart.
- * 
+ *
  * @param {object} req - The request object containing userId and serviceId.
  * @param {object} res - The response object.
  */
@@ -31,7 +31,7 @@ export const addToCart = async (req, res) => {
 
 /**
  * Retrieves the user's cart.
- * 
+ *
  * @param {object} req - The request object containing userId.
  * @param {object} res - The response object.
  */
@@ -50,10 +50,11 @@ export const getCart = async (req, res) => {
 
 /**
  * Removes a service from the user's cart.
- * 
+ *
  * @param {object} req - The request object containing userId and serviceId.
  * @param {object} res - The response object.
- */export const removeFromCart = async (req, res) => {
+ */
+export const removeFromCart = async (req, res) => {
   try {
     const { userId, serviceId } = req.body;
     const cart = await Cart.findOne({ userId });
