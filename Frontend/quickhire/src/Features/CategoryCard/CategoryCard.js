@@ -1,22 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams  } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
 import "./CategoryCard.css";
-import { CONFIG } from '../../config';
+import { CONFIG } from "../../config";
 
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   card: {
-    width: "345px",
+    width: "345px", // Default width
     borderRadius: "10px",
     margin: "10px",
+    [theme.breakpoints.down(390)]: {
+      width: "320px", // Adjusted width for screens up to 600px wide (e.g., mobile devices)
+    },
+    [theme.breakpoints.between(430, 530)]: {
+      width: "400px", // Adjusted width for screens up to 600px wide (e.g., mobile devices)
+    },
+    [theme.breakpoints.between(531, 726)]: {
+      width: "500px", // Adjusted width for screens up to 600px wide (e.g., mobile devices)
+    },
+    [theme.breakpoints.between(727, 875)]: {
+      width: "700px", // Adjusted width for screens between 601px and 1024px wide (e.g., tablets)
+    },
+    [theme.breakpoints.between(876, 1024)]: {
+      width: "370px", // Adjusted width for screens between 601px and 1024px wide (e.g., tablets)
+    },
+    [theme.breakpoints.between(1025, 1110)]: {
+      width: "400px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1111, 1185)]: {
+      width: "450px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1186, 1346)]: {
+      width: "500px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1347, 1445)]: {
+      width: "570px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1445, 1457)]: {
+      width: "400px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1458, 1508)]: {
+      width: "400px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1509, 1575)]: {
+      width: "420px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.between(1576, 1655)]: {
+      width: "435px", // Adjusted width for screens between 1025px and 1440px wide (e.g., laptops)
+    },
+    [theme.breakpoints.up(1656)]: {
+      width: "338px", // Adjusted width for screens wider than 1440px (e.g., large monitors)
+    },
   },
-});
+}));
 
 export default function MediaCard() {
   const classes = useStyles();
@@ -32,31 +73,35 @@ export default function MediaCard() {
         if (data.success) {
           let updatedCardData = [];
           if (name) {
-            const categoryData = data.data.find(category => category.name.toLowerCase() === name.toLowerCase());
+            const categoryData = data.data.find(
+              (category) => category.name.toLowerCase() === name.toLowerCase()
+            );
             if (categoryData) {
-              updatedCardData = categoryData.subcategories.map(subcategory => ({
-                title: subcategory.name,
-                content: subcategory.services,
-                image: subcategory.url
-              }));
+              updatedCardData = categoryData.subcategories.map(
+                (subcategory) => ({
+                  title: subcategory.name,
+                  content: subcategory.services,
+                  image: subcategory.url,
+                })
+              );
             } else {
-              console.error('Selected category not found:', name);
+              console.error("Selected category not found:", name);
             }
           } else {
-            updatedCardData = data.data.flatMap(category =>
-              category.subcategories.map(subcategory => ({
+            updatedCardData = data.data.flatMap((category) =>
+              category.subcategories.map((subcategory) => ({
                 title: subcategory.name,
                 content: subcategory.services,
-                image: subcategory.url
+                image: subcategory.url,
               }))
             );
           }
           setCardData(updatedCardData);
         } else {
-          console.error('Error fetching data:', data.message);
+          console.error("Error fetching data:", data.message);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -64,43 +109,67 @@ export default function MediaCard() {
   }, [name]);
 
   const pathname = window.location.pathname;
-  const categoryFromURL = decodeURIComponent(pathname.split('/').pop());
+  const categoryFromURL = decodeURIComponent(pathname.split("/").pop());
 
   return (
-    <div style={{marginLeft: "5%", marginRight: "5%"}}>
-      <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
-      <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "#3f51b5"}}>Explore {categoryFromURL}</h2>
-    </div>
-    <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
-      <div className='card-design'>
-        {cardData.map((data, index) => (
-          <Link key={index} to={`/subcategory/${name}?service=${encodeURIComponent(data.title)}`} className="category-link-deco">
-          <Card key={index} className={classes.card}>
-            <CardActionArea>
-              <CardMedia
-                className={"media"}
-                image={data.image}
-                title={data.title}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {data.title}
-                </Typography>
-                <Typography>
-                  <ul>
-                    {data.content.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-          </Link>
-        ))}
+    <div style={{ marginLeft: "5%", marginRight: "5%" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}>
+        <h2
+          className="topic"
+          style={{
+            textTransform: "capitalize",
+            marginTop: "20px",
+            color: "#3f51b5",
+          }}>
+          Explore {categoryFromURL}
+        </h2>
       </div>
-
-    </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          marginBottom: "20px",
+        }}>
+        <div className="card-design">
+          {cardData.map((data, index) => (
+            <Link
+              key={index}
+              to={`/subcategory/${name}?service=${encodeURIComponent(
+                data.title
+              )}`}
+              className="category-link-deco">
+              <Card key={index} className={classes.card}>
+                <CardActionArea>
+                  <CardMedia
+                    className={"media"}
+                    image={data.image}
+                    title={data.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {data.title}
+                    </Typography>
+                    <Typography>
+                      <ul>
+                        {data.content.map((item, i) => (
+                          <li key={i}>{item}</li>
+                        ))}
+                      </ul>
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
+    </div>
   );
 }
