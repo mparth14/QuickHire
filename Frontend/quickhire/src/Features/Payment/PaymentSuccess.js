@@ -1,4 +1,9 @@
-// Author: Parth Modi
+/**
+ * Author: Parth Modi
+ *
+ * Component for the page displayed when a payment is successful.
+ * This component confirms to the user that the payment was successful and provides a message.
+ */
 
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';

@@ -1,4 +1,9 @@
-// Author: Parth Modi
+/**
+ * Author: Parth Modi
+ *
+ * Component for the checkout page where users can view and manage their cart items and proceed to checkout.
+ * This component displays the list of cart items, allows users to remove items, and initiates the checkout process.
+ */
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -55,6 +60,11 @@ const CheckoutPage = ({ user, onload }) => {
     return null;
   }
 
+  /**
+   * Handles the removal of a service from the cart.
+   *
+   * @param {string} serviceId - The ID of the service to be removed from the cart.
+   */
   const handleRemoveItem = async (serviceId) => {
     try {
       const response = await fetch(CONFIG.BASE_PATH + 'cart/remove', {
@@ -80,6 +90,9 @@ const CheckoutPage = ({ user, onload }) => {
     }
   };
 
+  /**
+   * Handles the checkout process.
+   */
   const handleCheckout = async () => {
     const stripe = await stripePromise;
 
@@ -93,10 +106,9 @@ const CheckoutPage = ({ user, onload }) => {
         },
         unit_amount: item.price * 100,
       },
-      quantity: 1, // Quantity is always 1
+      quantity: 1,
     }));
 
-    // Call your backend to create a Stripe Checkout Session
     try {
       const response = await fetch(
         CONFIG.BASE_PATH + 'create-checkout-session',
@@ -105,13 +117,11 @@ const CheckoutPage = ({ user, onload }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ items: cartItems }), // Send line items instead of cartItems
+          body: JSON.stringify({ items: cartItems }),
         },
       );
 
       const session = await response.json();
-
-      // Redirect to Stripe Checkout
       const result = await stripe.redirectToCheckout({
         sessionId: session.id,
       });

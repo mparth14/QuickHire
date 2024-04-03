@@ -1,4 +1,9 @@
-// Author: Parth Modi
+/**
+ * Author: Parth Modi
+ *
+ * Defines routes related to creating checkout sessions and handling webhooks for payments.
+ * These routes handle operations such as creating checkout sessions and processing webhook events.
+ */
 
 import express from 'express';
 const router = express.Router();
@@ -9,6 +14,12 @@ const stripe = Stripe(
   'sk_test_51OpaEIEESxxIMUb2qqXQpcSqLoxrYyCJKof5zYBFTCxiUnUtYcVofHdVhEJDbbXFtutZRd36XwbqSdbgtVET0N4W00vB933MHY',
 );
 
+/**
+ * Route to create a Stripe Checkout session for payment.
+ *
+ * @param {object} req - The request object containing items to be purchased.
+ * @param {object} res - The response object.
+ */
 router.post('/create-checkout-session', async (req, res) => {
   const { items } = req.body;
 
@@ -41,6 +52,12 @@ router.post('/create-checkout-session', async (req, res) => {
   }
 });
 
+/**
+ * Route to handle Stripe webhook events.
+ *
+ * @param {object} req - The request object containing the webhook event.
+ * @param {object} res - The response object.
+ */
 router.post('/webhook', async (req, res) => {
   const event = req.body;
 
@@ -57,6 +74,11 @@ router.post('/webhook', async (req, res) => {
   }
 });
 
+/**
+ * Clear cart items associated with a user ID.
+ * 
+ * @param {string} userId - The ID of the user whose cart items are to be cleared.
+ */
 async function clearCartItems(userId) {
   try {
     // Find all cart items associated with the user ID

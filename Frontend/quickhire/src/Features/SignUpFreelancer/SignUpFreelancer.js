@@ -1,4 +1,9 @@
-// Author: Parth Modi
+/**
+ * Author: Parth Modi
+ *
+ * Component for registering as a freelancer.
+ * This component allows users to register as freelancers by providing professional information.
+ */
 
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
@@ -52,6 +57,9 @@ const SignUpFreelancer = ({ user, onload }) => {
   //   }
   // };
 
+  /**
+   * Adds a skill to the skills array.
+   */
   const handleAddSkill = () => {
     const newSkill = document.getElementById('skillsInput').value.trim();
     if (newSkill !== '') {
@@ -60,12 +68,22 @@ const SignUpFreelancer = ({ user, onload }) => {
     }
   };
 
+  /**
+   * Removes a skill from the skills array.
+   *
+   * @param {number} index - The index of the skill to be removed.
+   */
   const handleRemoveSkill = (index) => {
     const updatedSkills = [...skills];
     updatedSkills.splice(index, 1);
     setSkills(updatedSkills);
   };
 
+  /**
+   * Handles key press events, specifically for adding a skill when Enter key is pressed.
+   *
+   * @param {object} event - The key press event object.
+   */
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -82,6 +100,9 @@ const SignUpFreelancer = ({ user, onload }) => {
   //   });
   // };
 
+  /**
+   * Handles form submission.
+   */
   const handleSubmit = async () => {
     let isValid = true;
 
