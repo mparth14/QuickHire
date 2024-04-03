@@ -20,15 +20,30 @@ export const register = async (req, res) => {
         email: req.body.email,
         mobile: req.body.mobile,
         password: hash,
-        address: req.body.address
+        address: req.body.address,
+        profilePictureUrl: req.body.profilePictureUrl
     });
+    const username = req.body.username;
+    const email = req.body.email;
     try {
-      const newUser = await user.save();
-      const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, {
-        expiresIn: '1 hour'
-      });
+      const usernameExists = await User.find({username});
+      const emailExists = await User.find({email});
 
-      res.status(201).json({user: newUser, token: token});
+      if(emailExists.length > 0){
+        res.status(409).json({message:"Email already registered"});
+      }
+      else if(usernameExists.length > 0){
+        res.status(409).json({message:"Username already exists"});
+      }
+      else{
+        const newUser = await user.save();
+        const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, {
+          expiresIn: '7d'
+        });
+
+        res.status(201).json({user: newUser, token: token});
+      }
+      
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -45,18 +60,21 @@ export const login = async (req, res, next) => {
     try {
       const user = await User.findOne({ username });
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        res.status(404).json({ message: 'User not found' });
       }
-  
-      const passwordMatches = await user.comparePassword(password);
-      if (!passwordMatches) {
-        return res.status(401).json({ message: 'Incorrect password' });
+      else{
+        const passwordMatches = await user.comparePassword(password);
+        if (!passwordMatches) {
+          res.status(401).json({ message: 'Incorrect password' });
+        }
+        else{
+          const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+            expiresIn: '7d'
+          });
+          res.json({ userId: user._id, token: token });
+        }
       }
-  
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
-        expiresIn: '1 hour'
-      });
-      res.json({ token });
+      
     } catch (error) {
       next(error);
     }
@@ -107,6 +125,22 @@ export const changePassword = async (req, res) => {
     await token.deleteOne();
 
     res.send("password reset sucessfully.");
+  } catch(err){
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const validateToken = async (req, res) => {
+  try{
+    const user = await User.findById(req.params.user_id);
+    if (!user) return res.status(400).send({valid: false});
+
+    const token = await Token.findOne({
+        user_id: user._id,
+        token: req.params.token,
+    });
+    if (!token) return res.status(400).send({valid:false});
+    res.send({valid:true});
   } catch(err){
     res.status(400).json({ message: err.message });
   }

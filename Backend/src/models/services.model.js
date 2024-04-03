@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
-const serviceSchema = new mongoose.Schema({
+const { Schema } = mongoose;
+
+const serviceSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -33,7 +35,10 @@ const serviceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imgUrl: String
+    imgUrl: String,
+    currentRating: { type: Number, default: 0 },
+    numberOfRatings: { type: Number, default: 0 },
+    isPopular: { type: Boolean, default: false },
 });
 
-export default mongoose.model('services', serviceSchema);
+export default mongoose.model('Service', serviceSchema);
