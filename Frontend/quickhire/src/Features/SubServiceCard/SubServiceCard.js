@@ -6,22 +6,33 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import "./SubServiceCard.css";
 import InfoCard from "./InfoCard/InfoCard"
+import { Grid } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  card: {
-    width: "345px",
-    borderRadius: "10px",
-    margin: "10px"
+const useStyles = makeStyles((theme) => ({
+  gridContainer:{
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    alignItems: "center",
+    alignContent: "center"
+
   },
-});
+  card: {
+    minWidth: '300px', // Default width
+    borderRadius: '10px',
+    margin: '10px',
+    height: "520px"
+  },
+}));
 
 export default function SubServiceCard(props) {
   const classes = useStyles();
   const cardData = props.cardData;
 
   return (
-    <div className='sub-card-design'>
+    <div style={{justifyContent: "center"}}>
+      <Grid container spacing={5} className={classes.gridContainer}>
       {cardData.map((data, index) => (
+        <Grid item xs={12} sm={6} md={4} lg={3}>
         <Card key={index} className={classes.card}>
           <CardActionArea>
             <CardMedia
@@ -33,7 +44,9 @@ export default function SubServiceCard(props) {
             </CardContent>
           </CardActionArea>
         </Card>
+        </Grid>
       ))}
+      </Grid>
     </div>
   );
 }

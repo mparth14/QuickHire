@@ -22,11 +22,13 @@ import PaymentFailure from './Features/Payment/PaymentFailure.js';
 import SignUpFreelancer from './Features/SignUpFreelancer/SignUpFreelancer.js';
 
 function App() {
+  const isHomePage = window.location.pathname === '/';
+  console.log(isHomePage);
   return (
     <div>
       <Router>
         <Navbar />
-        <Header />
+        {!isHomePage && <Header />}
         <Switch className='remainingBody'>
           <Route exact path='/'>
             <Home />

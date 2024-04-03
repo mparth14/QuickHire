@@ -8,6 +8,6 @@ li {
 }
 .sub-card-design{
     display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
 }

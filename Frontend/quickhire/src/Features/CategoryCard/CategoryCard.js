@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams  } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,15 +8,22 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import "./CategoryCard.css";
 import { CONFIG } from '../../config';
+import { Grid } from '@material-ui/core';
 
+const useStyles = makeStyles((theme) => ({
+  gridContainer:{
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    alignItems: "center",
+    alignContent: "center"
 
-const useStyles = makeStyles({
-  card: {
-    width: "345px",
-    borderRadius: "10px",
-    margin: "10px",
   },
-});
+  card: {
+    minWidth: '300px', // Default width
+    borderRadius: '10px',
+    margin: '10px',
+  },
+}));
 
 export default function MediaCard() {
   const classes = useStyles();
@@ -71,36 +78,39 @@ export default function MediaCard() {
       <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
       <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "#3f51b5"}}>Explore {categoryFromURL}</h2>
     </div>
-    <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
-      <div className='card-design'>
+      {/* <div className='card-design'> */}
+      <div style={{justifyContent: "center"}}>
+      <Grid container spacing={5} className={classes.gridContainer}>
         {cardData.map((data, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3}>
           <Link key={index} to={`/subcategory/${name}?service=${encodeURIComponent(data.title)}`} className="category-link-deco">
-          <Card key={index} className={classes.card}>
-            <CardActionArea>
-              <CardMedia
-                className={"media"}
-                image={data.image}
-                title={data.title}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {data.title}
-                </Typography>
-                <Typography>
-                  <ul>
-                    {data.content.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+            <Card key={index} className={classes.card}>
+              <CardActionArea>
+                <CardMedia
+                  className={"media"}
+                  image={data.image}
+                  title={data.title}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {data.title}
+                  </Typography>
+                  <Typography>
+                    <ul>
+                      {data.content.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Link>
+          </Grid>
         ))}
-      </div>
-
+        </Grid>
+        </div>
+      {/* </div> */}
     </div>
-      </div>
   );
 }
