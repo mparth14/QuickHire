@@ -168,9 +168,11 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
       };
 
     const convertLink = link => {
-        return link.startsWith("http://") || link.startsWith("https://") ?
+        if(link){
+            return link.startsWith("http://") || link.startsWith("https://") ?
           link
           : `http://${link}`;
+        }
       };
 
     const updateUserDetails = () => {
@@ -536,7 +538,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             </Stack>
                         </div> : 
                         <div>
-                            <Paper elevation={1} sx={{ mb: 4, p: 4,
+                            <Paper elevation={2} sx={{ mb: 4, p: 4,
                                 minHeight: "250px", alignItems: 'center', display: 'flex', flexWrap: 'wrap', flexDirection: 'column', justifyContent: 'center' }}>
                                 <Typography component="h1" sx={{ typography: { sm: 'h4', xs: 'h5' } }}>
                                     Want to get hired?
