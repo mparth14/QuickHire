@@ -34,14 +34,9 @@ const CheckoutPage = ({ user, onload }) => {
     } else {
       const fetchCartItems = async () => {
         try {
-          console.log("user::", user);
-          const response = await fetch(
-            `http://localhost:4000/api/v1/cart/${user._id}`,
-          );
-          console.log('doingggggg');
+          const response = await fetch(CONFIG.BASE_PATH + `cart/${user._id}`);
 
           if (!response.ok) {
-            console.log('errorrrrrrr');
             throw new Error('Failed to fetch cart items');
           }
           const cartData = await response.json();

@@ -62,14 +62,8 @@ async function clearCartItems(userId) {
     // Find all cart items associated with the user ID
     const cartItems = await CartItem.find({ userId });
 
-    console.log(`Found ${cartItems.length} cart items for user ${userId}`);
-
     // Remove all cart items found
     const deletionResult = await CartItem.deleteMany({ userId });
-
-    console.log(
-      `Deleted ${deletionResult.deletedCount} cart items for user ${userId}`,
-    );
   } catch (error) {
     console.error('Error clearing cart items:', error);
     throw error; // Throw the error to handle it in the calling function

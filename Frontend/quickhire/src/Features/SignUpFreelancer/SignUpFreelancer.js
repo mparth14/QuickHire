@@ -128,7 +128,6 @@ const SignUpFreelancer = ({ user, onload }) => {
           body: JSON.stringify(formData),
         });
         if (response.ok) {
-          console.log('success!');
           navigate.push('/profile');
         } else {
           console.error('Failed to update user profile');
