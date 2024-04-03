@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -24,7 +24,6 @@ import HomeIcon from "@material-ui/icons/Home";
 import RatingsAndReviews from "./RatingsAndReviews";
 import { CONFIG } from "../../../config";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom";
-import { AuthContext } from "../../AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   serviceDetails: {},
   serviceTitle: {
+    marginBottom: "1rem",
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1rem",
     backgroundColor: "#000",
     color: "#fff",
+    "&:hover": {
+      backgroundColor: "#000",
+    },
   },
   paper: {
     marginTop: "2rem",
@@ -91,6 +94,9 @@ const useStyles = makeStyles((theme) => ({
   checkoutButton: {
     backgroundColor: "#000",
     color: "#fff",
+    "&:hover": {
+      backgroundColor: "#000",
+    },
   },
   sellerTitle: { marginTop: "2rem" },
   sellerAvatar: {
@@ -117,14 +123,7 @@ const IndividualServicePage = ({ user, onload }) => {
   const { id } = useParams();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("600"));
-  const { loading } = useContext(AuthContext);
   const history = useHistory();
-
-  useEffect(() => {
-    if (!user && onload) {
-      history.push("/login");
-    }
-  }, [onload, user, history]);
 
   useEffect(() => {
     const getServiceByID = async () => {
@@ -137,10 +136,6 @@ const IndividualServicePage = ({ user, onload }) => {
     getServiceByID();
   }, [id]);
 
-  if (!user || loading) {
-    return null;
-  }
-
   return (
     <div className={classes.root}>
       <Breadcrumbs aria-label="breadcrumb" className={classes.breadcrumb}>
@@ -150,29 +145,34 @@ const IndividualServicePage = ({ user, onload }) => {
         <Link href={`/category/${service?.data?.category}`}>
           {service?.data?.category}
         </Link>
-        <Link href={`/subcategory/${service?.data?.subCategory}`}>
+        <Link
+          href={`/subcategory/${service?.data?.category}?service=${service?.data?.subCategory}`}>
           {service?.data?.subCategory}
         </Link>
-        <Typography color="inherit">{service?.data?.title}</Typography>
       </Breadcrumbs>
 
       <div className={classes.serviceItems}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={8}>
             <div className={classes.serviceDetails}>
+              <div className={classes.serviceTitle}>
+                <Typography variant="h5" style={{ color: "rgb(63, 81, 181)" }}>
+                  {service?.data?.title}
+                </Typography>
+                {/* <IconButton>
+                  <FavoriteBorder />
+                </IconButton> */}
+              </div>
+
               <Card>
                 <CardMedia
                   image={service?.data?.imgUrl}
                   style={{ height: "50vh" }}
                 />
               </Card>
-              <div className={classes.serviceTitle}>
-                <Typography variant="h5">{service?.data?.title}</Typography>
-                {/* <IconButton>
-                  <FavoriteBorder />
-                </IconButton> */}
-              </div>
-              <Typography>{service?.data?.description}</Typography>
+              <Typography style={{ marginTop: "2rem" }}>
+                {service?.data?.description}
+              </Typography>
 
               {isSmallScreen && (
                 <Paper className={classes.checkoutOption}>
@@ -214,9 +214,18 @@ const IndividualServicePage = ({ user, onload }) => {
                   </div>
                 </div>
               </div>
-              <Button variant="contained" className={classes.contactButton}>
-                Contact Me
-              </Button>
+              {!user && onload ? (
+                <Button
+                  variant="contained"
+                  className={classes.contactButton}
+                  onClick={() => history.push("/login")}>
+                  Login to Contact
+                </Button>
+              ) : (
+                <Button variant="contained" className={classes.contactButton}>
+                  Contact Me
+                </Button>
+              )}
               <Paper className={classes.paper}>
                 <div className={classes.userInfoDetails}>
                   <div>
@@ -263,9 +272,18 @@ const IndividualServicePage = ({ user, onload }) => {
                     <Typography>Price: CAD{service?.data?.price}/hr</Typography>
                   </CardContent>
                   <CardActions>
-                    <Button className={classes.checkoutButton}>
-                      Proceed To Checkout
-                    </Button>
+                    {!user && onload ? (
+                      <Button
+                        variant="contained"
+                        className={classes.checkoutButton}
+                        onClick={() => history.push("/login")}>
+                        Login to Checkout
+                      </Button>
+                    ) : (
+                      <Button className={classes.checkoutButton}>
+                        Proceed To Checkout
+                      </Button>
+                    )}
                   </CardActions>
                 </Card>
               </Paper>
