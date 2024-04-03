@@ -153,6 +153,7 @@ export default function Navbar({user, onload}) {
       open={isMenuOpen}
       onClose={handleMenuClose}>
       <MenuItem onClick={handleMenuClose}><Link to="/profile" className="menu-link">Profile</Link></MenuItem>
+      <MenuItem onClick={handleMenuClose}><Link to="/checkout" className="menu-link">My Cart</Link></MenuItem>
       <MenuItem onClick={handleMenuClose}><p onClick={logout} className="menu-link">Sign Out</p></MenuItem>
     </Menu>
   );
