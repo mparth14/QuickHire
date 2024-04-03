@@ -5,6 +5,7 @@ import AboutUs from "./AboutUs";
 import CategorySection from "./CategoriesSection";
 import JoinNowSection from "./JoinNowSection";
 import { makeStyles } from "@material-ui/core";
+import Header from "../../CommonComponents/Header/Header";
 
 const useStyles = makeStyles((theme) => ({
   aboutUs: {
@@ -19,6 +20,8 @@ function LandingPage() {
     <div>
       <Hero />
       <div className={classes.aboutUs}>
+        <div style={{marginTop: "0px"}}></div>
+        <Header />
         <PopularServices />
         <AboutUs />
         <CategorySection />

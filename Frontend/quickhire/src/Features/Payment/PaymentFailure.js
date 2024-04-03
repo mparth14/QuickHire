@@ -1,5 +1,9 @@
-// Author: Parth Modi
-
+/**
+ * Author: Parth Modi
+ *
+ * Component for the page displayed when a payment fails or is cancelled by the user.
+ * This component informs the user about the payment failure and provides guidance.
+ */
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';

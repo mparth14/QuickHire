@@ -26,49 +26,50 @@ import ForgotPassword from './Features/Authentication/ForgotPassword/ForgotPassw
 import ChangePassword from './Features/Authentication/ChangePassword/ChangePassword.js';
 import UserProfile from './Features/UserProfile/UserProfile.js';
 
-import axios from "axios";
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CONFIG } from './config.js';
 
 function App() {
+  const isHomePage =
+    window.location.pathname === '/' ||
+    window.location.pathname === '/login' ||
+    window.location.pathname === '/signup';
   const [user, setUser] = useState(null);
   const [userLoaded, setUserLoaded] = useState(false);
-  const storedToken = localStorage.getItem("token");
+  const storedToken = localStorage.getItem('token');
 
-  useEffect(()=>{
-    if(storedToken){
+  useEffect(() => {
+    if (storedToken) {
       getUserDetails();
-    }
-    else{
+    } else {
       setUserLoaded(true);
     }
-      
-  }, [])
+  }, []);
 
   const getUserDetails = () => {
-    axios.get(CONFIG.BASE_PATH + CONFIG.USER_PATH,
-        {
-            headers: {'Authorization': 'Bearer '+ storedToken }
-        } )
-    .then((response) => {
-      console.log(response);
-      if(response.status === 200){
-        setUser(response.data);
-        setUserLoaded(true);
-      }
-    })
-    .catch(function (error) {
-        toast.error("Issue with authentication");
-    });
-  }
+    axios
+      .get(CONFIG.BASE_PATH + CONFIG.USER_PATH, {
+        headers: { Authorization: 'Bearer ' + storedToken },
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          setUser(response.data);
+          setUserLoaded(true);
+        }
+      })
+      .catch(function (error) {
+        toast.error('Issue with authentication');
+      });
+  };
 
   return (
     <div>
-      
-        <Router>
-          <Navbar user={user} onload={userLoaded}/>
-          <Header />
-          <Switch className='remainingBody'>
+      <Router>
+        <Navbar user={user} onload={userLoaded} />
+        {!isHomePage && <Header />}
+        <Switch className='remainingBody'>
           <AuthProvider>
             <Route exact path='/'>
               <Home />
@@ -77,7 +78,7 @@ function App() {
               <SignUp />
             </Route>
             <Route exact path='/login'>
-              <Login/>
+              <Login />
             </Route>
             <Route exact path='/forgot-password/'>
               <ForgotPassword />
@@ -92,7 +93,7 @@ function App() {
               <UserProfile user={user} onload={userLoaded} onUserUpdate={setUser}/>
             </Route>
             <Route exact path='/checkout'>
-              <Checkout />
+              <Checkout user={user} onload={userLoaded} />
             </Route>
             <Route exact path='/payment'>
               <PaymentPage />
@@ -121,12 +122,11 @@ function App() {
             <Route exact path='/payment-failure'>
               <PaymentFailure />
             </Route>
-            </AuthProvider>
-          </Switch>
-          <Footer />
-        </Router>
-        <ToastContainer />
-      
+          </AuthProvider>
+        </Switch>
+        <Footer />
+      </Router>
+      <ToastContainer />
     </div>
   );
 }
