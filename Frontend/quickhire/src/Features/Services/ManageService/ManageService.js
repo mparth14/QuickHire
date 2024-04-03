@@ -22,13 +22,15 @@ import {
     DialogActions,
     CardActionArea,
     CardMedia,
-    Tooltip
+    Tooltip,
+
 } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { green } from '@material-ui/core/colors';
-import { Close, Edit, Delete, Block, CheckCircle } from '@material-ui/icons';
+import { Close, Edit, Block } from '@material-ui/icons';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {  ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { imageStorage } from '../../../utils/firebaseConfig.js';
 
@@ -115,6 +117,7 @@ const TabPanel = (props) => {
         </div>
     );
 };
+const cardsPerPage = 16;
 
 const ManageService = () => {
     const classes = useStyles();
@@ -133,6 +136,12 @@ const ManageService = () => {
     const fileInputRef = useRef(null);
     const [confirmEnableDialogOpen, setConfirmEnableDialogOpen] = useState(false);
     const [enableServiceId, setEnableServiceId] = useState('');
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const handlePageChange = (event, page) => {
+        setCurrentPage(page);
+    };
 
     // Function to upload image to Firebase
     const uploadImageToFirebase = async (image) => {
@@ -195,6 +204,7 @@ const ManageService = () => {
     // Function to handle tab change
     const handleTabChange = (event, newValue) => {
         setActiveTabIndex(newValue);
+        setCurrentPage(1);
     };
 
     // Function to handle editing service
@@ -311,7 +321,7 @@ const ManageService = () => {
             reader.onload = () => {
                 setEditedService(prevState => ({
                     ...prevState,
-                    imgUrl: reader.result 
+                    imgUrl: reader.result
                 }));
             };
         } else {
@@ -323,7 +333,7 @@ const ManageService = () => {
                 setSelectedFile(null);
             }
             if (fileInputRef.current) {
-                fileInputRef.current.value = null; 
+                fileInputRef.current.value = null;
             }
         }
     };
@@ -352,6 +362,8 @@ const ManageService = () => {
             setConfirmEnableDialogOpen(false);
         }
     };
+    const showActivePagination = services.filter((service) => service.isActive).length > cardsPerPage;
+    const showDisabledPagination = services.filter((service) => !service.isActive).length > cardsPerPage;
 
     return (
         <ThemeProvider theme={theme}>
@@ -371,15 +383,16 @@ const ManageService = () => {
                         <Tab label="Disabled Services" />
                     </Tabs>
                 </Box>
-                <TabPanel value={activeTabIndex} index={0}>
+                <TabPanel value={activeTabIndex} index={0} >
                     {services.filter((service) => service.isActive).length === 0 ? (
                         <Typography variant="h5" align="center" style={{ marginTop: '20px' }} gutterBottom>
                             No services to show
                         </Typography>
                     ) : (
-                        <Grid container spacing={3}>
+                        <Grid container spacing={3} >
                             {services
                                 .filter((service) => service.isActive)
+                                .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
                                 .map((service) => (
                                     <Grid item xs={12} sm={6} md={3} key={service._id}>
                                         <Card className={classes.card}>
@@ -438,8 +451,22 @@ const ManageService = () => {
                                         </Card>
                                     </Grid>
                                 ))}
+
                         </Grid>
+
+
                     )}
+                    {showActivePagination && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                            <div>
+                                <Pagination
+                                    count={Math.ceil(services.filter((service) => service.isActive).length / cardsPerPage)}
+                                    color="primary"
+                                    onChange={handlePageChange}
+                                />
+                            </div>
+                        </div>)}
+
                 </TabPanel>
                 <TabPanel value={activeTabIndex} index={1}>
                     {services.filter((service) => !service.isActive).length === 0 ? (
@@ -450,6 +477,7 @@ const ManageService = () => {
                         <Grid container spacing={3}>
                             {services
                                 .filter((service) => !service.isActive)
+                                .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
                                 .map((service) => (
                                     <Grid item xs={12} sm={6} md={3} key={service._id}>
                                         <Card className={classes.card}>
@@ -486,7 +514,20 @@ const ManageService = () => {
                                         </Card>
                                     </Grid>
                                 ))}
+
                         </Grid>
+                    )}
+                    {showDisabledPagination && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                            <div>
+
+                                <Pagination
+                                    count={Math.ceil(services.filter((service) => !service.isActive).length / cardsPerPage)}
+                                    color="primary"
+                                    onChange={handlePageChange}
+                                />
+                            </div>
+                        </div>
                     )}
                 </TabPanel>
 
@@ -606,7 +647,7 @@ const ManageService = () => {
                                             <Button variant="outlined" color="secondary" onClick={() => {
                                                 setSelectedFile(null);
                                                 if (fileInputRef.current) {
-                                                    fileInputRef.current.value = null; 
+                                                    fileInputRef.current.value = null;
                                                 }
                                                 setEditedService(prevState => ({ ...prevState, imgUrl: '' }))
                                             }}>
