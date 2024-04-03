@@ -197,7 +197,7 @@ const SubCategoryService = () => {
       <div >
         <h2 style={{ marginLeft: "8px", marginTop: "20px", marginBottom: "20px", color: "#3f51b5" }}>{subCategory}</h2>
         <div>
-          {currentItems.length > 0 && (
+          {originalData.length > 0 && (
             <div>
               <RatingFilter value={state.rating} onChange={handleRatingChange} />
               <BudgetFilter value={state.budget} onChange={handleBudgetChange} />
