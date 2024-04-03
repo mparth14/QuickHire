@@ -191,7 +191,7 @@ const SubCategoryService = () => {
           <Link onClick={handleClick} className={classes.link}>
             <HomeIcon className={classes.icon} />
           </Link>
-          <Link color="inherit" onClick={handleClick} style={{textTransform: "capitalize"}} > {category} </Link>
+          <Link onClick={handleClick} style={{textTransform: "capitalize"}} > {category} </Link>
         </Breadcrumbs>
       </div>
       <div >

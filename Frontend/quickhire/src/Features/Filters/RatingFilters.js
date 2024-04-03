@@ -15,14 +15,19 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "#3F51B5"
+        }
+      }
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
-  }));
+}));
 
 const RatingFilter = ({ value, onChange }) => {
-    const classes = useStyles();
+  const classes = useStyles();
   return (
     <FormControl variant="outlined" className={classes.formControl}>
       <InputLabel htmlFor="outlined-seller-native-simple">Seller Ratings</InputLabel>
@@ -31,6 +36,9 @@ const RatingFilter = ({ value, onChange }) => {
         value={value}
         onChange={onChange}
         label="Seller Rating"
+        inputProps={{
+          id: 'outlined-seller-native-simple',
+        }}
       >
         <option aria-label="None" value="" />
         <option value={"4.5"}>4.5 and above</option>
