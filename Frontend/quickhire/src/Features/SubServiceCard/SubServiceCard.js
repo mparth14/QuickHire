@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '300px', // Default width
     borderRadius: '10px',
     margin: '10px',
-    height: "520px"
+    height: "530px"
   },
 }));
 
