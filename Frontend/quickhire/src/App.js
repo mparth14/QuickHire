@@ -1,3 +1,10 @@
+
+/**
+ * Main component for the application.
+ * Handles routing and authentication.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -48,6 +55,9 @@ function App() {
     }
   }, []);
 
+  /**
+   * Fetches user details from the backend.
+   */
   const getUserDetails = () => {
     axios
       .get(CONFIG.BASE_PATH + CONFIG.USER_PATH, {

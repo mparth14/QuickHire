@@ -36,8 +36,7 @@
 @media only screen and (max-width: 600px) {
     .card-btn {
         float: none; 
-        margin-left: 10px; 
-        width: 100%; 
+        margin-left: 10px;
     }
 }
 .card-text{

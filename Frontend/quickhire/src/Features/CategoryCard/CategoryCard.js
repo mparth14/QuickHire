@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
 import "./CategoryCard.css";
 import { CONFIG } from "../../config";
 import { Grid } from "@material-ui/core";
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
   },
   card: {
-    minWidth: "300px", // Default width
+    minWidth: "300px",
     borderRadius: "10px",
     margin: "10px",
   },
@@ -95,7 +95,6 @@ export default function MediaCard() {
           Explore {categoryFromURL}
         </h2>
       </div>
-      {/* <div className='card-design'> */}
       <div style={{ justifyContent: "center" }}>
         <Grid container spacing={5} className={classes.gridContainer}>
           {cardData.map((data, index) => (
@@ -131,8 +130,7 @@ export default function MediaCard() {
             </Grid>
           ))}
         </Grid>
-      </div>
-      {/* </div> */}
+        </div>
     </div>
   );
 }

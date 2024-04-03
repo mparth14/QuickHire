@@ -15,14 +15,19 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "#3F51B5"
+        }
+      }
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
-  }));
+}));
 
 const PopularFilter = ({ value, onChange }) => {
-    const classes = useStyles();
+  const classes = useStyles();
   return (
     <FormControl variant="outlined" className={classes.formControl}>
       <InputLabel htmlFor="outlined-age-native-simple">Popular</InputLabel>

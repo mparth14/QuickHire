@@ -1,5 +1,12 @@
+/**
+ * @Author Hiteshkumar Gupta
+ * Component for displaying information about a service provider.
+ * @param {Object} props - The props object.
+ * @param {Object} props.cardInfo - Information about the service provider.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
 import React from 'react'
-import Profile from "../../../assets/profile.jpg"
 import "./InfoCard.css"
 import Rating from "../../../assets/rating.png"
 
