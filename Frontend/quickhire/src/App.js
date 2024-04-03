@@ -1,49 +1,51 @@
+
 /**
  * Main component for the application.
  * Handles routing and authentication.
  * @returns {JSX.Element} The rendered JSX element.
  */
 
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Home from './Features/Home/Home';
-import SignUp from './Features/Authentication/Signup/Signup';
-import Checkout from './Features/Checkout/Checkout';
-import ContactUs from './Features/ContactUs/ContactUs.js';
-import './App.css';
-import FAQPage from './Features/FAQ/FAQ';
-import PaymentPage from './Features/Payment/Payment.js';
-import Navbar from './CommonComponents/Navbar/Navbar.js';
-import Header from './CommonComponents/Header/Header.js';
-import Footer from './CommonComponents/Footer/Footer.js';
-import ServiceOrdersView from './Features/Services/ServiceOrders/ServiceOrdersView.js';
-import ServiceCreationPage from './Features/Services/ServiceCreationPage/ServiceCreationPage.js';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Home from "./Features/Home/Home";
+import SignUp from "./Features/Authentication/Signup/Signup";
+import Checkout from "./Features/Checkout/Checkout";
+import ContactUs from "./Features/ContactUs/ContactUs.js";
+import "./App.css";
+import FAQPage from "./Features/FAQ/FAQ";
+import PaymentPage from "./Features/Payment/Payment.js";
+import Navbar from "./CommonComponents/Navbar/Navbar.js";
+import Header from "./CommonComponents/Header/Header.js";
+import Footer from "./CommonComponents/Footer/Footer.js";
+import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
+import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
 
-import CategoryCard from './Features/CategoryCard/CategoryCard';
-import SubCategoryService from './Features/SubCategoryService/SubCategoryService';
-import PaymentSuccess from './Features/Payment/PaymentSuccess.js';
-import PaymentFailure from './Features/Payment/PaymentFailure.js';
-import SignUpFreelancer from './Features/SignUpFreelancer/SignUpFreelancer.js';
-import Login from './Features/Authentication/Login/Login.js';
-import { AuthProvider } from './Features/AuthContext.js';
-import ForgotPassword from './Features/Authentication/ForgotPassword/ForgotPassword.js';
-import ChangePassword from './Features/Authentication/ChangePassword/ChangePassword.js';
-import UserProfile from './Features/UserProfile/UserProfile.js';
+import CategoryCard from "./Features/CategoryCard/CategoryCard";
+import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
+import PaymentSuccess from "./Features/Payment/PaymentSuccess.js";
+import PaymentFailure from "./Features/Payment/PaymentFailure.js";
+import SignUpFreelancer from "./Features/SignUpFreelancer/SignUpFreelancer.js";
+import IndividualServicePage from "./Features/Services/IndividualServicePage/IndividualServicePage.js";
+import Login from "./Features/Authentication/Login/Login.js";
+import { AuthProvider } from "./Features/AuthContext.js";
+import ForgotPassword from "./Features/Authentication/ForgotPassword/ForgotPassword.js";
+import ChangePassword from "./Features/Authentication/ChangePassword/ChangePassword.js";
+import UserProfile from "./Features/UserProfile/UserProfile.js";
 
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { CONFIG } from './config.js';
+import axios from "axios";
+import { toast } from "react-toastify";
+import { CONFIG } from "./config.js";
 
 function App() {
   const isHomePage =
-    window.location.pathname === '/' ||
-    window.location.pathname === '/login' ||
-    window.location.pathname === '/signup';
+    window.location.pathname === "/" ||
+    window.location.pathname === "/login" ||
+    window.location.pathname === "/signup";
   const [user, setUser] = useState(null);
   const [userLoaded, setUserLoaded] = useState(false);
-  const storedToken = localStorage.getItem('token');
+  const storedToken = localStorage.getItem("token");
 
   useEffect(() => {
     if (storedToken) {
@@ -59,7 +61,7 @@ function App() {
   const getUserDetails = () => {
     axios
       .get(CONFIG.BASE_PATH + CONFIG.USER_PATH, {
-        headers: { Authorization: 'Bearer ' + storedToken },
+        headers: { Authorization: "Bearer " + storedToken },
       })
       .then((response) => {
         console.log(response);
@@ -69,7 +71,7 @@ function App() {
         }
       })
       .catch(function (error) {
-        toast.error('Issue with authentication');
+        toast.error("Issue with authentication");
       });
   };
 
@@ -78,57 +80,64 @@ function App() {
       <Router>
         <Navbar user={user} onload={userLoaded} />
         {!isHomePage && <Header />}
-        <Switch className='remainingBody'>
+        <Switch className="remainingBody">
           <AuthProvider>
-            <Route exact path='/'>
+            <Route exact path="/">
               <Home />
             </Route>
-            <Route exact path='/signup'>
+            <Route exact path="/signup">
               <SignUp />
             </Route>
-            <Route exact path='/login'>
+            <Route exact path="/login">
               <Login />
             </Route>
-            <Route exact path='/forgot-password/'>
+            <Route exact path="/forgot-password/">
               <ForgotPassword />
             </Route>
-            <Route exact path='/change-password/:user_id/:token'>
+            <Route exact path="/change-password/:user_id/:token">
               <ChangePassword />
             </Route>
-            <Route exact path='/register-freelancer'>
+            <Route exact path="/register-freelancer">
               <SignUpFreelancer user={user} onload={userLoaded} />
             </Route>
-            <Route exact path='/profile'>
-              <UserProfile user={user} onload={userLoaded} onUserUpdate={setUser}/>
+            <Route exact path="/profile">
+              <UserProfile
+                user={user}
+                onload={userLoaded}
+                onUserUpdate={setUser}
+              />
             </Route>
-            <Route exact path='/checkout'>
+            <Route exact path="/checkout">
               <Checkout user={user} onload={userLoaded} />
             </Route>
-            <Route exact path='/payment'>
+            <Route exact path="/payment">
               <PaymentPage />
             </Route>
-            <Route exact path='/faqs'>
+            <Route exact path="/faqs">
               <FAQPage />
             </Route>
-            <Route exact path='/contact-us'>
+            <Route exact path="/contact-us">
               <ContactUs />
             </Route>
-            <Route exact path='/service-orders'>
+            <Route exact path="/service-orders">
               <ServiceOrdersView />
             </Route>
-            <Route exact path='/service-creation'>
+            <Route exact path="/service-creation">
               <ServiceCreationPage />
             </Route>
-            <Route exact path='/category/:name'>
+            <Route exact path="/services/:id">
+              <IndividualServicePage user={user} onload={userLoaded} />
+            </Route>
+            <Route exact path="/category/:name">
               <CategoryCard />
             </Route>
-            <Route exact path='/subcategory/:name'>
+            <Route exact path="/subcategory/:name">
               <SubCategoryService />
             </Route>
-            <Route exact path='/payment-success'>
+            <Route exact path="/payment-success">
               <PaymentSuccess />
             </Route>
-            <Route exact path='/payment-failure'>
+            <Route exact path="/payment-failure">
               <PaymentFailure />
             </Route>
           </AuthProvider>
