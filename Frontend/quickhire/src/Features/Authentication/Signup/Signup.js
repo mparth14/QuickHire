@@ -132,7 +132,7 @@ const Singup = () => {
     axios.post(CONFIG.BASE_PATH + CONFIG.SIGNUP_PATH, signupRequest)
     .then((response) => {
       console.log(response);
-      if(response.status == 200){
+      if(response.status == 200 || response.status === 201){
         //TODO: route to home page
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
