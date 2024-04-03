@@ -32,6 +32,7 @@ import { useHistory } from 'react-router-dom';
 import { CONFIG } from './config.js';
 
 function App() {
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/login' || window.location.pathname === '/signup';
   const [user, setUser] = useState(null);
   const [userLoaded, setUserLoaded] = useState(false);
   const storedToken = localStorage.getItem("token");
@@ -68,7 +69,7 @@ function App() {
       
         <Router>
           <Navbar user={user} onload={userLoaded}/>
-          <Header />
+          {!isHomePage && <Header />}
           <Switch className='remainingBody'>
           <AuthProvider>
             <Route exact path='/'>
