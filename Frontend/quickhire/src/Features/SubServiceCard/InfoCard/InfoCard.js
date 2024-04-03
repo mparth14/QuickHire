@@ -22,7 +22,7 @@ const InfoCard = (props) => {
           <p className='job-title'>{cardInfo.jobTitle}</p>
         </div>
         {cardInfo.rating > 4.5 && (
-        <div>
+        <div className='popular-btn-container'>
           <div className='card-btn'>Popular</div>
         </div>
       )}

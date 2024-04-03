@@ -14,6 +14,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import "./SubServiceCard.css";
+import { Link } from 'react-router-dom';
+
 import InfoCard from "./InfoCard/InfoCard";
 import { Grid } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -66,6 +68,9 @@ export default function SubServiceCard(props) {
       <Grid container spacing={5} className={classes.gridContainer}>
         {cardData.map((data, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Link
+            key={index}
+            to={`/services/${data.id}`} className="category-link-deco">
             <Card className={classes.card}>
               <CardActionArea>
                 <CardMedia className={"media"} image={data.image} />
@@ -94,6 +99,7 @@ export default function SubServiceCard(props) {
                 </CardContent>
               </CardActionArea>
             </Card>
+          </Link>
           </Grid>
         ))}
       </Grid>
