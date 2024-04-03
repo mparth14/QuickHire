@@ -148,6 +148,7 @@ export default function Navbar({user, onload}) {
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
+    !onload || !user ?
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -157,16 +158,25 @@ export default function Navbar({user, onload}) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}>
       <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link to="/login">Sign In</Link>
+        <Link className="menu-link" to="/login">Sign In</Link>
       </MenuItem>
       <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link to="/signup">Sign Up</Link>
+        <Link className="menu-link" to="/signup">Sign Up</Link>
+      </MenuItem>
+    </Menu> :
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/profile">Profile</Link>
       </MenuItem>
       <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link to="/profile">Profile</Link>
-      </MenuItem>
-      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link to="/">Sign Out</Link>
+        <p className="menu-link" onClick={logout}>Sign Out</p>
       </MenuItem>
     </Menu>
   );

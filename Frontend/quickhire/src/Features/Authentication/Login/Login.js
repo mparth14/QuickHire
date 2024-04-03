@@ -152,9 +152,15 @@ const Login = () => {
                       </InputAdornment>
                     ),}}
                 />
-                <Link to="/forgot-password">
-                      Forgot password?
-                </Link>
+                <div style={{display: 'flex'}}>
+                  <Link to="/forgot-password">
+                        Forgot password?
+                  </Link>
+                  <Link to="/signup" style={{marginLeft: 'auto'}}>
+                        Signup instead?
+                  </Link>
+                </div>
+                
                 <Button
                   variant="contained"
                   className='login-button'

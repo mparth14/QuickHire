@@ -9,6 +9,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
 import { CONFIG } from '../../../config.js';
 import { AuthContext } from '../../AuthContext';
+import { Link } from "react-router-dom";
 
 import "./Signup.css";
 
@@ -260,33 +261,9 @@ const Singup = () => {
                   error={Boolean(confirmPasswordError)}
                   helperText={confirmPasswordError}
                 />
-                <InputLabel
-                  htmlFor='profilePicture'
-                  sx={{ marginTop: 2, color: 'primary.secondary' }}
-                >
-                  Profile Picture:
-                </InputLabel>
-                <Button
-                  component='label'
-                  variant='contained'
-                  startIcon={<CloudUploadIcon />}
-                  htmlFor='profilePicture'
-                  sx={{
-                    marginBottom: 2,
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                  }}
-                >
-                  Upload File
-                  <input
-                    id='profilePicture'
-                    type='file'
-                    accept="image/jpeg, image/png"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
-                </Button>
-              <div id='selectedFileName' className='selected-file'></div>
+                <Link to="/login">
+                      Login instead?
+                </Link>
                 <Button
                   variant="contained"
                   className='signup-button'
