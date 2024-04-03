@@ -25,13 +25,14 @@ router.post('/create-checkout-session', async (req, res) => {
   }));
 
   // Create a Stripe Checkout Session
+  const baseUrl = req.headers.origin;
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: 'http://localhost:3000/payment-success',
-      cancel_url: 'http://localhost:3000/payment-failure',
+      success_url: `${baseUrl}/payment-success`,
+      cancel_url: `${baseUrl}/payment-failure`,
     });
 
     res.json({ id: session.id });

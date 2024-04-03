@@ -14,41 +14,61 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { loadStripe } from '@stripe/stripe-js';
+import { CONFIG } from '../../config';
+import emptyCartImage from '../../assets/empty-cart.png';
+import { useHistory } from 'react-router-dom';
 
-const CheckoutPage = () => {
+const CheckoutPage = ({ user, onload }) => {
+  const navigate = useHistory();
+  const [token, setToken] = useState('');
   const stripePromise = loadStripe(
     'pk_test_51OpaEIEESxxIMUb2yF1IhG32GJV16TiGcwKKJnQgz4X726DbQscGQRRHqe5TzKoqftbBHxiQgrVPq6pebSNDfsaR00mrbuYE1E',
   );
-
   const [cartItems, setCartItems] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:4000/api/v1/cart/660423ed59de39016941dcd2`,
-        );
-        const cartData = await response.json();
-        setCartItems(cartData.services);
-        setTotalCost(cartData.totalPrice);
-      } catch (error) {
-        console.error('Error fetching cart items:', error);
-      }
-    };
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken && !user) {
+      navigate.push('/login');
+    } else {
+      const fetchCartItems = async () => {
+        try {
+          console.log("user::", user);
+          const response = await fetch(
+            `http://localhost:4000/api/v1/cart/${user._id}`,
+          );
+          console.log('doingggggg');
 
-    fetchCartItems();
-  }, []);
+          if (!response.ok) {
+            console.log('errorrrrrrr');
+            throw new Error('Failed to fetch cart items');
+          }
+          const cartData = await response.json();
+          setCartItems(cartData.services || []);
+          setTotalCost(cartData.totalPrice || 0);
+        } catch (error) {
+          console.error('Error fetching cart items:', error);
+        }
+      };
+
+      fetchCartItems();
+    }
+  }, [onload, user, navigate]);
+
+  if (!user) {
+    return null;
+  }
 
   const handleRemoveItem = async (serviceId) => {
     try {
-      const response = await fetch('http://localhost:4000/api/v1/cart/remove', {
+      const response = await fetch(CONFIG.BASE_PATH + 'cart/remove', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: '660423ed59de39016941dcd2',
+          userId: '660c6ec65fc4364562ff6431',
           serviceId: serviceId,
         }),
       });
@@ -84,7 +104,7 @@ const CheckoutPage = () => {
     // Call your backend to create a Stripe Checkout Session
     try {
       const response = await fetch(
-        'http://localhost:4000/api/v1/create-checkout-session',
+        CONFIG.BASE_PATH + 'create-checkout-session',
         {
           method: 'POST',
           headers: {
@@ -111,9 +131,30 @@ const CheckoutPage = () => {
 
   return (
     <Container>
-      <Typography variant='h2' align='center' gutterBottom>
+      <Typography variant='h3' align='center' gutterBottom color='primary'>
         Checkout
       </Typography>
+
+      {cartItems.length === 0 && (
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          flexDirection='column'
+        >
+          <img
+            src={emptyCartImage}
+            alt='Empty Cart'
+            style={{ width: '50%', maxWidth: '275px', marginTop: '5px' }}
+            gutterBottom
+          />
+          <Typography variant='h6' align='center' gutterBottom>
+            Uh oh! Your cart is empty. Select your favorite services and add
+            them here.
+          </Typography>
+        </Box>
+      )}
+
       <Grid container spacing={2}>
         {cartItems.map((service) => (
           <Grid item xs={12} key={service._id}>
@@ -174,21 +215,25 @@ const CheckoutPage = () => {
           </Grid>
         ))}
       </Grid>
-      <Box mt={4} display='flex' justifyContent='flex-end'>
-        <Typography variant='h6'>
-          Total Cost: ${totalCost.toFixed(2)}
-        </Typography>
-      </Box>
-      <Box mt={4} display='flex' justifyContent='center'>
-        <Button
-          onClick={handleCheckout}
-          variant='contained'
-          color='primary'
-          size='large'
-        >
-          Checkout
-        </Button>
-      </Box>
+      {totalCost > 0 && (
+        <>
+          <Box mt={4} display='flex' justifyContent='flex-end'>
+            <Typography variant='h6'>
+              Total Cost: ${totalCost.toFixed(2)}
+            </Typography>
+          </Box>
+          <Box mt={4} display='flex' justifyContent='center'>
+            <Button
+              onClick={handleCheckout}
+              variant='contained'
+              color='primary'
+              size='large'
+            >
+              Checkout
+            </Button>
+          </Box>
+        </>
+      )}
     </Container>
   );
 };

@@ -1,65 +1,56 @@
 // Author: Parth Modi
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { Typography, Select, MenuItem, InputLabel } from '@mui/material';
 import { FaTimes, FaPlus } from 'react-icons/fa';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useHistory } from 'react-router-dom';
+import { CONFIG } from '../../config.js';
 
-const SignUpFreelancer = () => {
+const SignUpFreelancer = ({ user, onload }) => {
   const navigate = useHistory();
   const [skills, setSkills] = useState([]);
-  const [selectedProfileFile, setSelectedProfileFile] = useState(null);
-  const [selectedResumeFile, setSelectedResumeFile] = useState(null);
-  const [fullNameError, setFullNameError] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
   const [primaryOccupationError, setPrimaryOccupationError] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [yearsOfExperienceError, setYearsOfExperienceError] = useState('');
+  const [token, setToken] = useState('');
 
-  const handleProfileFileChange = (event) => {
-    const file = event.target.files[0];
-    const allowedFormats = ['image/jpeg', 'image/jpg', 'image/png'];
-
-    if (file && allowedFormats.includes(file.type)) {
-      setSelectedProfileFile(file);
-      document.getElementById(
-        'selectedProfileFileName',
-      ).innerText = `Selected Profile Picture: ${file.name}`;
-    } else {
-      setSelectedProfileFile(null);
-      const errorText = document.getElementById('selectedProfileFileName');
-      errorText.innerText =
-        'Please select a valid image file (jpg, jpeg, or png).';
-      errorText.style.color = 'red';
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+    if (!user && onload) {
+      navigate.push('/login');
     }
-  };
+  }, [onload, user, navigate]);
 
-  const handleResumeFileChange = (event) => {
-    const file = event.target.files[0];
-    const allowedFormats = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ];
+  if (!user) {
+    return null;
+  }
 
-    if (file && allowedFormats.includes(file.type)) {
-      setSelectedResumeFile(file);
-      document.getElementById(
-        'selectedResumeFileName',
-      ).innerText = `Selected Resume: ${file.name}`;
-    } else {
-      // Reset the selected file and display an error message
-      setSelectedResumeFile(null);
-      const errorText = document.getElementById('selectedResumeFileName');
-      errorText.innerText = 'Please select a valid file (PDF, DOC, or DOCX).';
-      errorText.style.color = 'red'; // Applying inline CSS for red color
-    }
-  };
+  // const handleResumeFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   const allowedFormats = [
+  //     'application/pdf',
+  //     'application/msword',
+  //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  //   ];
+
+  //   if (file && allowedFormats.includes(file.type)) {
+  //     setSelectedResumeFile(file);
+  //     document.getElementById(
+  //       'selectedResumeFileName',
+  //     ).innerText = `Selected Resume: ${file.name}`;
+  //   } else {
+  //     // Reset the selected file and display an error message
+  //     setSelectedResumeFile(null);
+  //     const errorText = document.getElementById('selectedResumeFileName');
+  //     errorText.innerText = 'Please select a valid file (PDF, DOC, or DOCX).';
+  //     errorText.style.color = 'red'; // Applying inline CSS for red color
+  //   }
+  // };
 
   const handleAddSkill = () => {
     const newSkill = document.getElementById('skillsInput').value.trim();
@@ -82,24 +73,24 @@ const SignUpFreelancer = () => {
     }
   };
 
-  const handleSubmit = () => {
+  // const convertFileToBase64 = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result); // Return full Base64 string
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
+
+  const handleSubmit = async () => {
     let isValid = true;
 
-    if (!document.getElementById('fullName').value.trim()) {
-      setFullNameError('Full Name is required');
-      isValid = false;
-    } else {
-      setFullNameError('');
-    }
+    // Validate form fields
+    const primaryOccupation = document
+      .getElementById('primaryOccupation')
+      .value.trim();
 
-    if (!document.getElementById('description').value.trim()) {
-      setDescriptionError('Description is required');
-      isValid = false;
-    } else {
-      setDescriptionError('');
-    }
-
-    if (!document.getElementById('primaryOccupation').value.trim()) {
+    if (!primaryOccupation) {
       setPrimaryOccupationError('Primary Occupation is required');
       isValid = false;
     } else {
@@ -113,8 +104,38 @@ const SignUpFreelancer = () => {
       setYearsOfExperienceError('');
     }
 
+    // // convert resume to base64
+    // const resumeFile = selectedResumeFile;
+    // const resumef = resumeFile ? await convertFileToBase64(resumeFile) : null;
+    const occupation = primaryOccupation;
+    const experience = yearsOfExperience;
+    const isFreelancer = true;
     if (isValid) {
-      navigate('/success');
+      const formData = {
+        isFreelancer,
+        occupation,
+        skills,
+        experience,
+      };
+
+      try {
+        const response = await fetch(CONFIG.BASE_PATH + 'user/' + user._id, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+          body: JSON.stringify(formData),
+        });
+        if (response.ok) {
+          console.log('success!');
+          navigate.push('/profile');
+        } else {
+          console.error('Failed to update user profile');
+        }
+      } catch (error) {
+        console.error('Error creating freelancer:', error);
+      }
     }
   };
 
@@ -124,71 +145,17 @@ const SignUpFreelancer = () => {
         <Typography
           variant='h3'
           align='center'
+          color='primary'
           gutterBottom
           style={{
             fontFamily: 'Arial, sans-serif',
             fontWeight: 'bolder',
-            color: 'black',
             letterSpacing: '1px',
-            marginBottom: '20px',
+            marginBottom: '30px',
           }}
         >
           Register as a Freelancer
         </Typography>
-
-        <Typography variant='h4' gutterBottom color='primary'>
-          Personal Information
-        </Typography>
-        <TextField
-          required
-          fullWidth
-          label='Full Name'
-          id='fullName'
-          placeholder='Enter your full name'
-          error={Boolean(fullNameError)}
-          helperText={fullNameError}
-          margin='normal'
-        />
-        <TextField
-          id='description'
-          fullWidth
-          label='Description'
-          multiline
-          rows={4}
-          placeholder='Add your description'
-          required
-          error={Boolean(descriptionError)}
-          helperText={descriptionError}
-          margin='normal'
-        />
-
-        <InputLabel
-          htmlFor='profilePicture'
-          sx={{ marginTop: 2, color: 'primary.main' }}
-        >
-          Profile Picture:
-        </InputLabel>
-        <Button
-          component='label'
-          variant='contained'
-          startIcon={<CloudUploadIcon />}
-          htmlFor='profilePicture'
-          sx={{
-            marginBottom: 2,
-            backgroundColor: 'primary.main',
-            color: 'white',
-          }}
-        >
-          Upload File
-          <input
-            id='profilePicture'
-            type='file'
-            style={{ display: 'none' }}
-            onChange={handleProfileFileChange}
-            accept='.jpg,.jpeg,.png'
-          />
-        </Button>
-        <div id='selectedProfileFileName' className='selected-file'></div>
 
         <Typography variant='h5' gutterBottom color='primary'>
           Professional Information
@@ -203,7 +170,7 @@ const SignUpFreelancer = () => {
           margin='normal'
         />
         <div>
-          <Typography variant='h6' gutterBottom color='primary'>
+          <Typography variant='h5' gutterBottom color='primary'>
             Skills
           </Typography>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -235,7 +202,10 @@ const SignUpFreelancer = () => {
             htmlFor='yearsOfExperience'
             sx={{ marginTop: 2, color: 'primary.main' }}
           >
-            Years of Experience
+            <Typography variant='h5' color='primary'>
+              {' '}
+              Years of Experience
+            </Typography>
           </InputLabel>
           <Select
             required
@@ -251,10 +221,12 @@ const SignUpFreelancer = () => {
             <MenuItem value='' disabled>
               Select one
             </MenuItem>
-            <MenuItem value='none'>None or less than a year</MenuItem>
-            <MenuItem value='1'>1 year</MenuItem>
-            <MenuItem value='2'>2 years</MenuItem>
-            <MenuItem value='3'>3 years or more</MenuItem>
+            <MenuItem value='None or less than a year'>
+              None or less than a year
+            </MenuItem>
+            <MenuItem value='1 year'>1 year</MenuItem>
+            <MenuItem value='2 years'>2 years</MenuItem>
+            <MenuItem value='3 years or more'>3 years or more</MenuItem>
           </Select>
           {yearsOfExperienceError && (
             <Typography variant='caption' color='error' sx={{ marginTop: 1 }}>
@@ -262,34 +234,6 @@ const SignUpFreelancer = () => {
             </Typography>
           )}
         </div>
-
-        <InputLabel
-          htmlFor='resume'
-          sx={{ marginTop: 2, color: 'primary.main' }}
-        >
-          Resume:
-        </InputLabel>
-        <Button
-          component='label'
-          variant='contained'
-          startIcon={<CloudUploadIcon />}
-          htmlFor='resume'
-          sx={{
-            marginBottom: 2,
-            backgroundColor: 'primary.main',
-            color: 'white',
-          }}
-        >
-          Upload File
-          <input
-            id='resume'
-            type='file'
-            style={{ display: 'none' }}
-            onChange={handleResumeFileChange}
-            accept='.pdf,.doc,.docx'
-          />
-        </Button>
-        <div id='selectedResumeFileName' className='selected-file'></div>
         <div
           style={{
             display: 'flex',
