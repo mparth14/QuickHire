@@ -1,3 +1,7 @@
+/**
+ * Footer components, it will stick to the bottom of the page.
+ * @return Footer componnet 
+ */
 import React from "react";
 import {
   Box,

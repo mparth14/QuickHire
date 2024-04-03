@@ -1,3 +1,7 @@
+/**
+ * Header component, sticks below the Navbar
+ * @returns Header component
+ */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import "./Header.css"; // Import your CSS file for styling

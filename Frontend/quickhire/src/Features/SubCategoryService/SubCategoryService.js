@@ -1,15 +1,17 @@
+/**
+ * @Author Hiteshkumar Gupta
+ * SubCategoryService component displaying services under a subcategory.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import HomeIcon from '@material-ui/icons/Home';
 import "./SubCategoryService.css"
-import SelectButton from "../SelectButton/SelectButton"
 import SubPagination from "../SubPagination/SubPagination"
 import SubServiceCard from "../SubServiceCard/SubServiceCard"
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import RatingFilter from '../Filters/RatingFilters';
 import BudgetFilter from '../Filters/BudgetFilter';
 import PopularFilter from '../Filters/PopularFilter';
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SubCategoryService = () => {
-  const history = useHistory(); // Initialize useHistory
+  const history = useHistory();
   const classes = useStyles();
   const [state, setState] = React.useState(0);
   const [filterState, setFilterState] = useState([]);
@@ -71,7 +73,6 @@ const SubCategoryService = () => {
         }
         const response = await fetch(`${CONFIG.BASE_PATH}services/search?value=${serviceValue}`);
         const data = await response.json();
-        // Extracting categoryx and subcategory from the first item in the response (assuming they are the same for all items)
         const pathname = window.location.pathname;
         const queryString = window.location.search;
         const searchParams = new URLSearchParams(queryString);

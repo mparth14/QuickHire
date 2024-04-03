@@ -1,3 +1,11 @@
+/**
+ * @Author Hiteshkumar Gupta
+ * Component for displaying sub-service cards.
+ * @param {Object} props - The props object.
+ * @param {Array} props.cardData - Array of sub-service data.
+ * @returns {JSX.Element} - The rendered JSX element.
+ */
+
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -17,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
   },
   card: {
-    minWidth: '300px', // Default width
+    minWidth: '300px',
     borderRadius: '10px',
     margin: '10px',
     height: "530px"

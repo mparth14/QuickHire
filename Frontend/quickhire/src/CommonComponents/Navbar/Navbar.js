@@ -1,3 +1,12 @@
+/**
+ * Navbar component for the application.
+ * Renders the navigation bar with search functionality and user authentication controls.
+ * @param {Object} props - Component props.
+ * @param {Object} props.user - User object containing user details.
+ * @param {boolean} props.onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
 import React, { useEffect } from "react";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -21,7 +30,9 @@ import { CONFIG } from "../../config";
 
 
 
-
+/**
+ * Declaring style classes heer, becasue these classes will be use by mui components
+ */
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -59,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   inputRoot: {
     color: "inherit",
     width: "100%",
-    paddingLeft: theme.spacing(1), // Adjust padding here
+    paddingLeft: theme.spacing(1),
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),

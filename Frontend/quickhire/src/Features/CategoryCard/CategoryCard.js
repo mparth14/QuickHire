@@ -1,3 +1,9 @@
+/**
+ * @Author Hiteshkumar Gupta
+ * Category card component displaying subcategories and their services.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -78,7 +84,6 @@ export default function MediaCard() {
       <div style={{display: "flex", flexDirection: "row", justifyContent: "center", marginBottom: "20px"}}>
       <h2 className='topic' style={{textTransform: "capitalize", marginTop: "20px", color: "#3f51b5"}}>Explore {categoryFromURL}</h2>
     </div>
-      {/* <div className='card-design'> */}
       <div style={{justifyContent: "center"}}>
       <Grid container spacing={5} className={classes.gridContainer}>
         {cardData.map((data, index) => (
@@ -110,7 +115,6 @@ export default function MediaCard() {
         ))}
         </Grid>
         </div>
-      {/* </div> */}
     </div>
   );
 }

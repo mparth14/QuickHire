@@ -1,4 +1,6 @@
-// For adding API's here instead of using it directly into the components
+/**
+ * Configuration for the react app
+ */
 export const CONFIG = {
     BASE_PATH: process.env.REACT_APP_BACKEND_URL,
     SIGNUP_PATH: 'auth/register',
