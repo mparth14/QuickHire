@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 /**
  * @Author Hiteshkumar Gupta
  * Component for displaying sub-service cards.
@@ -8,9 +7,6 @@
  */
 
 import React from "react";
-=======
-import React, { useState } from "react";
->>>>>>> Stashed changes
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
