@@ -79,7 +79,7 @@ function App() {
     <div>
       <Router>
         <Navbar user={user} onload={userLoaded} />
-        {!isHomePage && <Header />}
+        <Header />
         <Switch className="remainingBody">
           <AuthProvider>
             <Route exact path="/">
