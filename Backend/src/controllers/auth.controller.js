@@ -97,8 +97,8 @@ export const forgotPassword = async (req, res, next) => {
           }).save();
       }
 
-      const host = (req.protocol + '://' + req.get('host')).replace(BACKEND_PORT, "") ;
-      const link = `${host}${FRONTEND_PORT}/change-password/${user._id}/${token.token}`;
+      const host = process.env.FRONTEND_URL;
+      const link = `${host}/change-password/${user._id}/${token.token}`;
       await sendEmail(user.email, "Password reset", link);
 
       res.send("Password reset link sent to your email.");
