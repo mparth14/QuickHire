@@ -1,0 +1,20 @@
+li {
+    list-style-type: none;
+    cursor: pointer;
+}
+.media{
+    height: 230px;
+    border-radius: 10px;
+}
+.card-design {
+    display: grid;
+    grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+.category-link-deco {
+    text-decoration: none;
+    pointer-events: auto;
+    position: static;
+}
+  

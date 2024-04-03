@@ -20,7 +20,7 @@ input {
   color: white;
 }
 input::placeholder {
-  color: white; /* Change placeholder color to grey */
+  color: white;
 }
 
 input:focus {

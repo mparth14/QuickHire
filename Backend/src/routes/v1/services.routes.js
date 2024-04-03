@@ -1,10 +1,10 @@
 import express from 'express';
-import { createService, getAllServices, getServiceById, updateService, deleteService, getServicesByPartialTitle } from '../../controllers/services.controller.js';
+import { createService, getAllServices, getServiceById, updateService, deleteService, getServicesByPartialHint } from '../../controllers/services.controller.js';
 
 const router = express.Router();
 
 
-router.get('/search', getServicesByPartialTitle); // New route for searching by partial title
+router.get('/search', getServicesByPartialHint);
 router.post('/', createService);
 router.get('/', getAllServices);
 router.get('/:id', getServiceById);

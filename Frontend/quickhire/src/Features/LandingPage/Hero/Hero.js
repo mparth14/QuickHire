@@ -1,9 +1,16 @@
+/**
+ * @Author Hiteshkumar Gupta
+ * Hero component displaying the main hero section of the landing page.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
 import React from "react";
 import { Parallax } from "react-parallax";
 import "./Hero.css";
 import rightImg from "./hero-assets/10353047.png";
 import bgImg from "./hero-assets/hero-bg.png";
 import Type from "../../../CommonComponents/Header/Type";
+
 
 const Hero = () => {
   return (

@@ -1,4 +1,13 @@
-import React from "react";
+/**
+ * Navbar component for the application.
+ * Renders the navigation bar with search functionality and user authentication controls.
+ * @param {Object} props - Component props.
+ * @param {Object} props.user - User object containing user details.
+ * @param {boolean} props.onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} The rendered JSX element.
+ */
+
+import React, { useEffect } from "react";
 import { alpha, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,9 +26,13 @@ import Button from "@material-ui/core/Button";
 import { SearchBar } from "./searchComponents/SearchBar";
 import { SearchResultsList } from "./searchComponents/SearchResultsList";
 import { useState } from "react";
+import { CONFIG } from "../../config";
 
 
 
+/**
+ * Declaring style classes heer, becasue these classes will be use by mui components
+ */
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -57,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   inputRoot: {
     color: "inherit",
     width: "100%",
-    paddingLeft: theme.spacing(1), // Adjust padding here
+    paddingLeft: theme.spacing(1),
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -83,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+export default function Navbar({user, onload}) {
   const [results, setResults] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -110,8 +123,16 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const logout = () => {
+    if(localStorage.getItem("token")){
+      localStorage.removeItem("token");
+    }
+    window.location.href = "/";
+  }
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
+    !onload || !user ?
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -120,13 +141,25 @@ export default function Navbar() {
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}>
-      <MenuItem onClick={handleMenuClose}>Sign In</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Sign Up</MenuItem>
+        <MenuItem onClick={handleMenuClose}><Link to="/login" className="menu-link">Sign In</Link></MenuItem>
+        <MenuItem onClick={handleMenuClose}><Link to="/signup" className="menu-link">Sign Up</Link></MenuItem>
+    </Menu> :
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}>
+      <MenuItem onClick={handleMenuClose}><Link to="/profile" className="menu-link">Profile</Link></MenuItem>
+      <MenuItem onClick={handleMenuClose}><p onClick={logout} className="menu-link">Sign Out</p></MenuItem>
     </Menu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
+    !onload || !user ?
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -135,11 +168,26 @@ export default function Navbar() {
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>Sign In</p>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/login">Sign In</Link>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <p>Sign Up</p>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/signup">Sign Up</Link>
+      </MenuItem>
+    </Menu> :
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <Link className="menu-link" to="/profile">Profile</Link>
+      </MenuItem>
+      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+        <p className="menu-link" onClick={logout}>Sign Out</p>
       </MenuItem>
     </Menu>
   );
@@ -155,7 +203,7 @@ export default function Navbar() {
     // Set a new timeout to execute the API call after 300 milliseconds of inactivity
     debounceTimeout = setTimeout(() => {
       // Fetch search results from the API
-      fetch(`http://localhost:4000/api/v1/services/search?title=${searchTerm}`)
+      fetch(`${CONFIG.BASE_PATH}services/search?title=${searchTerm}`)
         .then((response) => response.json())
         .then((data) => setSearchResults(data))
         .catch((error) => console.error("Error fetching search results:", error));
@@ -173,44 +221,6 @@ export default function Navbar() {
           <Link to="/">
             <img src={logo} className="image-css" alt="Logo" />
           </Link>
-
-
-          {/* <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search here ..."
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-              onChange={handleSearchInputChange}
-            />
-          </div>
-          {searchResults.length > 0 && (
-            <div>
-              {searchResults.map((result) => (
-                <div key={result.id}>
-                  <div className="dropdown">
-                    <ul>
-                      <li>{result.title}</li>
-                      </ul>
-                  </div>
-                </div>
-              ))}
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="primary"
-                component={Link}
-                to="/search-results"
-              >
-                View All Results
-              </Button>
-            </div>
-          )} */}
 
           <div className={classes.search}>
             <SearchBar setResults={setResults} />

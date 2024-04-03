@@ -98,7 +98,6 @@
     }
   }
   
-  /* Media Query for Mobile Responsive Layout */
   @media screen and (max-width: 970px) {
     .hero-container {
       position: relative;
