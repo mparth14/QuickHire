@@ -18,9 +18,24 @@ const userSchema = new mongoose.Schema({
   },
   address: String,
   password: String,
+  profilePictureUrl: String,
+  linkedInLink: String,
+  instagramLink: String,
+  facebookLink: String,
   isFreelancer: {
     type: Boolean,
     default: false,
+  },
+  occupation: String,
+  skills: {
+    type: Array,
+    default: []
+  },
+  description: String,
+  experience: String,
+  education: {
+    type: Array,
+    default: []
   },
 });
 

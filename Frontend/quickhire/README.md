@@ -569,6 +569,96 @@ export default function PrimarySearchAppBar() {
 - [App Bar - Official Material UI Components](https://v4.mui.com/components/app-bar/)'s code was used because it contains search bar and icons on respective place. I try to implement it using custom css but it wasn't proper. Hence, we decided to use MUI's App Bar. It is responsive hence available for all screens. It was our belief that incorporating well-implemented code from external sources would expedite the development process and help me achieve the desired functionality and efficiency.
 - [App Bar - Official Material UI Components](https://v4.mui.com/components/app-bar/)'s code was modified by altering it according to the need of component with changes in code. Like discarding number badges and the icon buttons it provided, and replaced the icon buttons according to the requirements of the module.
 
+### Signup.js
+
+_Line 35_
+```
+const [showPassword, setShowPassword] = useState(false)
+```
+_Lines 52 - 54_
+```
+const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+};
+```
+_Lines 162 - 187_
+```
+<TextField
+  label="Password"
+  placeholder="Password*"
+  variant="outlined"
+  type={showPassword ? "text" : "password"}
+  name="password"
+  fullWidth
+  margin="normal"
+  value={formData.password}
+  onChange={handleChange}
+  required
+  error={Boolean(passwordError)}
+  helperText={passwordError}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="toggle password visibility"
+          onClick={handleClickShowPassword}
+          edge="end"
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),}}
+/>
+```
+
+The code above was created by adapting the code in [Medium.com - How I Created Toggle Password Visibility with Material UI](https://medium.com/@sumsourabh14/how-i-created-toggle-password-visibility-with-material-ui-b3fb975b5ce4) as shown below:
+
+```
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { useState } from "react";
+
+const PasswordInput = ({ password, handlePassword }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <TextField
+      size="small"
+      type={showPassword ? "text" : "password"}
+      label="Password"
+      value={password}
+      onChange={handlePassword}
+      required={true}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              edge="end"
+            >
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      fullWidth
+    />
+  );
+};
+
+export default PasswordInput;
+
+```
+- The code in [Medium.com - How I Created Toggle Password Visibility with Material UI](https://medium.com/@sumsourabh14/how-i-created-toggle-password-visibility-with-material-ui-b3fb975b5ce4)'s was implemented by modifying the existing code in our project and using the code provided from the source to suit an extra requirement- showing and hiding password on signup page.
+- [Medium.com - How I Created Toggle Password Visibility with Material UI](https://medium.com/@sumsourabh14/how-i-created-toggle-password-visibility-with-material-ui-b3fb975b5ce4)'s code was used because it contains MUI which was our main styling framework. I tried other sources but they were complicated increasing lines of code. I found that this source's code was very small compared to what I was building so I used it.
+- [Medium.com - How I Created Toggle Password Visibility with Material UI](https://medium.com/@sumsourabh14/how-i-created-toggle-password-visibility-with-material-ui-b3fb975b5ce4)'s code was modified by just adding extra state like showPassword in our component and using the source provided according to the requirements of the module.
+
+
 ## References
 [1] “Diary free icon,” Flaticon. [Online]. Available: https://www.flaticon.com/free-icon/diary_10748360?term=writing&page=1&position=90&origin=search&related_id=10748360. [Accessed On: Feb 27, 2024].
 
