@@ -167,6 +167,7 @@ const ServiceCreationPage = ({ user, onload }) => {
         setSelectedFile(null);
         setCategory('');
         setSubcategory('');
+        navigate.push('/service-manage')
       } else {
         toast.error('Error creating service. Please try again.');
       }

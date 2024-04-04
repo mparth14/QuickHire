@@ -204,7 +204,7 @@ const ManageService = ({ user, onload }) => {
         })
             .then((response) => response.json())
             .then(({ data }) => {
-                setServices(data);
+                setServices(data.reverse());
             })
             .catch((error) => console.error('Error fetching services:', error));
     };
@@ -407,10 +407,26 @@ const ManageService = ({ user, onload }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container maxWidth="xl" style={{ minHeight: '100vh' }}>
-                <Typography variant="h4" align="center" gutterBottom>
-                    Service Management
-                </Typography>
+            <Container maxWidth="xl" style={{ minHeight: '100vh', marginTop: '10px' }}>
+                <Grid container justifyContent="center" alignItems="center" spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <Typography variant="h4" align="center" gutterBottom>
+                            Service Management
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} container justifyContent="center">
+                        <Button
+                            variant="contained"
+                            style={{ backgroundColor: '#3F51B5', color: '#fff' }}
+                            onClick={() => navigate.push('/service-creation')}
+                        >
+                            Add New Service
+                        </Button>
+                    </Grid>
+                </Grid>
+
                 <Box mb={4}>
                     <Tabs
                         value={activeTabIndex}
