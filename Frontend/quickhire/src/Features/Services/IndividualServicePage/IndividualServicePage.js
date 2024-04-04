@@ -19,14 +19,11 @@ import {
   CardMedia,
   Divider,
   Grid,
-  // IconButton,
   Link,
   Paper,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
-// import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-// import Favorite from "@material-ui/icons/Favorite";
 import UserIcon from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import RatingsAndReviews from "./RatingsAndReviews";
@@ -34,6 +31,9 @@ import { CONFIG } from "../../../config";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom";
 import { toast } from "react-toastify";
 
+/**
+ * @material-ui/styles for the component
+ */
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "2rem 6rem 6rem 6rem",
@@ -132,9 +132,11 @@ const IndividualServicePage = ({ user, onload }) => {
   const [service, setService] = useState(null);
   const { id } = useParams();
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("600"));
-  const history = useHistory();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("600")); // Checking if screen size is small
+  const history = useHistory(); // Using history for navigation
+  const token = localStorage.getItem("token");
 
+  // Fetching service data based on ID
   useEffect(() => {
     const getServiceByID = async () => {
       const response = await fetch(
@@ -147,6 +149,7 @@ const IndividualServicePage = ({ user, onload }) => {
     getServiceByID();
   }, [id]);
 
+  // Function to add service to cart
   const onAddToCart = async () => {
     const body = {
       serviceId: service?.data?._id,
@@ -156,6 +159,7 @@ const IndividualServicePage = ({ user, onload }) => {
     const response = await fetch(`${CONFIG.BASE_PATH}cart/add`, {
       method: "POST",
       headers: {
+        Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
@@ -183,6 +187,7 @@ const IndividualServicePage = ({ user, onload }) => {
         </Link>
       </Breadcrumbs>
 
+      {/* Service details */}
       <div className={classes.serviceItems}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={8}>
@@ -191,9 +196,6 @@ const IndividualServicePage = ({ user, onload }) => {
                 <Typography variant="h5" style={{ color: "rgb(63, 81, 181)" }}>
                   {service?.data?.title}
                 </Typography>
-                {/* <IconButton>
-                  <FavoriteBorder />
-                </IconButton> */}
               </div>
 
               <Card>
@@ -202,10 +204,12 @@ const IndividualServicePage = ({ user, onload }) => {
                   style={{ height: "50vh" }}
                 />
               </Card>
+
               <Typography style={{ marginTop: "2rem" }}>
                 {service?.data?.description}
               </Typography>
 
+              {/* Checkout option for small screens which will be displayed above Seller details instead  */}
               {isSmallScreen && (
                 <Paper className={classes.checkoutOption}>
                   <Card>
@@ -223,6 +227,8 @@ const IndividualServicePage = ({ user, onload }) => {
                   </Card>
                 </Paper>
               )}
+
+              {/* Seller information */}
               <Typography variant="h6" className={classes.sellerTitle}>
                 About Seller
               </Typography>
@@ -246,6 +252,8 @@ const IndividualServicePage = ({ user, onload }) => {
                   </div>
                 </div>
               </div>
+
+              {/* Render different buttons based on user authentication */}
               {!user && onload ? (
                 <Button
                   variant="contained"
@@ -258,6 +266,7 @@ const IndividualServicePage = ({ user, onload }) => {
                   Contact Me
                 </Button>
               )}
+
               <Paper className={classes.paper}>
                 <div className={classes.userInfoDetails}>
                   <div>
@@ -292,9 +301,13 @@ const IndividualServicePage = ({ user, onload }) => {
                   <Typography>{service?.data?.seller?.description}</Typography>
                 </div>
               </Paper>
+
+              {/* Ratings and reviews section */}
               <RatingsAndReviews />
             </div>
           </Grid>
+
+          {/* Checkout option for large screens */}
           {!isSmallScreen && (
             <Grid item xs={12} sm={4} className={classes.checkoutOption}>
               <Paper>
@@ -304,6 +317,7 @@ const IndividualServicePage = ({ user, onload }) => {
                     <Typography>Price: CAD{service?.data?.price}/hr</Typography>
                   </CardContent>
                   <CardActions>
+                    {/* Render different button based on user authentication */}
                     {!user && onload ? (
                       <Button
                         variant="contained"
