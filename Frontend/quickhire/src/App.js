@@ -126,6 +126,9 @@ function App() {
             <Route exact path="/service-creation">
               <ServiceCreationPage user={user} onload={userLoaded}/>
             </Route>
+            <Route exact path="/service-manage">
+              <ManageService user={user} onload={userLoaded}/>
+            </Route>
             <Route exact path="/services/:id">
               <IndividualServicePage user={user} onload={userLoaded} />
             </Route>
