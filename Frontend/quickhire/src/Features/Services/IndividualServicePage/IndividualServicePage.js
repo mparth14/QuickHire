@@ -1,3 +1,11 @@
+/**
+ * @Author Yashkumar Khorja
+ * IndividualServicePage component renders the selected service details.
+ * @param {Object} user - User object containing user details.
+ * @param {boolean} onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} - The rendered JSX element.
+ */
+
 import React, { useEffect, useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
@@ -24,6 +32,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import RatingsAndReviews from "./RatingsAndReviews";
 import { CONFIG } from "../../../config";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +95,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   checkoutOption: {
+    marginTop: "3rem",
     [theme.breakpoints.down("sm")]: {
       marginLeft: 0,
       marginTop: "2rem",
@@ -127,14 +137,36 @@ const IndividualServicePage = ({ user, onload }) => {
 
   useEffect(() => {
     const getServiceByID = async () => {
-      const response = await fetch(`${CONFIG.BASE_PATH}services/${id}`);
+      const response = await fetch(
+        `${CONFIG.BASE_PATH}${CONFIG.SERVICES_PATH}/${id}`
+      );
       const serviceInfo = await response.json();
-      console.log({ serviceInfo });
       setService(serviceInfo);
     };
 
     getServiceByID();
   }, [id]);
+
+  const onAddToCart = async () => {
+    const body = {
+      serviceId: service?.data?._id,
+      userId: user?._id,
+    };
+
+    const response = await fetch(`${CONFIG.BASE_PATH}cart/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const addToCart = await response.json();
+    if (addToCart) {
+      toast.success("Service Added to Cart Successfully!", {
+        position: "bottom-center",
+      });
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -280,8 +312,10 @@ const IndividualServicePage = ({ user, onload }) => {
                         Login to Checkout
                       </Button>
                     ) : (
-                      <Button className={classes.checkoutButton}>
-                        Proceed To Checkout
+                      <Button
+                        className={classes.checkoutButton}
+                        onClick={onAddToCart}>
+                        Add To Cart
                       </Button>
                     )}
                   </CardActions>

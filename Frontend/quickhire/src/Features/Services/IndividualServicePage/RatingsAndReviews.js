@@ -1,3 +1,9 @@
+/**
+ * @Author Yashkumar Khorja
+ * RatingsAndReviews component renders the ratings and reviews of service.
+ * @returns {JSX.Element} - The rendered JSX element.
+ */
+
 import React, { useState } from "react";
 import {
   Typography,
@@ -8,6 +14,35 @@ import {
 } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import { makeStyles } from "@material-ui/core/styles";
+
+/**
+   *I have dependency on Reviews feature and currently it is not ready
+   so adding static data
+  */
+
+const ratingsAndReviews = [
+  {
+    user: "User1",
+    avatar: "https://via.placeholder.com/150",
+    rating: 4,
+    review: "Great service, very satisfied!",
+    timestamp: "2 days ago",
+  },
+  {
+    user: "User2",
+    avatar: "https://via.placeholder.com/150",
+    rating: 5,
+    review: "Excellent experience, highly recommended!",
+    timestamp: "5 days ago",
+  },
+  {
+    user: "User3",
+    avatar: "https://via.placeholder.com/150",
+    rating: 3,
+    review: "Good service, could be improved.",
+    timestamp: "1 week ago",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -25,30 +60,6 @@ const useStyles = makeStyles((theme) => ({
 const RatingsAndReviews = () => {
   const classes = useStyles();
   const [selectedRating, setSelectedRating] = useState(null);
-
-  const ratingsAndReviews = [
-    {
-      user: "User1",
-      avatar: "https://via.placeholder.com/150",
-      rating: 4,
-      review: "Great service, very satisfied!",
-      timestamp: "2 days ago",
-    },
-    {
-      user: "User2",
-      avatar: "https://via.placeholder.com/150",
-      rating: 5,
-      review: "Excellent experience, highly recommended!",
-      timestamp: "5 days ago",
-    },
-    {
-      user: "User3",
-      avatar: "https://via.placeholder.com/150",
-      rating: 3,
-      review: "Good service, could be improved.",
-      timestamp: "1 week ago",
-    },
-  ];
 
   const calculateAverageRating = (ratingsAndReviews) => {
     if (ratingsAndReviews.length === 0) return 0;
