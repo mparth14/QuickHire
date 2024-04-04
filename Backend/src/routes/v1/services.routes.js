@@ -5,16 +5,9 @@
  * Express router for managing service routes.
  * @type {express.Router}
  */
-import express from "express";
-import {
-  createService,
-  getAllServices,
-  getServiceById,
-  updateService,
-  deleteService,
-  getServicesByPartialHint,
-} from "../../controllers/services.controller.js";
-import { authenticate, isSeller } from "../../middleware/auth.js";
+import express from 'express';
+import { createService, getAllServices, getServiceById, updateService, deleteService, getServicesByPartialHint,getAllServicesIncludingDisabled } from '../../controllers/services.controller.js';
+import { authenticate, isSeller } from '../../middleware/auth.js';
 
 const router = express.Router();
 
@@ -40,6 +33,13 @@ router.post("/", authenticate, isSeller, createService);
 router.get("/", getAllServices);
 
 /**
+ * Route to retrieve all services including disabled services for that Id.
+ * @name GET /api/services/all
+ * @function
+ */
+router.get('/all',authenticate, getAllServicesIncludingDisabled);
+
+/**
  * Route to retrieve a service by ID.
  * @name GET /api/services/:id
  * @function
@@ -53,7 +53,7 @@ router.get("/:id", getServiceById);
  * @function
  * @param {string} id - The ID of the service to update.
  */
-router.put("/:id", updateService);
+router.put('/:id',authenticate,isSeller, updateService);
 
 /**
  * Route to delete a service by ID.
