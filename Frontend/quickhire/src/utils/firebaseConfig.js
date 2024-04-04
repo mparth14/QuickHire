@@ -1,12 +1,18 @@
-// Import the functions you need from the SDKs you need
+
+/**
+ * * Author : Angel Christian
+ * Initializes Firebase app and sets up image storage.
+ * @module firebaseConfig
+ */
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
- 
-// Your web app's Firebase configuration
+
+/**
+ * Firebase configuration object.
+ * @constant {object}
+ */
 const firebaseConfig = {
-  apiKey: "AIzaSyAeyFuIDm34sjFU0_yGgMTJmpyJTCmoE5k",
+  apiKey: process.env.REACT_APP_FIREBASE_API,
   authDomain: "quickhire-d317e.firebaseapp.com",
   projectId: "quickhire-d317e",
   storageBucket: "quickhire-d317e.appspot.com",

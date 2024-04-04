@@ -1,6 +1,17 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
+/**
+ * Middleware to check if the user is authenticated or not
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const authenticate = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
 
@@ -41,4 +52,21 @@ export const getUser = async(req, res, next) => {
     }
     res.user = user;
     next();
+}
+
+/**
+ * Middleware to check if the user is a seller
+ * If isFreelancer is true, the user is considered a seller
+ * @param {*} req 
+ * @param {*} res 
+ */
+export const isSeller = (req, res, next) => {
+  const { isFreelancer } = req.user;
+
+  if (isFreelancer) {
+      // If the user is a freelancer
+      next();
+  } else {
+      return res.status(403).json({ message: 'Forbidden. User is not a freelancer.' });
+  }
 }

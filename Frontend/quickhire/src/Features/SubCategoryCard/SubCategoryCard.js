@@ -6,7 +6,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import "./CategoryCard.css";
+import "./SubCategoryCard.css";
 import { CONFIG } from "../../config";
 import { Grid } from "@material-ui/core";
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MediaCard() {
+export default function SubCategoryCard() {
   const classes = useStyles();
   const { name } = useParams();
   const [cardData, setCardData] = useState([]);
@@ -101,7 +101,7 @@ export default function MediaCard() {
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Link
                 key={index}
-                to={`/subcategory/${name}?service=${encodeURIComponent(
+                to={`/${CONFIG.SUB_CATEGORY}${name}?service=${encodeURIComponent(
                   data.title
                 )}`}
                 className="category-link-deco">

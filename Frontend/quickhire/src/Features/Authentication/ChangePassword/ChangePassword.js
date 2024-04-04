@@ -28,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Page to change a user's password
+ * @returns 
+ */
 const ChangePassword = () => {
   const classes = useStyles();
   const navigate = useHistory();
@@ -42,6 +46,9 @@ const ChangePassword = () => {
     }, []
   )
 
+  /**
+   * Validates new password and update the password
+   */
   const handleSubmit = () => {
     let isValid = true;
     if (!password) {
@@ -50,16 +57,53 @@ const ChangePassword = () => {
     } else {
       setPasswordError('');
     }
+    //Check that the password matches our restrictions
+    const passwordHasLowerCase = /[a-z]/.test(password);
+    const passwordHasUpperCase = /[A-Z]/.test(password);
+    const passwordHasDigit = /\d/.test(password);
+    const passwordHasSpecialCharacter = /[%^=@#+$&]/.test(password);
+    const passwordIsLongEnough = password?.length >= 8;
+
+    if(!passwordHasLowerCase){
+      setPasswordError("Password should contain at least 1 lowercase character.");
+      isValid = false;
+    }
+
+    if(!passwordHasUpperCase){
+      setPasswordError("Password should contain at least 1 uppercase character.");
+      isValid = false;
+    }
+
+    if(!passwordHasDigit){
+      setPasswordError("Password should contain at least 1 number.");
+      isValid = false;
+    }
+
+    if(!passwordHasSpecialCharacter){
+      setPasswordError("Password should contain at least 1 special character.");
+      isValid = false;
+    }
+
+    if(!passwordIsLongEnough){
+      setPasswordError("Password should contain at least 8 character long.");
+      isValid = false;
+    }
 
     if (isValid) {
       changePassword();
     }
   };
 
+  /**
+   * Show and hide password
+   */
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  /**
+   * Check whether a token is valid or not
+   */
   const validateToken = () => {
     const url = CONFIG.BASE_PATH + CONFIG.VALIDATE_TOKEN_PATH + user_id + "/" + token;
     axios.get(url)
@@ -74,6 +118,9 @@ const ChangePassword = () => {
     });
   }
 
+  /**
+   * Send a call to backend to change a user's password
+   */
   const changePassword = () => {
     const changePasswordRequest = {
       password: password,

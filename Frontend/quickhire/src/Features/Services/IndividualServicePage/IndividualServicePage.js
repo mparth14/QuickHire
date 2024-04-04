@@ -1,3 +1,11 @@
+/**
+ * @Author Yashkumar Khorja
+ * IndividualServicePage component renders the selected service details.
+ * @param {Object} user - User object containing user details.
+ * @param {boolean} onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} - The rendered JSX element.
+ */
+
 import React, { useEffect, useState } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
@@ -11,20 +19,22 @@ import {
   CardMedia,
   Divider,
   Grid,
-  // IconButton,
   Link,
   Paper,
+  Popover,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
-// import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-// import Favorite from "@material-ui/icons/Favorite";
 import UserIcon from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import RatingsAndReviews from "./RatingsAndReviews";
 import { CONFIG } from "../../../config";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom";
+import { toast } from "react-toastify";
 
+/**
+ * @material-ui/styles for the component
+ */
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "2rem 6rem 6rem 6rem",
@@ -34,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   breadcrumb: {
     marginBottom: "1rem",
+    // position: "sticky",
+    // top: "0",
+    // alignSelf: "start",
   },
   homeIcon: {
     width: 20,
@@ -86,9 +99,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   checkoutOption: {
-    [theme.breakpoints.down("sm")]: {
+    marginTop: "3rem",
+    position: "sticky",
+    top: "0",
+    alignSelf: "start",
+    [theme.breakpoints.down("600")]: {
       marginLeft: 0,
-      marginTop: "2rem",
+      marginTop: "3rem",
+      position: "static",
     },
   },
   checkoutButton: {
@@ -115,26 +133,64 @@ const useStyles = makeStyles((theme) => ({
   sellerIntroDivider: {
     margin: "1rem 0",
   },
+  typography: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const IndividualServicePage = ({ user, onload }) => {
   const classes = useStyles();
   const [service, setService] = useState(null);
+  const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
   const { id } = useParams();
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("600"));
-  const history = useHistory();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("600")); // Checking if screen size is small
+  const history = useHistory(); // Using history for navigation
+  const token = localStorage.getItem("token");
 
+  // Fetching service data based on ID
   useEffect(() => {
     const getServiceByID = async () => {
-      const response = await fetch(`${CONFIG.BASE_PATH}services/${id}`);
+      const response = await fetch(
+        `${CONFIG.BASE_PATH}${CONFIG.SERVICES_PATH}/${id}`
+      );
       const serviceInfo = await response.json();
-      console.log({ serviceInfo });
       setService(serviceInfo);
     };
 
     getServiceByID();
   }, [id]);
+
+  // Function to add service to cart
+  const onAddToCart = async () => {
+    const body = {
+      serviceId: service?.data?._id,
+      userId: user?._id,
+    };
+
+    const response = await fetch(`${CONFIG.BASE_PATH}cart/add`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const addToCart = await response.json();
+    if (addToCart) {
+      toast.success("Service Added to Cart Successfully!", {
+        position: "bottom-center",
+      });
+    }
+  };
+
+  const handleOpenPopOver = (e) => {
+    setPopoverAnchorEl(e.currentTarget);
+  };
+
+  const handleClosePopOver = () => {
+    setPopoverAnchorEl(null);
+  };
 
   return (
     <div className={classes.root}>
@@ -151,6 +207,7 @@ const IndividualServicePage = ({ user, onload }) => {
         </Link>
       </Breadcrumbs>
 
+      {/* Service details */}
       <div className={classes.serviceItems}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={8}>
@@ -159,9 +216,6 @@ const IndividualServicePage = ({ user, onload }) => {
                 <Typography variant="h5" style={{ color: "rgb(63, 81, 181)" }}>
                   {service?.data?.title}
                 </Typography>
-                {/* <IconButton>
-                  <FavoriteBorder />
-                </IconButton> */}
               </div>
 
               <Card>
@@ -170,10 +224,15 @@ const IndividualServicePage = ({ user, onload }) => {
                   style={{ height: "50vh" }}
                 />
               </Card>
-              <Typography style={{ marginTop: "2rem" }}>
+
+              <Typography
+                style={{
+                  marginTop: "2rem",
+                }}>
                 {service?.data?.description}
               </Typography>
 
+              {/* Checkout option for small screens which will be displayed above Seller details instead  */}
               {isSmallScreen && (
                 <Paper className={classes.checkoutOption}>
                   <Card>
@@ -191,6 +250,8 @@ const IndividualServicePage = ({ user, onload }) => {
                   </Card>
                 </Paper>
               )}
+
+              {/* Seller information */}
               <Typography variant="h6" className={classes.sellerTitle}>
                 About Seller
               </Typography>
@@ -214,6 +275,8 @@ const IndividualServicePage = ({ user, onload }) => {
                   </div>
                 </div>
               </div>
+
+              {/* Render different buttons based on user authentication */}
               {!user && onload ? (
                 <Button
                   variant="contained"
@@ -222,10 +285,14 @@ const IndividualServicePage = ({ user, onload }) => {
                   Login to Contact
                 </Button>
               ) : (
-                <Button variant="contained" className={classes.contactButton}>
+                <Button
+                  variant="contained"
+                  className={classes.contactButton}
+                  onClick={handleOpenPopOver}>
                   Contact Me
                 </Button>
               )}
+
               <Paper className={classes.paper}>
                 <div className={classes.userInfoDetails}>
                   <div>
@@ -260,9 +327,10 @@ const IndividualServicePage = ({ user, onload }) => {
                   <Typography>{service?.data?.seller?.description}</Typography>
                 </div>
               </Paper>
-              <RatingsAndReviews />
             </div>
           </Grid>
+
+          {/* Checkout option for large screens */}
           {!isSmallScreen && (
             <Grid item xs={12} sm={4} className={classes.checkoutOption}>
               <Paper>
@@ -272,6 +340,7 @@ const IndividualServicePage = ({ user, onload }) => {
                     <Typography>Price: CAD{service?.data?.price}/hr</Typography>
                   </CardContent>
                   <CardActions>
+                    {/* Render different button based on user authentication */}
                     {!user && onload ? (
                       <Button
                         variant="contained"
@@ -280,8 +349,10 @@ const IndividualServicePage = ({ user, onload }) => {
                         Login to Checkout
                       </Button>
                     ) : (
-                      <Button className={classes.checkoutButton}>
-                        Proceed To Checkout
+                      <Button
+                        className={classes.checkoutButton}
+                        onClick={onAddToCart}>
+                        Add To Cart
                       </Button>
                     )}
                   </CardActions>
@@ -291,8 +362,35 @@ const IndividualServicePage = ({ user, onload }) => {
           )}
         </Grid>
       </div>
+      <ContactPopOver
+        anchorEl={popoverAnchorEl}
+        handleClose={handleClosePopOver}
+      />
     </div>
   );
 };
 
+function ContactPopOver({ anchorEl, handleClose }) {
+  const classes = useStyles();
+
+  return (
+    <Popover
+      open={Boolean(anchorEl)}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}>
+      <Typography className={classes.typography}>
+        This button will redirect to the seller's chat whenever that feature
+        will be completely ready. As of now, there's nothing to redirect to.
+      </Typography>
+    </Popover>
+  );
+}
 export default IndividualServicePage;

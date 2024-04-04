@@ -20,8 +20,9 @@ import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
 import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
 import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
+import ManageService from "./Features/Services/ManageService/ManageService.js";
 
-import CategoryCard from "./Features/CategoryCard/CategoryCard";
+import SubCategoryCard from "./Features/SubCategoryCard/SubCategoryCard.js";
 import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
 import WishList from "./Features/WishList/Wishlist.js";
 import PaymentSuccess from "./Features/Payment/PaymentSuccess.js";
@@ -123,13 +124,13 @@ function App() {
               <ServiceOrdersView />
             </Route>
             <Route exact path="/service-creation">
-              <ServiceCreationPage />
+              <ServiceCreationPage user={user} onload={userLoaded}/>
             </Route>
             <Route exact path="/services/:id">
               <IndividualServicePage user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/category/:name">
-              <CategoryCard />
+              <SubCategoryCard />
             </Route>
             <Route exact path="/subcategory/:name">
               <SubCategoryService user={user} onload={userLoaded} />
@@ -145,7 +146,7 @@ function App() {
             </Route>
           </AuthProvider>
         </Switch>
-        <Footer />
+        <Footer/>
       </Router>
       <ToastContainer />
     </div>

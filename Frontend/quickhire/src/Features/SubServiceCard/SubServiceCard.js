@@ -82,7 +82,7 @@ export default function SubServiceCard(props) {
   const toggleIconColor = (index, data) => {
     console.log("Toggle called");
     if (!user) {
-      toast.error("Please login first"); // Display toast message if user is not logged in
+      toast.error("Please login first");
       return;
     }
     const newIconColors = [...iconColors]; // Create a copy of iconColors array

@@ -1,3 +1,7 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import User from '../models/user.model.js';
 import Token from '../models/token.model.js';
 import bcrypt from 'bcrypt';
@@ -80,6 +84,11 @@ export const login = async (req, res, next) => {
     }
 };
 
+/**
+ * Send email to user on forgot password
+ * @param {*} req 
+ * @param {*} res 
+ */
 export const forgotPassword = async (req, res, next) => {
     const email = req.body.email;
 
@@ -108,6 +117,12 @@ export const forgotPassword = async (req, res, next) => {
     }
 }
 
+/**
+ * Change a user's password
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export const changePassword = async (req, res) => {
   try{
     const user = await User.findById(req.params.user_id);
@@ -130,6 +145,12 @@ export const changePassword = async (req, res) => {
   }
 }
 
+/**
+ * Validate whether a password-change token is valid or not
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export const validateToken = async (req, res) => {
   try{
     const user = await User.findById(req.params.user_id);

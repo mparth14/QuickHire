@@ -6,10 +6,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
-import { makeStyles } from "@material-ui/core";
+import { DialogTitle, makeStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import { Container, Typography, Avatar, Grid, Paper, TextField, ToggleButton, Select, MenuItem, InputLabel  } from '@mui/material';
+import { Container, Typography, Avatar, Grid, Paper, TextField, ToggleButton, Select, MenuItem, InputLabel, DialogActions  } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import "./UserProfile.css";
 import Divider from '@mui/material/Divider';
@@ -31,7 +31,7 @@ import IconButton from '@mui/material/IconButton';
 import { v4 } from "uuid";
 import { imageStorage }  from "../../utils/firebaseConfig.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-
+import Dialog from '@mui/material/Dialog';
 const useStyles = makeStyles((theme) => ({
     parentCard: {
       backgroundColor: "rgba(255,255,255,0.87)",
@@ -69,6 +69,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
     const [ selectLeftMenuEdit, setSelectLeftMenuEdit] = useState(false);
     const [ firstNameError, setFirstNameError] = useState("");
     const [ lastNameError, setLastNameError] = useState("");
+    const [ deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
     const storedToken = localStorage.getItem("token");
     const inputFile = useRef(null) 
 
@@ -247,7 +248,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         .then((response) => {
           console.log(response);
           if(response.status === 200){
-            console.log("Saved");
+            toast.success("Profile details updated succesfully");
           }
         })
         .catch(function (error) {
@@ -279,6 +280,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
           console.log(response);
           if(response.status === 200){
             console.log("Saved")
+            toast.success("Profile picture updated succesfully");
           }
         })
         .catch(function (error) {
@@ -291,6 +293,38 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         });
       }
 
+    const deleteUserAccount = () => {
+        setDeleteAccountDialogOpen(true);
+    }
+
+    const confirmDeleteAccount = () => {
+        axios.delete(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id,
+            {
+                headers: {'Authorization': 'Bearer '+ storedToken }
+            })
+        .then((response) => {
+          console.log(response);
+          if(response.status === 200){
+            // console.log("Account deleted successfully")
+            toast.success("Account deleted succesfully");
+            if(localStorage.getItem("token")){
+                localStorage.removeItem("token");
+            }
+            setTimeout(()=>{
+                window.location.href = "/";
+            }, 2000)
+            
+          }
+        })
+        .catch(function (error) {
+            toast.error("Issue while deleting user account");
+        });
+        setDeleteAccountDialogOpen(false);
+      }
+
+    const closeDeleteAccountDialog = () => {
+        setDeleteAccountDialogOpen(false);
+      }
 
   return (
         <Container maxWidth="xl">
@@ -578,7 +612,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
      
                         <Divider/>
                         {/* Contact me section */}
-                        <div style={{marginBottom: '20px'}}>
+                        <div style={{marginBottom: '15px'}}>
                             <Typography component="h1" variant="h6">
                                 <b>Contact me</b>
                             </Typography>
@@ -625,15 +659,39 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 />
                             </>}
                         </div>
+                        <Divider/>
                         
                     </Grid>
                     <Grid item xs={12} sm={9} md={9}>
                         {/* Services section */}
                         {user?.isFreelancer ?
                         <div>
-                            <Typography component="h1" variant="h6">
-                                <b>Services</b>
-                            </Typography>
+                                  {/* Heading for services */}
+                                  <div>
+                                      <Typography component="h1" variant="h6">
+                                          <b>Services</b>
+                                      </Typography>
+                                  </div>
+                                    
+                                  {/* Container to center the buttons */}
+                                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                      {/* Add Service button */}
+                                      <Button
+                                          variant="contained"
+                                          style={{ backgroundColor: '#1F91CC', color: '#fff', marginRight: 10 }}
+                                          onClick={() => navigate.push('/service-creation')}
+                                      >
+                                          <span role="img" aria-label="add-service" style={{ fontSize: 30, color: '#ffffff' }}>➕</span> Add Service
+                                      </Button>
+
+                                      {/* Manage Service button */}
+                                      <Button
+                                          variant="contained"
+                                          style={{ backgroundColor: '#1F91CC', color: '#fff' }}
+                                      >
+                                          <span role="img" aria-label="manage-service" style={{ fontSize: 30, color: '#ffffff' }}>🛠️</span> Manage Service
+                                      </Button>
+                                  </div>
                         </div> : 
                         <div>
                             <Paper elevation={2} sx={{ mb: 4, p: 4,
@@ -649,17 +707,31 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         
                     </Grid>
                 </Grid>
-                {user?.isFreelancer ? 
-                    <>
-                    {/* <Divider/>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Typography component="h1" variant="h6">
-                                    <b>Reviews</b>
-                                </Typography>
-                            </Grid>
-                        </Grid> */}
-                    </> : <></>}
+                {/* Danger section */}
+                <Typography component="h1" variant="h6">
+                    <b>Danger section</b>
+                </Typography>
+                <Button variant="outlined" 
+                    style={{ color: '#fc2403', borderColor: '#fc2403', marginTop: 5 }}
+                    onClick={deleteUserAccount}>
+                    Delete account
+                </Button>
+                {/* Delete account alert */}
+                <Dialog
+                    open={deleteAccountDialogOpen}
+                    onClose={closeDeleteAccountDialog}>
+                    <DialogTitle>
+                        {"Delete user acccount?"}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button style={{ color: '#fc2403'}} onClick={confirmDeleteAccount}>
+                            Delete
+                        </Button>
+                        <Button autoFocus onClick={closeDeleteAccountDialog}>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
         </Container>
   );

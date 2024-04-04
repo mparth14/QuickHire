@@ -11,6 +11,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const SERVICES = [
   {
@@ -18,42 +19,49 @@ const SERVICES = [
     description: "Customize your site",
     image:
       "https://www.truelogic.com.ph/wp-content/uploads/2021/09/dynamic_website.png",
+    link: "/category/Programming",
   },
   {
     title: "Video Editing",
     description: "Customize your site",
     image:
-      "https://cdn.flatworldsolutions.com/featured-images/top-10-online-video-editing-tools.jpg",
+      "https://www.flatworldsolutions.com/featured-images/top-10-online-video-editing-tools.jpg",
+    link: "/category/Video and Animation",
   },
   {
     title: "Figma Designs",
     description: "Customize your site",
     image:
       "https://images.ctfassets.net/ooa29xqb8tix/22yB0fxGdusPYvjeHt0tIc/5e8425645473fbfc465de26fff504c89/Metadata_the_Figma_Handbook.jpg",
+    link: "/category/Graphics and Design",
   },
   {
     title: "Voice Over",
     description: "Customize your site",
     image:
       "https://multimedia.journalism.berkeley.edu/wp-content/uploads/stand_up_vo-main.jpg",
+    link: "/category/Miscellaneous",
   },
   {
     title: "Event Photographer",
     description: "Customize your site",
     image:
       "https://miro.medium.com/v2/resize:fit:1400/1*MirlZnbuS9Cs9bVxxSPbjg.jpeg",
+    link: "/category/Photography",
   },
   {
     title: "SEO",
     description: "Customize your site",
     image:
       "https://seo-hacker.com/wp-content/uploads/2019/07/Cover-Photo-New-Website-SEO-A-Comprehensive-Guide-1024x768.jpg",
+    link: "/category/Programming",
   },
   {
     title: "Content Writer",
     description: "Customize your site",
     image:
       "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2022/10/thought-catalog-505eectW54k-unsplash.jpg",
+    link: "/category/Miscellaneous",
   },
 ];
 
@@ -118,6 +126,7 @@ function PopularServices() {
   const classes = useStyles();
   const [hover, setHover] = useState(false);
   const [serviceCardIndex, setServiceCardIndex] = useState(0);
+  const history = useHistory();
 
   const CustomLeftArrow = ({ onClick }) => {
     return (
@@ -143,6 +152,10 @@ function PopularServices() {
   const handleMouseLeaveEvent = (e, index) => {
     setHover(false);
     setServiceCardIndex(0);
+  };
+
+  const handleOnClick = (e, service) => {
+    history.push(service.link);
   };
 
   return (
@@ -225,6 +238,7 @@ function PopularServices() {
           <Card
             key={index}
             className={classes.serviceCard}
+            onClick={(e) => handleOnClick(e, service)}
             onMouseEnter={(e) => handleMouseEnterEvent(e, index)}
             onMouseLeave={(e) => handleMouseLeaveEvent(e, index)}>
             {hover && serviceCardIndex === index && (
