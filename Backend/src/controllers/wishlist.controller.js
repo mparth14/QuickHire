@@ -1,3 +1,7 @@
+/**
+ * @Author Tijilkumar Parmar
+ * Controller for all the interactions regarding the wishlist page.
+ */
 import Wishlist from "../models/wishlist.model.js";
 import Service from "../models/services.model.js";
 
@@ -7,9 +11,11 @@ async function getServiceDetails(email) {
   if (!wishlistObj) {
     return [];
   }
+  // Fetch service IDs for all the items wishlisted by the current user
   const serviceIDs = wishlistObj[0].wishlist;
   console.log(serviceIDs);
-  // Fetch service details for each service ID
+
+  // Fetch service details for all the items wishlisted by the current user
   const serviceDetails = await Service.find({
     _id: { $in: serviceIDs },
   });
@@ -23,7 +29,7 @@ export async function getUserWishlistWithServiceDetails(req, res) {
     const { email } = req.query;
     console.log(email);
 
-    // Get service details
+    // Fetch service details for all the items wishlisted by the current user
     const serviceDetails = await getServiceDetails(email);
 
     if (serviceDetails.error) {
@@ -37,21 +43,21 @@ export async function getUserWishlistWithServiceDetails(req, res) {
   }
 }
 
+//Logic to add a service ID to users wishlist document
 export async function addToWishlist(req, res) {
-  const { email, id } = req.body; // Assuming the request body contains email and id
+  const { email, id } = req.body;
   try {
     const wishlistObj = await Wishlist.findOne({ email });
-    // console.log(wishlistObj);
 
     if (!wishlistObj) {
-      // If wishlist doesn't exist for the user, create a new one
+      // If wishlist document doesn't exist for the user, create a new one
       const newWishlist = new Wishlist({
         email,
         wishlist: [id],
       });
       await newWishlist.save();
     } else {
-      // If wishlist already exists, push the new service ID
+      // If wishlist already exists, append the new service ID
       wishlistObj.wishlist.push(id);
       await wishlistObj.save();
     }
@@ -62,12 +68,13 @@ export async function addToWishlist(req, res) {
   }
 }
 
+//Logic to remove a service ID from users wishlist document
 export async function removeFromWishlist(req, res) {
-  const { email, id } = req.body; // Assuming the request body contains email and id
+  const { email, id } = req.body;
   try {
     const wishlistObj = await Wishlist.findOne({ email });
-    // console.log(wishlistObj);
 
+    // If the user document not found, we need not do anything. (Highly unlikely)
     if (!wishlistObj) {
       return res.status(404).json({ error: "Wishlist not found" });
     }

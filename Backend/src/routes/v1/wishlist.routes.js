@@ -1,3 +1,7 @@
+/**
+ * @Author Tijilkumar Parmar
+ * Route set for the APIs related to the wishlist page
+ */
 import express from "express";
 import {
   getUserWishlistWithServiceDetails,

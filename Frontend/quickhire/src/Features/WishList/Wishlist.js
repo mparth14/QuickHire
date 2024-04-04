@@ -1,3 +1,7 @@
+/**
+ * @Author Tijilkumar Parmar
+ * Wishlist Page for the user's bookmarked services to visit later
+ */
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import "./wishlist.css";
@@ -26,9 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WishlistComponent = ({ user, onload }) => {
-  const history = useHistory(); // Initialize useHistory
-  const classes = useStyles();
-  const [state, setState] = React.useState(0);
+  const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [services, setServices] = useState(1);
@@ -36,6 +38,7 @@ const WishlistComponent = ({ user, onload }) => {
   console.log(user);
 
   useEffect(() => {
+    // We required the user to be logged in to use thgis feature hence enforcing the login
     if (!user && onload) {
       history.push("/login");
     } else {
@@ -44,7 +47,8 @@ const WishlistComponent = ({ user, onload }) => {
           const response = await fetch(
             `${CONFIG.BASE_PATH}wishlist?email=${user.email}`
           );
-          const data = await response.json(); // Convert response to JSON
+          const data = await response.json();
+          // Profile images logic is static for  now
           const profileImages = [
             "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png",
             "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-with-beard-vector-ilustration-png-image_6110777.png",
@@ -55,6 +59,7 @@ const WishlistComponent = ({ user, onload }) => {
             "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022161.png",
             "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022170.png",
           ];
+          // Trim the data for a better visibility on this screen as the user can always click on it to explore
           const newData = data.map((service, index) => {
             let trimmedDescription = service.description
               .split(" ")
@@ -71,17 +76,18 @@ const WishlistComponent = ({ user, onload }) => {
               rating: service.currentRating,
               rate: service.price,
               numberOfRatings: service.numberOfRatings,
-              profile: profileImages[index % profileImages.length], // Randomly assigning profile image
+              profile: profileImages[index % profileImages.length],
             };
           });
-          setServices(newData); // Update services with fetched data
+          // Update the array we are using to populate this screen
+          setServices(newData);
           console.log(newData);
-          setLoading(false); // Data loading complete
+          setLoading(false);
         } catch (error) {
           console.error("Error fetching data:", error);
-          // Handle error, maybe set an error state
         }
       };
+      // Get the data to display from the API
       fetchData();
     }
   }, [onload, user, history]);
@@ -123,6 +129,7 @@ const WishlistComponent = ({ user, onload }) => {
             {loading ? (
               <p>Loading...</p>
             ) : services.length > 0 ? (
+              // We will pass the object array here and the SubServiceWill iterate through all of them
               <SubServiceCard user={user} cardData={services} />
             ) : (
               <div style={{ textAlign: "center" }}>
