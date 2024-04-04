@@ -1,5 +1,15 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import nodemailer from 'nodemailer';
 
+/**
+ * Send an email to given address
+ * @param {*} emailAddress Address to email to
+ * @param {*} subject The subject of the email
+ * @param {*} text The content of the email
+ */
 const sendEmail = async (emailAddress, subject, text) => {
     try {
         const transporter = nodemailer.createTransport( {
