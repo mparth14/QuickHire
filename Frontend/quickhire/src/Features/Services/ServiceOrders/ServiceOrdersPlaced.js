@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import RatingPopup from "../../../utils/RatingDialogPopUp";
 import {
   Accordion,
   AccordionSummary,
@@ -53,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
 function ServiceOrdersPlaced({ user }) {
   const classes = useStyles();
   const [orders, setOrders] = useState([]);
+  const [serviceId, setServiceID] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const token = localStorage.getItem("token");
   const history = useHistory();
 
@@ -77,6 +80,17 @@ function ServiceOrdersPlaced({ user }) {
     getAllServices();
   }, [token, user]);
 
+  const handleOpenPopup = (e, id) => {
+    e.stopPropagation();
+    console.log("Open pop up called!");
+    setServiceID(id);
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
   const onServiceTitleClick = (e, order) => {
     e.stopPropagation();
     history.push(`/services/${order.service._id}`);
@@ -90,7 +104,8 @@ function ServiceOrdersPlaced({ user }) {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`order-details-${index}`}
-            id={`order-summary-${index}`}>
+            id={`order-summary-${index}`}
+          >
             <Grid container alignItems="center">
               <Grid item>
                 <img
@@ -103,7 +118,8 @@ function ServiceOrdersPlaced({ user }) {
                 <Typography
                   variant="h5"
                   onClick={(e) => onServiceTitleClick(e, order)}
-                  className={classes.serviceTitle}>
+                  className={classes.serviceTitle}
+                >
                   {order.service.title}
                 </Typography>
                 <Typography>CAD$ {order.service.price}/hr</Typography>
@@ -136,13 +152,21 @@ function ServiceOrdersPlaced({ user }) {
           <AccordionActions>
             <Button
               variant="contained"
-              // onClick={handleSubmitFeedback}
-              style={{ color: "#fff", backgroundColor: "#000" }}>
+              onClick={(e) => handleOpenPopup(e, order.service._id)}
+              style={{ color: "#fff", backgroundColor: "#000" }}
+            >
               Give Service Review
             </Button>
           </AccordionActions>
         </Accordion>
       ))}
+      {showPopup && (
+        <RatingPopup
+          serviceID={serviceId}
+          user={user}
+          onClose={handleClosePopup}
+        />
+      )}
     </Container>
   );
 }

@@ -270,7 +270,7 @@ export default function Navbar({ user, onload }) {
           <div className={classes.sectionDesktop}>
             <Link className="menu-link" to="/wishlist">
               <IconButton edge="end" aria-label="favorite" color="inherit">
-                <FavoriteBorderIcon />
+                <FavoriteBorderIcon color="white" style={{ color: "white" }} />
               </IconButton>
             </Link>
             <IconButton
@@ -291,7 +291,7 @@ export default function Navbar({ user, onload }) {
               aria-label="favorite"
               color="inherit"
             >
-              <FavoriteBorderIcon />
+              <FavoriteBorderIcon color="white" style={{ color: "white" }} />
             </IconButton>
             <IconButton
               aria-label="show more"
