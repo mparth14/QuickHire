@@ -101,7 +101,7 @@ export default function MediaCard() {
             <Grid item xs={12} sm={6} md={4} lg={3}>
               <Link
                 key={index}
-                to={`/subcategory/${name}?service=${encodeURIComponent(
+                to={`/${CONFIG.SUB_CATEGORY}${name}?service=${encodeURIComponent(
                   data.title
                 )}`}
                 className="category-link-deco">
