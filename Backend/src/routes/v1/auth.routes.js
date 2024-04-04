@@ -1,3 +1,7 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import express from 'express';
 import { login, register, forgotPassword, changePassword, validateToken } from '../../controllers/auth.controller.js';
 

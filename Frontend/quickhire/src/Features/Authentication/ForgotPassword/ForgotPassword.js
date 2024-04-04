@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Forgot password page to input a user's email for password reset link
+ * @returns 
+ */
 const ForgotPassword = () => {
   const classes = useStyles();
   const navigate = useHistory();
@@ -47,6 +51,9 @@ const ForgotPassword = () => {
     }
   };
 
+  /**
+   * Send a call to backend to receive an email with password reset link
+   */
   const forgotPassword = () => {
     const forgotPasswordRequest = {
       email: email,
