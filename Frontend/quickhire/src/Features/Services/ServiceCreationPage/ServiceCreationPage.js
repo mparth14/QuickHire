@@ -1,4 +1,14 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @Author Angel Christian
+ * ServiceCreationPage Component
+ * 
+ * Component for adding a new service by a user.
+ * 
+ * @param {object} user - The user object containing information about the logged-in user.
+ * @param {boolean} onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} ServiceCreationPage component JSX
+ */
+import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
@@ -9,21 +19,25 @@ import {
   Button,
   Grid,
 } from '@mui/material';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from "uuid";
 import { imageStorage }  from "../../../utils/firebaseConfig.js";
+import { AuthContext } from '../../AuthContext.js';
+import { useHistory } from 'react-router-dom';
+import { CONFIG } from '../../../config.js';
+
 
 const useStyles = makeStyles((theme) => ({
   focusedInput: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#1f91cc"
+      borderColor: "#3f51b5"
     },
     "& .MuiInputLabel-outlined.Mui-focused": {
-      color: "#1f91cc"
+      color: "#3f51b5"
     },
     "&.MuiOutlinedInput-root": {
       "&.Mui-focused fieldset": {
-        borderColor: "#1f91cc"
+        borderColor: "#3f51b5"
       }
     },
     "& .MuiSelect-root.Mui-focused": {
@@ -35,37 +49,52 @@ const useStyles = makeStyles((theme) => ({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1f91cc',
+      main: '#3f51b5',
     },
   },
 });
 
-const ServiceCreationPage = () => {
+
+const ServiceCreationPage = ({ user, onload }) => {
   const classes = useStyles();
   const [selectedFile, setSelectedFile] = useState(null);
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
   const [categoryOptions, setCategoryOptions] = useState([]);
-  const [wholeCategoryOptions, setWholeCategoryOptions] = useState([]);
   const [subcategoryOptions, setSubcategoryOptions] = useState([]);
+  const { loading} = useContext(AuthContext);
+  const [token, setToken] = useState('');
+  const navigate = useHistory();
 
-   const uploadImageToFirebase = async (image) => {
+
+
+  const uploadImageToFirebase = async (image) => {
     const imageUUID = v4();
     const imageRef = ref(imageStorage, `files/${imageUUID}`);
     await uploadBytes(imageRef, image);
-    const imageURL = await getDownloadURL(
-      ref(imageStorage, `files/${imageUUID}`)
-    );
+    const imageURL = await getDownloadURL(ref(imageStorage, `files/${imageUUID}`));
     return imageURL;
   };
 
+  useEffect(( ) =>{
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+    if(!user && onload){
+        navigate.push("/login");
+    }
+    if(user && onload && !user.isFreelancer){
+      navigate.push("/profile");
+  }
+  }, [onload, user,navigate])
+
+  
+
   useEffect(() => {
     // Fetch categories from the API
-    fetch('http://localhost:4000/api/v1/categories')
+    fetch(`${CONFIG.BASE_PATH}categories`)
       .then(response => response.json())
       .then(({ data }) => {
-        setCategoryOptions(data.map(category => category.name));
-        setWholeCategoryOptions(data)
+        setCategoryOptions(data);
       })
       .catch(error => console.error('Error fetching categories:', error));
   }, []);
@@ -74,16 +103,11 @@ const ServiceCreationPage = () => {
     const selectedCategory = event.target.value;
     setCategory(selectedCategory);
 
-    const selectedCategoryObject = categoryOptions.find(cat => cat === selectedCategory);
-    if (selectedCategoryObject) {
-      const categoryData = wholeCategoryOptions.find(cat => cat.name === selectedCategory);
-      if (categoryData) {
-        setSubcategoryOptions(categoryData.subcategories);
-      } else {
-        console.error(`Subcategories for ${selectedCategory} not found.`);
-      }
+    const categoryData = categoryOptions.find(cat => cat.name === selectedCategory);
+    if (categoryData) {
+      setSubcategoryOptions(categoryData.subcategories);
     } else {
-      console.error(`Category ${selectedCategory} not found.`);
+      console.error(`Subcategories for ${selectedCategory} not found.`);
     }
 
     setSubcategory('');
@@ -112,52 +136,44 @@ const ServiceCreationPage = () => {
       toast.warning('Description should be a minimum of 120 characters.');
       return;
     }
-    const profilePictureURL = await uploadImageToFirebase(selectedFile);
-
-    try{
+    
+    try {
       const profilePictureURL = await uploadImageToFirebase(selectedFile);
 
-    const response = await fetch('http://localhost:4000/api/v1/services', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        category,
-        subCategory: subcategory,
-        price: parseFloat(price),
-        sellerId: '1', // Hardcoded for testing
-        imgUrl: profilePictureURL,
-      }),
-    });
-
-    const responseData = await response.json();
-    console.log("responseData",responseData);
-
-    if (response.ok) {
-      toast.success('Service Created Successfully!', {
-        style: {
-          backgroundColor: '#5DA3A0',
-          color: '#ffffff',
+      const response = await fetch(`${CONFIG.BASE_PATH}services`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` ,
         },
+        body: JSON.stringify({
+          title,
+          description,
+          category,
+          subCategory: subcategory,
+          price: parseFloat(price),
+          sellerId: user._id, 
+          imgUrl: profilePictureURL,
+        }),
       });
 
-      // Reset form fields
-      event.target.reset();
-      setSelectedFile(null);
-      setCategory('');
-      setSubcategory('');
-  
-    } else {
-      toast.error('Error creating service. Please try again.');
+      const responseData = await response.json();
+
+      if (response.ok) {
+        toast.success('Service Created Successfully!');
+
+        // Reset form fields
+        event.target.reset();
+        setSelectedFile(null);
+        setCategory('');
+        setSubcategory('');
+      } else {
+        toast.error('Error creating service. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating service:', error);
+      toast.error('An unexpected error occurred. Please try again later.');
     }
-  } catch (error) {
-    console.error('Error creating service:', error);
-    toast.error('An unexpected error occurred. Please try again later.');
-  }
- 
   };
 
   const handleFileChange = (event) => {
@@ -171,13 +187,16 @@ const ServiceCreationPage = () => {
       event.target.value = null;
     }
   };
+  if (!user || loading) {
+    return null;
+  }
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ backgroundColor: 'white', height: '100vh' }}>
+      <div style={{ height: '100vh' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '5%' }}>
           <Container maxWidth="md" style={{ backgroundColor: 'white', padding: 20, borderRadius: 8 }}>
-            <Typography variant="h4" align="center" gutterBottom>
+            <Typography  variant="h4" align="center" gutterBottom>
               Add New Service
             </Typography>
             <form id='creationForm' onSubmit={handleSubmit}>
@@ -202,9 +221,9 @@ const ServiceCreationPage = () => {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {categoryOptions.map((category, index) => (
-                      <MenuItem key={index} value={category}>
-                        {category}
+                    {categoryOptions.map((category) => (
+                      <MenuItem key={category._id} value={category.name}>
+                        {category.name}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -224,9 +243,10 @@ const ServiceCreationPage = () => {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {subcategoryOptions.map((subcategory, index) => (
-                      <MenuItem key={index} value={subcategory}>
-                        {subcategory}
+                    {subcategoryOptions.map((subcategory) => (
+                      <MenuItem key={subcategory._id} value={subcategory.name}>
+                       
+                       {subcategory.name}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -262,7 +282,7 @@ const ServiceCreationPage = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <Button
-                    style={{ color: 'white', backgroundColor: '#1f91cc' }}
+                    style={{ color: 'white', backgroundColor: '#3f51b5' }}
                     type="submit"
                     variant="contained"
                     fullWidth
@@ -280,4 +300,3 @@ const ServiceCreationPage = () => {
 };
 
 export default ServiceCreationPage;
-

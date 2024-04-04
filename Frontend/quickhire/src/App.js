@@ -21,6 +21,7 @@ import Header from "./CommonComponents/Header/Header.js";
 import Footer from "./CommonComponents/Footer/Footer.js";
 import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersView.js";
 import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
+import ManageService from "./Features/Services/ManageService/ManageService.js";
 
 import CategoryCard from "./Features/CategoryCard/CategoryCard";
 import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
@@ -123,7 +124,7 @@ function App() {
               <ServiceOrdersView />
             </Route>
             <Route exact path="/service-creation">
-              <ServiceCreationPage />
+              <ServiceCreationPage user={user} onload={userLoaded}/>
             </Route>
             <Route exact path="/services/:id">
               <IndividualServicePage user={user} onload={userLoaded} />
@@ -142,7 +143,7 @@ function App() {
             </Route>
           </AuthProvider>
         </Switch>
-        <Footer />
+        <Footer/>
       </Router>
       <ToastContainer />
     </div>

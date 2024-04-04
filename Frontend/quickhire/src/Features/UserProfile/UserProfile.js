@@ -32,7 +32,6 @@ import { v4 } from "uuid";
 import { imageStorage }  from "../../utils/firebaseConfig.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Dialog from '@mui/material/Dialog';
-
 const useStyles = makeStyles((theme) => ({
     parentCard: {
       backgroundColor: "rgba(255,255,255,0.87)",
@@ -667,9 +666,32 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         {/* Services section */}
                         {user?.isFreelancer ?
                         <div>
-                            <Typography component="h1" variant="h6">
-                                <b>Services</b>
-                            </Typography>
+                                  {/* Heading for services */}
+                                  <div>
+                                      <Typography component="h1" variant="h6">
+                                          <b>Services</b>
+                                      </Typography>
+                                  </div>
+                                    
+                                  {/* Container to center the buttons */}
+                                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                                      {/* Add Service button */}
+                                      <Button
+                                          variant="contained"
+                                          style={{ backgroundColor: '#1F91CC', color: '#fff', marginRight: 10 }}
+                                          onClick={() => navigate.push('/service-creation')}
+                                      >
+                                          <span role="img" aria-label="add-service" style={{ fontSize: 30, color: '#ffffff' }}>➕</span> Add Service
+                                      </Button>
+
+                                      {/* Manage Service button */}
+                                      <Button
+                                          variant="contained"
+                                          style={{ backgroundColor: '#1F91CC', color: '#fff' }}
+                                      >
+                                          <span role="img" aria-label="manage-service" style={{ fontSize: 30, color: '#ffffff' }}>🛠️</span> Manage Service
+                                      </Button>
+                                  </div>
                         </div> : 
                         <div>
                             <Paper elevation={2} sx={{ mb: 4, p: 4,
