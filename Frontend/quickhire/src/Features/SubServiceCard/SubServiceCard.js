@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import InfoCard from "./InfoCard/InfoCard";
 import { Grid } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { toast } from "react-toastify";
 import { CONFIG } from "../../config";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -43,51 +42,39 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SubServiceCard(props) {
   const classes = useStyles();
-  const [iconColors, setIconColors] = useState(
-    Array(props.cardData.length).fill("#000000")
-  );
 
   const cardData = props.cardData;
   const user = props.user;
-  const onload = props.onload;
   const [wishlistServices, setWishlistServices] = useState([]);
   const history = useHistory();
   console.log({ cardData }, { user }, { wishlistServices });
 
   useEffect(() => {
+    if (!user) {
+      setWishlistServices([]);
+      return;
+    }
     const getWishlistedServices = async () => {
+      console.log(user);
       const response = await fetch(
         `${CONFIG.BASE_PATH}wishlist?email=${user.email}`
       );
-      const data = await response.json(); // Assuming the response is JSON
+      const data = await response.json(); 
       setWishlistServices(data);
     };
     getWishlistedServices();
-  }, [user]); // Only fetch wishlist services when user email changes
+  }, [user]);
 
-  const isWishlisted = (id, index) => {
-    console.log("ID: " + id);
-    console.log(wishlistServices);
-    for (let i = 0; i < wishlistServices.length; i++) {
-      console.log(wishlistServices[i].id);
-      if (wishlistServices[i]._id == id) {
-        iconColors[index] = "#FF5555";
-        return true;
-      }
-    }
-    iconColors[index] = "#000000";
-    return false;
+  const isWishlisted = (id) => {
+    return wishlistServices.some(service => service._id === id);
   };
 
-  const toggleIconColor = (index, data) => {
+  const toggleIconColor = async (id, data) => {
     console.log("Toggle called");
     if (!user) {
       toast.error("Please login first");
       return;
     }
-    const newIconColors = [...iconColors]; // Create a copy of iconColors array
-    newIconColors[index] =
-      newIconColors[index] === "#000000" ? "#FF5555" : "#000000"; // Toggle icon color
     const updateDB = async (color) => {
       console.log(color);
       if (color === "#000000") {
@@ -106,6 +93,7 @@ export default function SubServiceCard(props) {
         });
         if (response.status === 200) {
           toast.success("Removed from your wishlist!");
+          setWishlistServices(prevState => prevState.filter(service => service._id !== data._id));
         } else {
           toast.error("Failed to update your wishlist.");
         }
@@ -125,13 +113,14 @@ export default function SubServiceCard(props) {
         });
         if (response.status === 200) {
           toast.success("Added to your wishlist!");
+          setWishlistServices(prevState => [...prevState, data]);
         } else {
           toast.error("Failed to update your wishlist.");
         }
       }
     };
-    updateDB(newIconColors[index]);
-    setIconColors(newIconColors);
+    const color = isWishlisted(id) ? "#000000" : "#FF5555";
+    await updateDB(color);
   };
 
   return (
@@ -141,7 +130,7 @@ export default function SubServiceCard(props) {
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Link
               key={index}
-              to={`/services/${data._id}`}
+              to={`/services/${data.id}`}
               className="category-link-deco"
             >
               <Card className={classes.card}>
@@ -150,13 +139,11 @@ export default function SubServiceCard(props) {
                   <FavoriteIcon
                     className={classes.heartIcon}
                     style={{
-                      color: isWishlisted(data._id || data.id, index)
-                        ? "#FF5555"
-                        : "#000000",
+                      color: isWishlisted(data._id || data.id) ? "#FF5555" : "#000000",
                     }}
                     onClick={(e) => {
                       e.preventDefault();
-                      toggleIconColor(index, data);
+                      toggleIconColor(data._id || data.id, data);
                     }}
                   />
                   <CardContent>
