@@ -12,7 +12,7 @@ import { getStorage } from "firebase/storage";
  * @constant {object}
  */
 const firebaseConfig = {
-  apiKey: "AIzaSyAeyFuIDm34sjFU0_yGgMTJmpyJTCmoE5k",
+  apiKey: process.env.REACT_APP_FIREBASE_API,
   authDomain: "quickhire-d317e.firebaseapp.com",
   projectId: "quickhire-d317e",
   storageBucket: "quickhire-d317e.appspot.com",
