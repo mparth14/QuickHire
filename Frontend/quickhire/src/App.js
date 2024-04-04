@@ -1,4 +1,3 @@
-
 /**
  * Main component for the application.
  * Handles routing and authentication.
@@ -25,6 +24,7 @@ import ManageService from "./Features/Services/ManageService/ManageService.js";
 
 import SubCategoryCard from "./Features/SubCategoryCard/SubCategoryCard.js";
 import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
+import WishList from "./Features/WishList/Wishlist.js";
 import PaymentSuccess from "./Features/Payment/PaymentSuccess.js";
 import PaymentFailure from "./Features/Payment/PaymentFailure.js";
 import SignUpFreelancer from "./Features/SignUpFreelancer/SignUpFreelancer.js";
@@ -124,7 +124,7 @@ function App() {
               <ServiceOrdersView />
             </Route>
             <Route exact path="/service-creation">
-              <ServiceCreationPage user={user} onload={userLoaded}/>
+              <ServiceCreationPage user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/services/:id">
               <IndividualServicePage user={user} onload={userLoaded} />
@@ -141,9 +141,12 @@ function App() {
             <Route exact path="/payment-failure">
               <PaymentFailure />
             </Route>
+            <Route exact path="/wishlist">
+              <WishList user={user} onload={userLoaded} />
+            </Route>
           </AuthProvider>
         </Switch>
-        <Footer/>
+        <Footer />
       </Router>
       <ToastContainer />
     </div>
