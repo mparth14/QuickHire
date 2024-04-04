@@ -21,6 +21,7 @@ import {
   Grid,
   Link,
   Paper,
+  Popover,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
@@ -125,11 +126,15 @@ const useStyles = makeStyles((theme) => ({
   sellerIntroDivider: {
     margin: "1rem 0",
   },
+  typography: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const IndividualServicePage = ({ user, onload }) => {
   const classes = useStyles();
   const [service, setService] = useState(null);
+  const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
   const { id } = useParams();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("600")); // Checking if screen size is small
@@ -170,6 +175,14 @@ const IndividualServicePage = ({ user, onload }) => {
         position: "bottom-center",
       });
     }
+  };
+
+  const handleOpenPopOver = (e) => {
+    setPopoverAnchorEl(e.currentTarget);
+  };
+
+  const handleClosePopOver = () => {
+    setPopoverAnchorEl(null);
   };
 
   return (
@@ -262,7 +275,10 @@ const IndividualServicePage = ({ user, onload }) => {
                   Login to Contact
                 </Button>
               ) : (
-                <Button variant="contained" className={classes.contactButton}>
+                <Button
+                  variant="contained"
+                  className={classes.contactButton}
+                  onClick={handleOpenPopOver}>
                   Contact Me
                 </Button>
               )}
@@ -339,8 +355,35 @@ const IndividualServicePage = ({ user, onload }) => {
           )}
         </Grid>
       </div>
+      <ContactPopOver
+        anchorEl={popoverAnchorEl}
+        handleClose={handleClosePopOver}
+      />
     </div>
   );
 };
 
+function ContactPopOver({ anchorEl, handleClose }) {
+  const classes = useStyles();
+
+  return (
+    <Popover
+      open={Boolean(anchorEl)}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}>
+      <Typography className={classes.typography}>
+        This button will redirect to the seller's chat whenever that feature
+        will be completely ready. As of now, there's nothing to redirect to.
+      </Typography>
+    </Popover>
+  );
+}
 export default IndividualServicePage;
