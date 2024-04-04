@@ -279,3 +279,8 @@ Initially, we built our project in local. Then, uploaded repo on GitHub and conn
 - To add a service to the cart, send a POST request with userId and serviceId to the `addToCart` endpoint.
 - Retrieve the user's cart using a GET request to the `getCart` endpoint with the userId as a parameter.
 - To remove a service from the cart, send a DELETE request with userId and serviceId to the `removeFromCart` endpoint.
+
+## Acknowledgments
+
+- Created React application using template [create-react-app](https://create-react-app.dev/docs/getting-started)
+- Used [Material-UI](https://v4.mui.com/getting-started/installation/) components and icons
