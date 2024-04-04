@@ -27,8 +27,7 @@ import { SearchBar } from "./searchComponents/SearchBar";
 import { SearchResultsList } from "./searchComponents/SearchResultsList";
 import { useState } from "react";
 import { CONFIG } from "../../config";
-
-
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 /**
  * Declaring style classes heer, becasue these classes will be use by mui components
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.50),
+    backgroundColor: alpha(theme.palette.common.white, 0.5),
     "&:hover": {
       backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
@@ -96,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar({user, onload}) {
+export default function Navbar({ user, onload }) {
   const [results, setResults] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -124,74 +123,108 @@ export default function Navbar({user, onload}) {
   };
 
   const logout = () => {
-    if(localStorage.getItem("token")){
+    if (localStorage.getItem("token")) {
       localStorage.removeItem("token");
     }
     window.location.href = "/";
-  }
+  };
 
   const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    !onload || !user ?
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}>
-        <MenuItem onClick={handleMenuClose}><Link to="/login" className="menu-link">Sign In</Link></MenuItem>
-        <MenuItem onClick={handleMenuClose}><Link to="/signup" className="menu-link">Sign Up</Link></MenuItem>
-    </Menu> :
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}>
-      <MenuItem onClick={handleMenuClose}><Link to="/profile" className="menu-link">Profile</Link></MenuItem>
-      <MenuItem onClick={handleMenuClose}><Link to="/checkout" className="menu-link">My Cart</Link></MenuItem>
-      <MenuItem onClick={handleMenuClose}><p onClick={logout} className="menu-link">Sign Out</p></MenuItem>
-    </Menu>
-  );
+  const renderMenu =
+    !onload || !user ? (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleMenuClose}>
+          <Link to="/login" className="menu-link">
+            Sign In
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <Link to="/signup" className="menu-link">
+            Sign Up
+          </Link>
+        </MenuItem>
+      </Menu>
+    ) : (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleMenuClose}>
+          <Link to="/profile" className="menu-link">
+            Profile
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <Link to="/checkout" className="menu-link">
+            My Cart
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <p onClick={logout} className="menu-link">
+            Sign Out
+          </p>
+        </MenuItem>
+      </Menu>
+    );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    !onload || !user ?
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}>
-      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link className="menu-link" to="/login">Sign In</Link>
-      </MenuItem>
-      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link className="menu-link" to="/signup">Sign Up</Link>
-      </MenuItem>
-    </Menu> :
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}>
-      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <Link className="menu-link" to="/profile">Profile</Link>
-      </MenuItem>
-      <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
-        <p className="menu-link" onClick={logout}>Sign Out</p>
-      </MenuItem>
-    </Menu>
-  );
+  const renderMobileMenu =
+    !onload || !user ? (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        id={mobileMenuId}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMobileMenuOpen}
+        onClose={handleMobileMenuClose}
+      >
+        <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+          <Link className="menu-link" to="/login">
+            Sign In
+          </Link>
+        </MenuItem>
+        <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+          <Link className="menu-link" to="/signup">
+            Sign Up
+          </Link>
+        </MenuItem>
+      </Menu>
+    ) : (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        id={mobileMenuId}
+        keepMounted
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={isMobileMenuOpen}
+        onClose={handleMobileMenuClose}
+      >
+        <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+          <Link className="menu-link" to="/profile">
+            Profile
+          </Link>
+        </MenuItem>
+        <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
+          <p className="menu-link" onClick={logout}>
+            Sign Out
+          </p>
+        </MenuItem>
+      </Menu>
+    );
 
   let debounceTimeout;
 
@@ -207,7 +240,9 @@ export default function Navbar({user, onload}) {
       fetch(`${CONFIG.BASE_PATH}services/search?title=${searchTerm}`)
         .then((response) => response.json())
         .then((data) => setSearchResults(data))
-        .catch((error) => console.error("Error fetching search results:", error));
+        .catch((error) =>
+          console.error("Error fetching search results:", error)
+        );
     }, 300);
   };
   return (
@@ -218,36 +253,53 @@ export default function Navbar({user, onload}) {
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="open drawer"></IconButton>
+            aria-label="open drawer"
+          ></IconButton>
           <Link to="/">
             <img src={logo} className="image-css" alt="Logo" />
           </Link>
 
           <div className={classes.search}>
             <SearchBar setResults={setResults} />
-            {results && results.length > 0 && <SearchResultsList results={results} />}
+            {results && results.length > 0 && (
+              <SearchResultsList results={results} />
+            )}
           </div>
-
 
           <div className={"grow"} />
           <div className={classes.sectionDesktop}>
+            <Link className="menu-link" to="/wishlist">
+              <IconButton edge="end" aria-label="favorite" color="inherit">
+                <FavoriteBorderIcon />
+              </IconButton>
+            </Link>
             <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit">
+              color="inherit"
+            >
               <AccountCircle />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
+              style={{ marginLeft: "-20px", marginRight: "-15px" }}
+              edge="end"
+              aria-label="favorite"
+              color="inherit"
+            >
+              <FavoriteBorderIcon />
+            </IconButton>
+            <IconButton
               aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit">
+              color="inherit"
+            >
               <MoreIcon />
             </IconButton>
           </div>
