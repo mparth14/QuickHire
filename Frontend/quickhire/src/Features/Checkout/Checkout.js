@@ -151,118 +151,151 @@ const CheckoutPage = ({ user, onload }) => {
         Checkout
       </Typography>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          {cartItems.map((service, index) => (
-            <div key={service._id}>
-              <Card>
-                <Grid container>
-                  <Grid item xs={3}>
-                    <CardMedia
-                      component='img'
-                      image={service.imgUrl}
-                      alt={service.title}
-                      style={{
-                        height: '100%',
-                        width: '100%',
-                        objectFit: 'cover',
-                        borderRadius: 8,
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={9}>
-                    <CardContent>
-                      <Typography
-                        variant='h4'
-                        component='h2'
-                        gutterBottom
-                        style={{ fontWeight: 'bold', color: '#333' }}
-                      >
-                        {service.title}
-                      </Typography>
-                      <Typography
-                        variant='body1'
-                        color='textSecondary'
-                        gutterBottom
-                      >
-                        {service.description}
-                      </Typography>
-                      <Typography
-                        variant='body1'
-                        color='textSecondary'
-                        gutterBottom
-                      >
-                        Offered by{' '}
-                        <span style={{ fontWeight: 'bold' }}>
-                          {service.sellerName}
-                        </span>
-                      </Typography>
-                      <Typography
-                        variant='body1'
-                        color='textSecondary'
-                        gutterBottom
-                        style={{ fontWeight: 'bold' }}
-                      >
-                        Cost: ${service.price}
-                      </Typography>
-                      <div>
-                        <IconButton
-                          aria-label='delete'
-                          style={{ color: '#e74c3c' }}
-                          onClick={() => handleRemoveItem(service._id)}
-                        >
-                          <DeleteIcon />
-                          <Typography
-                            variant='body1'
-                            style={{ color: '#333'}}
-                          >
-                            Remove Service
-                          </Typography>
-                        </IconButton>
-                      </div>
-                    </CardContent>
-                  </Grid>
-                </Grid>
-              </Card>
-              {index < cartItems.length - 1 && <Box mb={2} />}
-            </div>
-          ))}
-        </Grid>
-        <Grid item xs={12} md={4}>
-          {totalCost > 0 && (
-            <>
-              <Box mt={4} textAlign='center'>
-                <Typography
-                  variant='h4'
-                  gutterBottom
-                  style={{ fontWeight: 'bold', color: '#333' }}
-                >
-                  Total Cost: ${totalCost.toFixed(2)}
-                </Typography>
-                <Typography
-                  variant='h5'
-                  style={{ fontStyle: 'italic', color: '#666' }}
-                >
-                  Place your order now!
-                </Typography>
-              </Box>
+      {cartItems.length === 0 && (
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          flexDirection='column'
+        >
+          <img
+            src={emptyCartImage}
+            alt='Empty Cart'
+            style={{ width: '50%', maxWidth: '300px', marginTop: '15px' }}
+          />
+          <Typography
+            variant='h5'
+            align='center'
+            style={{
+              color: '#333',
+              marginTop: '20px',
+              marginBottom: '20px',
+              fontFamily: 'Arial, sans-serif',
+              fontStyle: 'italic',
+              fontWeight: 'normal',
+              lineHeight: '1.5',
+            }}
+          >
+            Oh no, your cart is empty! <br />
+            Discover our delightful services and start adding your favorites.
+          </Typography>
+        </Box>
+      )}
 
-              <Divider variant='middle' style={{ margin: '20px 0' }} />
-              <Box mt={4} display='flex' justifyContent='center'>
-                <Button
-                  onClick={handleCheckout}
-                  variant='contained'
-                  color='primary'
-                  size='large'
-                >
-                  Checkout
-                </Button>
-              </Box>
-            </>
-          )}
+      {cartItems.length > 0 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            {cartItems.map((service, index) => (
+              <div key={service._id}>
+                <Card>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <CardMedia
+                        component='img'
+                        image={service.imgUrl}
+                        alt={service.title}
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                          objectFit: 'cover',
+                          borderRadius: 8,
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={9}>
+                      <CardContent>
+                        <Typography
+                          variant='h4'
+                          component='h2'
+                          gutterBottom
+                          style={{ fontWeight: 'bold', color: '#333' }}
+                        >
+                          {service.title}
+                        </Typography>
+                        <Typography
+                          variant='body1'
+                          color='textSecondary'
+                          gutterBottom
+                        >
+                          {service.description}
+                        </Typography>
+                        <Typography
+                          variant='body1'
+                          color='textSecondary'
+                          gutterBottom
+                        >
+                          Offered by{' '}
+                          <span style={{ fontWeight: 'bold' }}>
+                            {service.sellerName}
+                          </span>
+                        </Typography>
+                        <Typography
+                          variant='body1'
+                          color='textSecondary'
+                          gutterBottom
+                          style={{ fontWeight: 'bold' }}
+                        >
+                          Cost: ${service.price}
+                        </Typography>
+                        <div>
+                          <IconButton
+                            aria-label='delete'
+                            style={{ color: '#e74c3c' }}
+                            onClick={() => handleRemoveItem(service._id)}
+                          >
+                            <DeleteIcon />
+                            <Typography
+                              variant='body1'
+                              style={{ color: '#333' }}
+                            >
+                              Remove Service
+                            </Typography>
+                          </IconButton>
+                        </div>
+                      </CardContent>
+                    </Grid>
+                  </Grid>
+                </Card>
+                {index < cartItems.length - 1 && <Box mb={2} />}
+              </div>
+            ))}
+          </Grid>
+          <Grid item xs={12} md={4}>
+            {totalCost > 0 && (
+              <>
+                <Box mt={4} textAlign='center'>
+                  <Typography
+                    variant='h4'
+                    gutterBottom
+                    style={{ fontWeight: 'bold', color: '#333' }}
+                  >
+                    Total Cost: ${totalCost.toFixed(2)}
+                  </Typography>
+                  <Typography
+                    variant='h5'
+                    style={{ fontStyle: 'italic', color: '#666' }}
+                  >
+                    Place your order now!
+                  </Typography>
+                </Box>
+
+                <Divider variant='middle' style={{ margin: '20px 0' }} />
+                <Box mt={4} display='flex' justifyContent='center'>
+                  <Button
+                    onClick={handleCheckout}
+                    variant='contained'
+                    color='primary'
+                    size='large'
+                  >
+                    Checkout
+                  </Button>
+                </Box>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Container>
   );
 };
