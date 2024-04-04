@@ -11,3 +11,7 @@ li {
     flex-wrap: wrap;
     gap: 20px;
 }
+.subcategory-link-deco{
+    text-decoration: none;
+    color: black;
+}

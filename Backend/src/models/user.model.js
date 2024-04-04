@@ -1,6 +1,13 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
+/**
+ * Mongoose schema for user details
+ */
 const userSchema = new mongoose.Schema({
   username: {
     type: String,

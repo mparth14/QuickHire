@@ -1,6 +1,13 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
+/**
+ * Mongoose schema for password reset token
+ */
 const tokenSchema = new mongoose.Schema({
     user_id: {
         type: Schema.Types.ObjectId,

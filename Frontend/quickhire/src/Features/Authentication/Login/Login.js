@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Login page to enter a user's login details
+ * @returns 
+ */
 const Login = () => {
   const classes = useStyles();
   const navigate = useHistory();
@@ -42,6 +46,10 @@ const Login = () => {
     password: "",
   });
 
+  /**
+   * Handle all the input changes in the form
+   * @param {*} e 
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -50,11 +58,16 @@ const Login = () => {
     });
   };
 
+  /**
+   * Show and hide password
+   */
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-
+  /**
+   * Validates user details and login user
+   */
   const handleSubmit = () => {
     let isValid = true;
     if (!formData.username) {
@@ -75,6 +88,9 @@ const Login = () => {
     }
   };
 
+  /**
+   * Send request to backend to validate login details and receive token
+   */
   const loginUser = () => {
     const loginRequest = {
       username: formData.username,

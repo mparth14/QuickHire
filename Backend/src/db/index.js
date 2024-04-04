@@ -1,3 +1,11 @@
+/**
+ * Connects to the MongoDB database using Mongoose.
+ * @author Hiteshkumar
+ * @author Angel
+ * @async
+ * @function connectDB
+ * @returns {Promise<void>}
+ */
 import mongoose from "mongoose";
 import { DB_NAME } from "../config/constants.js";
 

@@ -1,6 +1,19 @@
+/**
+ * @author Hiteshkumar
+ * @author Angel
+ * Services controller
+ */
+
 import services from "../models/services.model.js";
 import users from "../models/user.model.js";
 
+/**
+ * Creates a new service.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const createService = async (req, res) => {
   try {
     const service = await services.create(req.body);
@@ -16,6 +29,13 @@ export const createService = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves all active services.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const getAllServices = async (req, res) => {
   try {
     const allServices = await services.find({ isActive: true });
@@ -25,6 +45,13 @@ export const getAllServices = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves a service by ID.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const getServiceById = async (req, res) => {
   try {
     const service = await services.findById({
@@ -48,6 +75,13 @@ export const getServiceById = async (req, res) => {
   }
 };
 
+/**
+ * Updates a service by ID.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const updateService = async (req, res) => {
   try {
     const service = await services.findByIdAndUpdate(req.params.id, req.body, {
@@ -71,6 +105,13 @@ export const updateService = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a service by ID.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const deleteService = async (req, res) => {
   try {
     const service = await services.findByIdAndDelete(req.params.id);
@@ -85,6 +126,13 @@ export const deleteService = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves services by partial hint.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const getServicesByPartialHint = async (req, res) => {
   try {
     const { value } = req.query;
