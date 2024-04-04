@@ -40,7 +40,8 @@ import paymentRoutes from "./routes/v1/payment.routes.js";
 import cartRoutes from "./routes/v1/cart.routes.js";
 import wishlistRoute from "./routes/v1/wishlist.routes.js";
 import serviceOrderRoutes from "./routes/v1/order.routes.js";
-
+import rating from "./routes/v1/review.routes.js";
+import userReview from "./routes/v1/userReview.routes.js";
 //routes declaration
 app.use("/api/v1/dummyData", dummyData);
 app.use("/api/v1/auth", authData);
@@ -50,6 +51,8 @@ app.use("/api/v1/categories", categoriesData);
 app.use("/api/v1", paymentRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishlist", wishlistRoute);
+app.use("/api/v1/rating", rating);
+app.use("/api/v1/userReview", userReview);
 app.post("/api/v1/checkout", paymentController.checkout);
 app.use("/api/v1/orders", serviceOrderRoutes);
 

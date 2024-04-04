@@ -13,6 +13,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import { toast } from "react-toastify";
 import { CONFIG } from "../../config";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import RatingPopup from "../../utils/RatingDialogPopUp.js";
 
 const useStyles = makeStyles((theme) => ({
   gridContainer: {
@@ -42,12 +43,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SubServiceCard(props) {
   const classes = useStyles();
-
   const cardData = props.cardData;
   const user = props.user;
   const [wishlistServices, setWishlistServices] = useState([]);
   const history = useHistory();
   console.log({ cardData }, { user }, { wishlistServices });
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleOpenPopup = () => {
+    console.log("Open pop up called!");
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -59,14 +69,14 @@ export default function SubServiceCard(props) {
       const response = await fetch(
         `${CONFIG.BASE_PATH}wishlist?email=${user.email}`
       );
-      const data = await response.json(); 
+      const data = await response.json();
       setWishlistServices(data);
     };
     getWishlistedServices();
   }, [user]);
 
   const isWishlisted = (id) => {
-    return wishlistServices.some(service => service._id === id);
+    return wishlistServices.some((service) => service._id === id);
   };
 
   const toggleIconColor = async (id, data) => {
@@ -93,7 +103,9 @@ export default function SubServiceCard(props) {
         });
         if (response.status === 200) {
           toast.success("Removed from your wishlist!");
-          setWishlistServices(prevState => prevState.filter(service => service._id !== data._id));
+          setWishlistServices((prevState) =>
+            prevState.filter((service) => service._id !== data._id)
+          );
         } else {
           toast.error("Failed to update your wishlist.");
         }
@@ -113,7 +125,7 @@ export default function SubServiceCard(props) {
         });
         if (response.status === 200) {
           toast.success("Added to your wishlist!");
-          setWishlistServices(prevState => [...prevState, data]);
+          setWishlistServices((prevState) => [...prevState, data]);
         } else {
           toast.error("Failed to update your wishlist.");
         }
@@ -139,7 +151,9 @@ export default function SubServiceCard(props) {
                   <FavoriteIcon
                     className={classes.heartIcon}
                     style={{
-                      color: isWishlisted(data._id || data.id) ? "#FF5555" : "#000000",
+                      color: isWishlisted(data._id || data.id)
+                        ? "#FF5555"
+                        : "#000000",
                     }}
                     onClick={(e) => {
                       e.preventDefault();
@@ -155,6 +169,7 @@ export default function SubServiceCard(props) {
           </Grid>
         ))}
       </Grid>
+      {showPopup && <RatingPopup onClose={handleClosePopup} />}
     </div>
   );
 }
