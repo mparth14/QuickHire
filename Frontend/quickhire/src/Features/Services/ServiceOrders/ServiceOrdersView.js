@@ -30,10 +30,6 @@ function Orders({ user, onload }) {
     }
   }, [onload, user, history]);
 
-  // if (!user || loading) {
-  //   return null;
-  // }
-
   return (
     <div style={{ padding: "0 2rem" }}>
       <Tabs
@@ -41,8 +37,7 @@ function Orders({ user, onload }) {
         onChange={handleChange}
         indicatorColor="primary"
         textColor="primary"
-        centered
-      >
+        centered>
         <Tab
           label="Service Placed"
           id="full-width-tab-0"
@@ -73,8 +68,7 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && <Box p={3}>{children}</Box>}
     </div>
   );

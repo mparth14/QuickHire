@@ -139,8 +139,7 @@ export default function Navbar({ user, onload }) {
         keepMounted
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={isMenuOpen}
-        onClose={handleMenuClose}
-      >
+        onClose={handleMenuClose}>
         <MenuItem onClick={handleMenuClose}>
           <Link to="/login" className="menu-link">
             Sign In
@@ -160,8 +159,7 @@ export default function Navbar({ user, onload }) {
         keepMounted
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={isMenuOpen}
-        onClose={handleMenuClose}
-      >
+        onClose={handleMenuClose}>
         <MenuItem onClick={handleMenuClose}>
           <Link to="/profile" className="menu-link">
             Profile
@@ -170,6 +168,11 @@ export default function Navbar({ user, onload }) {
         <MenuItem onClick={handleMenuClose}>
           <Link to="/checkout" className="menu-link">
             My Cart
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <Link to="/service-orders" className="menu-link">
+            My Orders
           </Link>
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>
@@ -190,8 +193,7 @@ export default function Navbar({ user, onload }) {
         keepMounted
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
-      >
+        onClose={handleMobileMenuClose}>
         <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
           <Link className="menu-link" to="/login">
             Sign In
@@ -211,8 +213,7 @@ export default function Navbar({ user, onload }) {
         keepMounted
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
-      >
+        onClose={handleMobileMenuClose}>
         <MenuItem className="menu-link" onClick={handleProfileMenuOpen}>
           <Link className="menu-link" to="/profile">
             Profile
@@ -253,8 +254,7 @@ export default function Navbar({ user, onload }) {
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="open drawer"
-          ></IconButton>
+            aria-label="open drawer"></IconButton>
           <Link to="/">
             <img src={logo} className="image-css" alt="Logo" />
           </Link>
@@ -279,8 +279,7 @@ export default function Navbar({ user, onload }) {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
+              color="inherit">
               <AccountCircle />
             </IconButton>
           </div>
@@ -289,8 +288,7 @@ export default function Navbar({ user, onload }) {
               style={{ marginLeft: "-20px", marginRight: "-15px" }}
               edge="end"
               aria-label="favorite"
-              color="inherit"
-            >
+              color="inherit">
               <FavoriteBorderIcon color="white" style={{ color: "white" }} />
             </IconButton>
             <IconButton
@@ -298,8 +296,7 @@ export default function Navbar({ user, onload }) {
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
+              color="inherit">
               <MoreIcon />
             </IconButton>
           </div>
