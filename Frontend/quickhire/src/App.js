@@ -124,7 +124,7 @@ function App() {
               <ServiceOrdersView />
             </Route>
             <Route exact path="/service-creation">
-              <ServiceCreationPage />
+              <ServiceCreationPage user={user} onload={userLoaded}/>
             </Route>
             <Route exact path="/services/:id">
               <IndividualServicePage user={user} onload={userLoaded} />

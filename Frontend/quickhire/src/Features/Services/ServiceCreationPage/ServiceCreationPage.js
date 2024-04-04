@@ -1,4 +1,14 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @Author Angel Christian
+ * ServiceCreationPage Component
+ * 
+ * Component for adding a new service by a user.
+ * 
+ * @param {object} user - The user object containing information about the logged-in user.
+ * @param {boolean} onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} ServiceCreationPage component JSX
+ */
+import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
@@ -9,21 +19,25 @@ import {
   Button,
   Grid,
 } from '@mui/material';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from "uuid";
 import { imageStorage }  from "../../../utils/firebaseConfig.js";
+import { AuthContext } from '../../AuthContext.js';
+import { useHistory } from 'react-router-dom';
+import { CONFIG } from '../../../config.js';
+
 
 const useStyles = makeStyles((theme) => ({
   focusedInput: {
     "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#1f91cc"
+      borderColor: "#3f51b5"
     },
     "& .MuiInputLabel-outlined.Mui-focused": {
-      color: "#1f91cc"
+      color: "#3f51b5"
     },
     "&.MuiOutlinedInput-root": {
       "&.Mui-focused fieldset": {
-        borderColor: "#1f91cc"
+        borderColor: "#3f51b5"
       }
     },
     "& .MuiSelect-root.Mui-focused": {
@@ -35,18 +49,24 @@ const useStyles = makeStyles((theme) => ({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1f91cc',
+      main: '#3f51b5',
     },
   },
 });
 
-const ServiceCreationPage = () => {
+
+const ServiceCreationPage = ({ user, onload }) => {
   const classes = useStyles();
   const [selectedFile, setSelectedFile] = useState(null);
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [subcategoryOptions, setSubcategoryOptions] = useState([]);
+  const { loading} = useContext(AuthContext);
+  const [token, setToken] = useState('');
+  const navigate = useHistory();
+
+
 
   const uploadImageToFirebase = async (image) => {
     const imageUUID = v4();
@@ -56,9 +76,22 @@ const ServiceCreationPage = () => {
     return imageURL;
   };
 
+  useEffect(( ) =>{
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+    if(!user && onload){
+        navigate.push("/login");
+    }
+    if(user && onload && !user.isFreelancer){
+      navigate.push("/profile");
+  }
+  }, [onload, user,navigate])
+
+  
+
   useEffect(() => {
     // Fetch categories from the API
-    fetch('http://localhost:4000/api/v1/categories')
+    fetch(`${CONFIG.BASE_PATH}categories`)
       .then(response => response.json())
       .then(({ data }) => {
         setCategoryOptions(data);
@@ -107,10 +140,11 @@ const ServiceCreationPage = () => {
     try {
       const profilePictureURL = await uploadImageToFirebase(selectedFile);
 
-      const response = await fetch('http://localhost:4000/api/v1/services', {
+      const response = await fetch(`${CONFIG.BASE_PATH}services`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` ,
         },
         body: JSON.stringify({
           title,
@@ -118,7 +152,7 @@ const ServiceCreationPage = () => {
           category,
           subCategory: subcategory,
           price: parseFloat(price),
-          sellerId: '1', // Hardcoded for testing
+          sellerId: user._id, 
           imgUrl: profilePictureURL,
         }),
       });
@@ -153,13 +187,16 @@ const ServiceCreationPage = () => {
       event.target.value = null;
     }
   };
+  if (!user || loading) {
+    return null;
+  }
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ backgroundColor: 'white', height: '100vh' }}>
+      <div style={{ height: '100vh' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '5%' }}>
           <Container maxWidth="md" style={{ backgroundColor: 'white', padding: 20, borderRadius: 8 }}>
-            <Typography variant="h4" align="center" gutterBottom>
+            <Typography style={{color:'#3f51b5'}} variant="h4" align="center" gutterBottom>
               Add New Service
             </Typography>
             <form id='creationForm' onSubmit={handleSubmit}>
@@ -245,7 +282,7 @@ const ServiceCreationPage = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <Button
-                    style={{ color: 'white', backgroundColor: '#1f91cc' }}
+                    style={{ color: 'white', backgroundColor: '#3f51b5' }}
                     type="submit"
                     variant="contained"
                     fullWidth
