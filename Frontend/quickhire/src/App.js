@@ -1,4 +1,3 @@
-
 /**
  * Main component for the application.
  * Handles routing and authentication.
@@ -24,6 +23,7 @@ import ServiceCreationPage from "./Features/Services/ServiceCreationPage/Service
 
 import CategoryCard from "./Features/CategoryCard/CategoryCard";
 import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
+import WishList from "./Features/WishList/Wishlist.js";
 import PaymentSuccess from "./Features/Payment/PaymentSuccess.js";
 import PaymentFailure from "./Features/Payment/PaymentFailure.js";
 import SignUpFreelancer from "./Features/SignUpFreelancer/SignUpFreelancer.js";
@@ -139,6 +139,9 @@ function App() {
             </Route>
             <Route exact path="/payment-failure">
               <PaymentFailure />
+            </Route>
+            <Route exact path="/wishlist">
+              <WishList user={user} onload={userLoaded} />
             </Route>
           </AuthProvider>
         </Switch>
