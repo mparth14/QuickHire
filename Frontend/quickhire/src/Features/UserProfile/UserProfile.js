@@ -1,10 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
+
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
-import { makeStyles } from "@material-ui/core";
+import { DialogTitle, makeStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
-import { Container, Typography, Avatar, Grid, Paper, TextField, ToggleButton, Select, MenuItem, InputLabel  } from '@mui/material';
+import { Container, Typography, Avatar, Grid, Paper, TextField, ToggleButton, Select, MenuItem, InputLabel, DialogActions  } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import "./UserProfile.css";
 import Divider from '@mui/material/Divider';
@@ -23,6 +28,10 @@ import { toast } from 'react-toastify';
 import { CONFIG } from '../../config.js';
 import { FaTimes, FaPlus } from 'react-icons/fa';
 import IconButton from '@mui/material/IconButton';
+import { v4 } from "uuid";
+import { imageStorage }  from "../../utils/firebaseConfig.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import Dialog from '@mui/material/Dialog';
 
 const useStyles = makeStyles((theme) => ({
     parentCard: {
@@ -44,7 +53,6 @@ const EditProfilePicButton = ({ visibility }) => {
                     height: "100%",
                     backgroundColor: 'rgba(52, 52, 52, 0.4)'
                 }}
-                sx={{"&:hover": {backgroundColor: "black"}}}
                 
             >
                 <AddAPhotoIcon fontSize='large'/>
@@ -60,7 +68,11 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
     const [ visibility, setVisibility ] = useState("invisible");
     const [ selectInfoEdit, setSelectInfoEdit] = useState(false);
     const [ selectLeftMenuEdit, setSelectLeftMenuEdit] = useState(false);
+    const [ firstNameError, setFirstNameError] = useState("");
+    const [ lastNameError, setLastNameError] = useState("");
+    const [ deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
     const storedToken = localStorage.getItem("token");
+    const inputFile = useRef(null) 
 
     const [formData, setFormData] = useState({
         first_name: "",
@@ -167,6 +179,34 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         }
       };
 
+    const onProfileButtonClick = () => {
+        inputFile.current.click();
+      };
+
+    const handleProfileFileChange = async(event) => {
+        event.preventDefault();
+        const file = event.target.files[0];
+        if (file) {
+            const profilePictureUrl = await uploadImageToFirebase(file);
+            const oldProfilePicture = formData.profilePictureUrl;
+            setFormData({
+                ...formData,
+                "profilePictureUrl": profilePictureUrl,
+            });
+            updateProfilePicture(profilePictureUrl, oldProfilePicture);
+        }
+    }
+
+    const uploadImageToFirebase = async (image) => {
+        const imageUUID = v4();
+        const imageRef = ref(imageStorage, `files/${imageUUID}`);
+        await uploadBytes(imageRef, image);
+        const imageURL = await getDownloadURL(
+          ref(imageStorage, `files/${imageUUID}`)
+        );
+        return imageURL;
+      };
+
     const convertLink = link => {
         if(link){
             return link.startsWith("http://") || link.startsWith("https://") ?
@@ -176,33 +216,40 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
       };
 
     const updateUserDetails = () => {
+        let isValid = true;
+        if (!formData.first_name || formData.first_name.length <= 0) {
+            setFirstNameError('First name is required');
+            isValid = false;
+          } else {
+            setFirstNameError('');
+        }
+
+        if (!formData.last_name || formData.last_name.length <= 0) {
+            setLastNameError('Last name is required');
+            isValid = false;
+          } else {
+            setLastNameError('');
+        }
+
+        if(!isValid){
+            return;
+        }
+      
+        const newFormData = {...formData};
+        delete newFormData.password;
+        setFormData(newFormData);
+        onUserUpdate(newFormData);
+
         setSelectInfoEdit(false);
         setSelectLeftMenuEdit(false);
-        // const req = {
-        //         _id: user._id,
-        //         first_name: formData.first_name,
-        //         last_name: formData.last_name,
-        //         occupation: formData.occupation,
-        //         description: formData.description,
-        //         skills: formData.skills,
-        //         education: formData.education.length > 0 ? formData.education : user.education,
-        //         experience: formData.experience !== "" ? formData.experience : user.experience,
-        //         linkedInLink: formData.linkedInLink !== "" ? formData.linkedInLink : user.linkedInLink,
-        //         instagramLink: formData.instagramLink !== "" ? formData.instagramLink : user.instagramLink,
-        //         facebookLink: formData.facebookLink !== "" ? formData.facebookLink : user.facebookLink,
-        //         isFreelancer: user.isFreelancer,
-        //         email: user.email
-        //     };
-        onUserUpdate(formData);
-
-        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, formData,
+        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, newFormData,
             {
                 headers: {'Authorization': 'Bearer '+ storedToken }
             } )
         .then((response) => {
           console.log(response);
           if(response.status === 200){
-            console.log("Saved")
+            toast.success("Profile details updated succesfully");
           }
         })
         .catch(function (error) {
@@ -212,22 +259,105 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         });
       }
 
+    const clearUserInfoForm = () => {
+        setFirstNameError('');
+        setLastNameError('');
+        setSelectInfoEdit(!selectInfoEdit);
+        setFormData(user);
+      }
+    const updateProfilePicture = (profilePictureUrl, oldProfilePicture) => {
+        const newFormData = {...formData};
+        delete newFormData.password;
+        setFormData(newFormData);
+        onUserUpdate(newFormData);
+
+        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, 
+            {...newFormData,
+            "profilePictureUrl": profilePictureUrl},
+            {
+                headers: {'Authorization': 'Bearer '+ storedToken }
+            } )
+        .then((response) => {
+          console.log(response);
+          if(response.status === 200){
+            console.log("Saved")
+            toast.success("Profile picture updated succesfully");
+          }
+        })
+        .catch(function (error) {
+            toast.error("Issue while updating profile picture");
+            setFormData({
+                ...formData,
+                "profilePictureUrl": oldProfilePicture,
+            });
+            onUserUpdate(formData);
+        });
+      }
+
+    const deleteUserAccount = () => {
+        setDeleteAccountDialogOpen(true);
+    }
+
+    const confirmDeleteAccount = () => {
+        axios.delete(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id,
+            {
+                headers: {'Authorization': 'Bearer '+ storedToken }
+            })
+        .then((response) => {
+          console.log(response);
+          if(response.status === 200){
+            // console.log("Account deleted successfully")
+            toast.success("Account deleted succesfully");
+            if(localStorage.getItem("token")){
+                localStorage.removeItem("token");
+            }
+            setTimeout(()=>{
+                window.location.href = "/";
+            }, 2000)
+            
+          }
+        })
+        .catch(function (error) {
+            toast.error("Issue while deleting user account");
+        });
+        setDeleteAccountDialogOpen(false);
+      }
+
+    const closeDeleteAccountDialog = () => {
+        setDeleteAccountDialogOpen(false);
+      }
 
   return (
         <Container maxWidth="xl">
             <Paper elevation={2} sx={{ my: 4, p: 4 }} className='profile-paper'>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={3} md={3}>
-                        <Avatar variant='square'onMouseEnter={(e) => showButton(e)}
-                        onMouseLeave={(e) => hideButton(e)}
+                        <Avatar variant='square' onMouseEnter={(e) => showButton(e)}
+                            onMouseLeave={(e) => hideButton(e)}
+                            onClick={onProfileButtonClick}
                             sx={{
                                 backgroundColor: '#1F91CC',
                                 width: { xs: 110, sm: 130, md: 135, lg: 150 },
                                 height: { xs: 110, sm: 130, md: 135, lg: 150 },
                                 borderRadius: 2.5,
-                            }}>
-                            <AccountCircle className='svg_icons' fontSize="large" />
+                            }}
+                            >
+                            {formData.profilePictureUrl && formData.profilePictureUrl !== "" ?
+                                <img src={formData?.profilePictureUrl} 
+                                className="profile-picture"/>
+                                :
+                                <AccountCircle className='svg_icons' fontSize="large" />}
+                            
                             <EditProfilePicButton visibility={visibility}/>
+                            <input
+                                id='profilePicture'
+                                type='file'
+                                style={{ display: 'none' }}
+                                ref={inputFile}
+                                onChange={handleProfileFileChange}
+                                accept='.jpg,.jpeg,.png'
+                            />
+
                         </Avatar>
                     </Grid>
                     <Grid item xs={12} sm={9} md={9}>
@@ -250,7 +380,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 <ToggleButton value="check"
                                         sx={{border:0, marginTop: '27px', marginLeft: 2, padding: 0, float: 'right'}}
                                         selected={!selectInfoEdit}
-                                        onChange={() => setSelectInfoEdit(!selectInfoEdit)}>
+                                        onChange={() => clearUserInfoForm()}>
                                         <ClearIcon fontSize='large'/>
                                 </ToggleButton>
                                 <ToggleButton value="check"
@@ -266,17 +396,23 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         {selectInfoEdit ?
                         <>
                             <TextField label='First name' id='first_name' 
-                                placeholder="Your occupation"
+                                placeholder="Your occupation" required
                                 name="first_name" onChange={handleChange} 
-                                value={formData.first_name === "" ? user?.first_name : formData.first_name} 
-                                margin='normal' style={{marginRight: '20px'}}
+                                value={formData.first_name} 
+                                error={Boolean(firstNameError)}
+                                helperText={firstNameError}
+                                size='small'
+                                sx={{margin: '5px', marginLeft: 0}} style={{marginRight: '20px'}}
                                 /> 
                         
                             <TextField label='Last name' id='last_name' 
-                                placeholder="Your occupation"
+                                placeholder="Your occupation" required
                                 name="last_name" onChange={handleChange} 
-                                value={formData.last_name === "" ? user?.last_name : formData.last_name} 
-                                margin='normal'
+                                value={formData.last_name}
+                                error={Boolean(lastNameError)}
+                                helperText={lastNameError}
+                                size='small'
+                                sx={{margin: '5px', marginLeft: 0}}
                                 /> <br/>
                         </> : <></>}
                         {!selectInfoEdit ?
@@ -287,8 +423,8 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         <TextField label='Your occupation' id='occupation' 
                             placeholder="Your occupation"
                             name="occupation" onChange={handleChange} 
-                            value={formData.occupation === "" ? user?.occupation : formData.occupation} 
-                            margin='normal'
+                            value={formData.occupation} 
+                            sx={{margin: '5px', marginLeft: 0}} size='small'
                             />
                         }
                         {!selectInfoEdit ?
@@ -301,8 +437,8 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         <TextField fullWidth label='Your professional description'
                             id='description' placeholder="Your desciption"
                             name="description" onChange={handleChange} multiline maxRows={5}
-                            value={formData.description === "" ? user?.description : formData.description} 
-                            margin='normal'/>
+                            value={formData.description} 
+                            sx={{margin: '5px', marginLeft: 0}} size='small'/>
                         }
                         <br/>
                         {/* <Divider/> */}
@@ -332,7 +468,10 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                     <ToggleButton value="check"
                                             sx={{border:0, marginTop: '5px', marginLeft: 2, padding: 0, float: 'right'}}
                                             selected={!selectLeftMenuEdit}
-                                            onChange={() => setSelectLeftMenuEdit(!selectLeftMenuEdit)}>
+                                            onChange={() => {
+                                                setSelectLeftMenuEdit(!selectLeftMenuEdit);
+                                                setFormData(user);
+                                                }}>
                                             <ClearIcon/>
                                     </ToggleButton>
                                     <ToggleButton value="check"
@@ -360,10 +499,10 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 <TextField
                                 id='skillsInput'
                                 onKeyPress={handleSkillKeyPress}
-                                margin='normal'
+                                sx={{margin: '5px', marginLeft: 0}}
                                 label='Skills'
                                 placeholder="Your skills"
-                                name="skills"
+                                name="skills" size='small'
                                 />
                                 <IconButton onClick={handleAddSkill}>
                                     <FaPlus />
@@ -410,10 +549,10 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 <TextField
                                 id='educationInput'
                                 onKeyPress={handleEducationKeyPress}
-                                margin='normal'
+                                sx={{margin: '5px', marginLeft: 0}}
                                 label='Education'
                                 placeholder="Your education"
-                                name="education"
+                                name="education" size='small'
                                 />
                                 <IconButton onClick={handleAddEducation}>
                                     <FaPlus />
@@ -452,14 +591,14 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             <>
                                 <Select
                                     required
-                                    fullWidth
                                     label="Years of Experience"
                                     placeholder="Years of Experience"
                                     id='yearsOfExperience'
                                     name='experience'
                                     value={formData.experience}
                                     onChange={handleChange}
-                                    margin='normal'
+                                    sx={{margin: '5px', marginLeft: 0}}
+                                    size='small'
                                 >
                                     <MenuItem value='' disabled>
                                     Select one
@@ -474,7 +613,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
      
                         <Divider/>
                         {/* Contact me section */}
-                        <div style={{marginBottom: '20px'}}>
+                        <div style={{marginBottom: '15px'}}>
                             <Typography component="h1" variant="h6">
                                 <b>Contact me</b>
                             </Typography>
@@ -483,44 +622,45 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             </Typography>
                             {!selectLeftMenuEdit ?
                             <>
+                                {user.linkedInLink ?
                                 <a href={convertLink(user?.linkedInLink)} target="_blank">
                                     <LinkedInIcon fontSize='large'sx={{margin: '2px', marginLeft: 0, paddingLeft: 0}}/>
-                                </a>
+                                </a>: <></>}
+                                {user.instagramLink ?
                                 <a href={convertLink(user?.instagramLink)} target="_blank">
                                     <InstagramIcon fontSize='large'sx={{margin: '2px'}}/>
-                                </a>
+                                </a>: <></>}
+                                {user.facebookLink ?
                                 <a href={convertLink(user?.facebookLink)} target="_blank">
                                     <FacebookIcon fontSize='large'sx={{margin: '2px'}}/>
-                                </a>
+                                </a> : <></>}
                             </>
                             :
                             <>
                             <TextField label='LinkedIn url' id='linkedInLink' 
-                                fullWidth
                                 placeholder="LinkedIn url"
                                 name="linkedInLink" onChange={handleChange} 
                                 size='small'
-                                value={formData.linkedInLink === "" ? user?.linkedInLink : formData.linkedInLink} 
+                                value={formData.linkedInLink} 
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             <TextField label='Instagram url' id='instagramLink' 
-                                fullWidth
                                 placeholder="Instagram url"
                                 size='small'
                                 name="instagramLink" onChange={handleChange} 
-                                value={formData.instagramLink === "" ? user?.instagramLink : formData.instagramLink} 
+                                value={formData.instagramLink} 
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             <TextField label='Facebook url' id='facebookLink' 
-                                fullWidth
                                 placeholder="Facebook url"
                                 size='small'
                                 name="facebookLink" onChange={handleChange} 
-                                value={formData.facebookLink === "" ? user?.facebookLink : formData.facebookLink} 
+                                value={formData.facebookLink} 
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             </>}
                         </div>
+                        <Divider/>
                         
                     </Grid>
                     <Grid item xs={12} sm={9} md={9}>
@@ -530,12 +670,6 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             <Typography component="h1" variant="h6">
                                 <b>Services</b>
                             </Typography>
-                            <Stack spacing={{ xs: 0.5, sm: 1 }} direction="row" useFlexGap flexWrap="wrap">
-                                <Service/>
-                                <Service/>
-                                <Service/>
-                                <Service/>
-                            </Stack>
                         </div> : 
                         <div>
                             <Paper elevation={2} sx={{ mb: 4, p: 4,
@@ -551,17 +685,31 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         
                     </Grid>
                 </Grid>
-                {user?.isFreelancer ? 
-                    <>
-                    {/* <Divider/>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Typography component="h1" variant="h6">
-                                    <b>Reviews</b>
-                                </Typography>
-                            </Grid>
-                        </Grid> */}
-                    </> : <></>}
+                {/* Danger section */}
+                <Typography component="h1" variant="h6">
+                    <b>Danger section</b>
+                </Typography>
+                <Button variant="outlined" 
+                    style={{ color: '#fc2403', borderColor: '#fc2403', marginTop: 5 }}
+                    onClick={deleteUserAccount}>
+                    Delete account
+                </Button>
+                {/* Delete account alert */}
+                <Dialog
+                    open={deleteAccountDialogOpen}
+                    onClose={closeDeleteAccountDialog}>
+                    <DialogTitle>
+                        {"Delete user acccount?"}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button style={{ color: '#fc2403'}} onClick={confirmDeleteAccount}>
+                            Delete
+                        </Button>
+                        <Button autoFocus onClick={closeDeleteAccountDialog}>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
         </Container>
   );

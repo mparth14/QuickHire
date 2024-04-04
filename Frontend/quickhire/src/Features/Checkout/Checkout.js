@@ -73,7 +73,7 @@ const CheckoutPage = ({ user, onload }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: '660c6ec65fc4364562ff6431',
+          userId: user._id,
           serviceId: serviceId,
         }),
       });
@@ -168,14 +168,14 @@ const CheckoutPage = ({ user, onload }) => {
                 <Grid item xs={3}>
                   <CardMedia
                     component='img'
-                    image={service.image}
+                    image={service.imgUrl}
                     alt={service.title}
                     style={{ height: 200, width: '100%', objectFit: 'cover' }}
                   />
                 </Grid>
                 <Grid item xs={9}>
                   <CardContent>
-                    <Typography variant='h6' component='h2' gutterBottom>
+                    <Typography variant='h4' component='h2' gutterBottom>
                       {service.title}
                     </Typography>
                     <Typography
@@ -186,33 +186,36 @@ const CheckoutPage = ({ user, onload }) => {
                       {service.description}
                     </Typography>
                     <Typography
-                      variant='body2'
+                      variant='body1'
                       color='textSecondary'
                       gutterBottom
                     >
-                      Offered by {service.provider}
+                      Offered by {service.sellerName}
                     </Typography>
                     <Typography
-                      variant='body2'
+                      variant='body1'
                       color='textSecondary'
                       gutterBottom
                     >
-                      Quantity: {service.quantity}
+                      Quantity: 1
                     </Typography>
                     <Typography
-                      variant='body2'
+                      variant='body1'
                       color='textSecondary'
                       gutterBottom
                     >
                       Cost: ${service.price}
                     </Typography>
-                    <IconButton
-                      aria-label='delete'
-                      style={{ color: 'red' }}
-                      onClick={() => handleRemoveItem(service._id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <div>
+                      <IconButton
+                        aria-label='delete'
+                        style={{ color: 'red' }}
+                        onClick={() => handleRemoveItem(service._id)}
+                      >
+                        <DeleteIcon />
+                        <Typography variant='body1'>Remove Service</Typography>
+                      </IconButton>
+                    </div>
                   </CardContent>
                 </Grid>
               </Grid>

@@ -1,3 +1,7 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import React, { useState, useContext } from 'react';
 import { InputLabel, IconButton, InputAdornment } from '@mui/material';
 import { Grid, Paper, Typography, TextField, Button, makeStyles } from "@material-ui/core";
@@ -58,15 +62,6 @@ const Singup = () => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-    document.getElementById(
-      'selectedFileName',
-    ).innerText = `Selected File: ${file.name}`;
-  };
-
 
   const handleSubmit = () => {
     let isValid = true;
@@ -132,7 +127,7 @@ const Singup = () => {
     axios.post(CONFIG.BASE_PATH + CONFIG.SIGNUP_PATH, signupRequest)
     .then((response) => {
       console.log(response);
-      if(response.status == 200){
+      if(response.status == 200 || response.status === 201){
         //TODO: route to home page
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);

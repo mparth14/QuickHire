@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SubCategoryService = () => {
+const SubCategoryService = ({user, onload}) => {
   const history = useHistory();
   const classes = useStyles();
   const [state, setState] = React.useState(0);
@@ -94,11 +94,13 @@ const SubCategoryService = () => {
           "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022161.png",
           "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022170.png"
         ];
+        console.log(data);
         const newData = data.map((service, index) => {
           let trimmedDescription = service.description.split(' ').slice(0, 21).join(' ');
           if (service.description.split(' ').length > 21)
             trimmedDescription += '...';
           return {
+            id: service._id,
             image: service.imgUrl,
             name: service.sellerName,
             jobTitle: service.jobTitle,
@@ -197,7 +199,7 @@ const SubCategoryService = () => {
       <div >
         <h2 style={{ marginLeft: "8px", marginTop: "20px", marginBottom: "20px", color: "#3f51b5" }}>{subCategory}</h2>
         <div>
-          {currentItems.length > 0 && (
+          {originalData.length > 0 && (
             <div>
               <RatingFilter value={state.rating} onChange={handleRatingChange} />
               <BudgetFilter value={state.budget} onChange={handleBudgetChange} />
@@ -216,7 +218,7 @@ const SubCategoryService = () => {
               <p>Loading...</p>
             ) : (
               currentItems.length > 0 ? (
-                <SubServiceCard state={state} cardData={currentItems} />
+                <SubServiceCard state={state} cardData={currentItems} user={user} onload={onload}/>
               ) : (
                 <div style={{ textAlign: 'center' }}>
                   <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711127194~exp=1711130794~hmac=1229dd34750bfe08aa5b1ead640f1dfb81bd096024f35b53f4e97025df00c596&w=1380" alt="No data found"

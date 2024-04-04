@@ -1,67 +1,76 @@
-.profile-pic{
+.profile-pic {
     height: 50px;
     width: 50px;
     border-radius: 100%;
 }
-.profile-section{
+
+.profile-section {
     display: flex;
 }
-.name-tag{
+
+.name-tag {
     display: flex;
     flex-direction: column;
     margin-left: 15px;
 }
+
 .name-sec {
     font-size: large;
     font-weight: 1000;
 }
 
-.job-title{
+.job-title {
     font-weight: bold;
 }
+
 .card-btn {
     border: 1.2px solid black;
     color: green;
-    padding: 10px 24px;
+    padding: 10px 8px;
     font-size: 16px;
     border-color: black;
-    float: right;
-    margin-left: 30px;
     border-radius: 12px;
-    max-width: 100%; 
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
+.popular-btn-container {
+    margin-left: auto; /* Adjusted */
+}
 
 @media only screen and (max-width: 600px) {
     .card-btn {
-        float: none; 
+        float: none;
         margin-left: 10px;
     }
 }
-.card-text{
+
+.card-text {
     margin-top: 8px;
     margin-left: 8px;
     font-weight: 600;
 }
-.rating-sec{
+
+.rating-sec {
     margin-top: 10px;
     margin-left: 1px;
     display: flex;
     align-items: center;
 }
-.rating-icon{
+
+.rating-icon {
     margin-top: 10px;
     height: 30px;
     width: 30px;
 }
-.rating-text-sec{
+
+.rating-text-sec {
     font-size: large;
     font-weight: 1000;
     margin-left: 20px;
     align-items: center;
 }
-.price-text-sec{
+
+.price-text-sec {
     font-size: large;
     margin-top: 10px;
 }

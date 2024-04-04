@@ -1,3 +1,7 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 .profile-parallax-content {
     height: 90vh;
     align-items: center;
@@ -5,8 +9,15 @@
     
 }
 
-.profile-paper {
-    
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    object-fit: cover;
+    color: transparent;
+    text-indent: 10000px;
+    overflow-clip-margin: content-box;
+    overflow: clip;
 }
 
 .svg_icons {
