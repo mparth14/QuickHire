@@ -1,0 +1,13 @@
+/**
+ * @Author Tijilkumar Parmar
+ * CSS for Wishlist Page for the user's bookmarked services to visit later
+ */
+.breadcrumbs-css{
+    margin-top: 20px;
+}
+.sub-cat {
+    margin-top: 20px;
+}
+.link-deco{
+    text-decoration: none;
+}

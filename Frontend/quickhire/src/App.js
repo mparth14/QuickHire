@@ -1,4 +1,3 @@
-
 /**
  * Main component for the application.
  * Handles routing and authentication.
@@ -23,8 +22,9 @@ import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersVi
 import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
 import ManageService from "./Features/Services/ManageService/ManageService.js";
 
-import CategoryCard from "./Features/CategoryCard/CategoryCard";
+import SubCategoryCard from "./Features/SubCategoryCard/SubCategoryCard.js";
 import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
+import WishList from "./Features/WishList/Wishlist.js";
 import PaymentSuccess from "./Features/Payment/PaymentSuccess.js";
 import PaymentFailure from "./Features/Payment/PaymentFailure.js";
 import SignUpFreelancer from "./Features/SignUpFreelancer/SignUpFreelancer.js";
@@ -124,7 +124,7 @@ function App() {
               <ServiceOrdersView />
             </Route>
             <Route exact path="/service-creation">
-              <ServiceCreationPage user={user} onload={userLoaded}/>
+              <ServiceCreationPage user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/service-manage">
               <ManageService user={user} onload={userLoaded}/>
@@ -133,7 +133,7 @@ function App() {
               <IndividualServicePage user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/category/:name">
-              <CategoryCard />
+              <SubCategoryCard />
             </Route>
             <Route exact path="/subcategory/:name">
               <SubCategoryService user={user} onload={userLoaded} />
@@ -144,9 +144,12 @@ function App() {
             <Route exact path="/payment-failure">
               <PaymentFailure />
             </Route>
+            <Route exact path="/wishlist">
+              <WishList user={user} onload={userLoaded} />
+            </Route>
           </AuthProvider>
         </Switch>
-        <Footer/>
+        <Footer />
       </Router>
       <ToastContainer />
     </div>
