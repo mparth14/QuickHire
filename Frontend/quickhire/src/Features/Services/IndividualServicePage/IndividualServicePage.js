@@ -105,7 +105,8 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "start",
     [theme.breakpoints.down("sm")]: {
       marginLeft: 0,
-      marginTop: "2rem",
+      marginTop: "3rem",
+      position: "static",
     },
   },
   checkoutButton: {
@@ -224,7 +225,10 @@ const IndividualServicePage = ({ user, onload }) => {
                 />
               </Card>
 
-              <Typography style={{ marginTop: "2rem" }}>
+              <Typography
+                style={{
+                  marginTop: "2rem",
+                }}>
                 {service?.data?.description}
               </Typography>
 
@@ -323,9 +327,6 @@ const IndividualServicePage = ({ user, onload }) => {
                   <Typography>{service?.data?.seller?.description}</Typography>
                 </div>
               </Paper>
-
-              {/* Ratings and reviews section */}
-              <RatingsAndReviews />
             </div>
           </Grid>
 

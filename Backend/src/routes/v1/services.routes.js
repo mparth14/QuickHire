@@ -1,11 +1,19 @@
 /**
  * @author Hiteshkumar
  * @author Angel
+ * @author Yashkumar
  * Express router for managing service routes.
  * @type {express.Router}
  */
-import express from 'express';
-import { createService, getAllServices, getServiceById, updateService, deleteService, getServicesByPartialHint } from '../../controllers/services.controller.js';
+import express from "express";
+import {
+  createService,
+  getAllServices,
+  getServiceById,
+  updateService,
+  deleteService,
+  getServicesByPartialHint,
+} from "../../controllers/services.controller.js";
 
 const router = express.Router();
 
@@ -14,21 +22,21 @@ const router = express.Router();
  * @name GET /api/services/search
  * @function
  */
-router.get('/search', getServicesByPartialHint);
+router.get("/search", getServicesByPartialHint);
 
 /**
  * Route to create a new service.
  * @name POST /api/services/
  * @function
  */
-router.post('/', createService);
+router.post("/", createService);
 
 /**
  * Route to retrieve all services.
  * @name GET /api/services/
  * @function
  */
-router.get('/', getAllServices);
+router.get("/", getAllServices);
 
 /**
  * Route to retrieve a service by ID.
@@ -36,7 +44,7 @@ router.get('/', getAllServices);
  * @function
  * @param {string} id - The ID of the service to retrieve.
  */
-router.get('/:id', getServiceById);
+router.get("/:id", getServiceById);
 
 /**
  * Route to update a service by ID.
@@ -44,7 +52,7 @@ router.get('/:id', getServiceById);
  * @function
  * @param {string} id - The ID of the service to update.
  */
-router.put('/:id', updateService);
+router.put("/:id", updateService);
 
 /**
  * Route to delete a service by ID.
@@ -52,6 +60,6 @@ router.put('/:id', updateService);
  * @function
  * @param {string} id - The ID of the service to delete.
  */
-router.delete('/:id', deleteService);
+router.delete("/:id", deleteService);
 
 export default router;
