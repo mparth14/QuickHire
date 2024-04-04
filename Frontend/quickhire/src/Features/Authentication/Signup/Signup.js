@@ -63,15 +63,6 @@ const Singup = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-    document.getElementById(
-      'selectedFileName',
-    ).innerText = `Selected File: ${file.name}`;
-  };
-
-
   const handleSubmit = () => {
     let isValid = true;
 
