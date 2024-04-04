@@ -1,5 +1,19 @@
+/**
+ * Manages routes related to categories.
+ * @module controllers/categories.controller
+ * @author Hiteshkumar
+ * @author Angel
+ */
+
 import Category from '../models/categories.model.js';
 
+/**
+ * Creates a new category.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const createCategory = async (req, res) => {
     try {
         const category = await Category.create(req.body);
@@ -9,6 +23,13 @@ export const createCategory = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves all categories.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const getAllCategories = async (req, res) => {
     try {
         const categories = await Category.find();
@@ -18,6 +39,13 @@ export const getAllCategories = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves a category by ID.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const getCategoryById = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
@@ -30,6 +58,13 @@ export const getCategoryById = async (req, res) => {
     }
 };
 
+/**
+ * Updates a category by ID.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const updateCategory = async (req, res) => {
     try {
         const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
@@ -47,6 +82,13 @@ export const updateCategory = async (req, res) => {
     }
 };
 
+/**
+ * Deletes a category by ID.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
 export const deleteCategory = async (req, res) => {
     try {
         const category = await Category.findByIdAndDelete(req.params.id);

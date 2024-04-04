@@ -16,6 +16,7 @@ import {
   CardMedia,
   CardContent,
   IconButton,
+  Divider,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { loadStripe } from '@stripe/stripe-js';
@@ -136,112 +137,132 @@ const CheckoutPage = ({ user, onload }) => {
 
   return (
     <Container>
-      <Typography variant='h3' align='center' gutterBottom color='primary'>
+      <Typography
+        variant='h2'
+        align='center'
+        gutterBottom
+        style={{
+          fontFamily: 'Roboto, sans-serif',
+          fontWeight: 'bold',
+          color: '#333',
+          marginTop: '30px',
+        }}
+      >
         Checkout
       </Typography>
 
-      {cartItems.length === 0 && (
-        <Box
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          flexDirection='column'
-        >
-          <img
-            src={emptyCartImage}
-            alt='Empty Cart'
-            style={{ width: '50%', maxWidth: '275px', marginTop: '5px' }}
-            gutterBottom
-          />
-          <Typography variant='h6' align='center' gutterBottom>
-            Uh oh! Your cart is empty. Select your favorite services and add
-            them here.
-          </Typography>
-        </Box>
-      )}
-
       <Grid container spacing={2}>
-        {cartItems.map((service) => (
-          <Grid item xs={12} key={service._id}>
-            <Card>
-              <Grid container>
-                <Grid item xs={3}>
-                  <CardMedia
-                    component='img'
-                    image={service.imgUrl}
-                    alt={service.title}
-                    style={{ height: 200, width: '100%', objectFit: 'cover' }}
-                  />
-                </Grid>
-                <Grid item xs={9}>
-                  <CardContent>
-                    <Typography variant='h4' component='h2' gutterBottom>
-                      {service.title}
-                    </Typography>
-                    <Typography
-                      variant='body1'
-                      color='textSecondary'
-                      gutterBottom
-                    >
-                      {service.description}
-                    </Typography>
-                    <Typography
-                      variant='body1'
-                      color='textSecondary'
-                      gutterBottom
-                    >
-                      Offered by {service.sellerName}
-                    </Typography>
-                    <Typography
-                      variant='body1'
-                      color='textSecondary'
-                      gutterBottom
-                    >
-                      Quantity: 1
-                    </Typography>
-                    <Typography
-                      variant='body1'
-                      color='textSecondary'
-                      gutterBottom
-                    >
-                      Cost: ${service.price}
-                    </Typography>
-                    <div>
-                      <IconButton
-                        aria-label='delete'
-                        style={{ color: 'red' }}
-                        onClick={() => handleRemoveItem(service._id)}
+        <Grid item xs={12} md={8}>
+          {cartItems.map((service, index) => (
+            <div key={service._id}>
+              <Card>
+                <Grid container>
+                  <Grid item xs={3}>
+                    <CardMedia
+                      component='img'
+                      image={service.imgUrl}
+                      alt={service.title}
+                      style={{
+                        height: '100%',
+                        width: '100%',
+                        objectFit: 'cover',
+                        borderRadius: 8,
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <CardContent>
+                      <Typography
+                        variant='h4'
+                        component='h2'
+                        gutterBottom
+                        style={{ fontWeight: 'bold', color: '#333' }}
                       >
-                        <DeleteIcon />
-                        <Typography variant='body1'>Remove Service</Typography>
-                      </IconButton>
-                    </div>
-                  </CardContent>
+                        {service.title}
+                      </Typography>
+                      <Typography
+                        variant='body1'
+                        color='textSecondary'
+                        gutterBottom
+                      >
+                        {service.description}
+                      </Typography>
+                      <Typography
+                        variant='body1'
+                        color='textSecondary'
+                        gutterBottom
+                      >
+                        Offered by{' '}
+                        <span style={{ fontWeight: 'bold' }}>
+                          {service.sellerName}
+                        </span>
+                      </Typography>
+                      <Typography
+                        variant='body1'
+                        color='textSecondary'
+                        gutterBottom
+                        style={{ fontWeight: 'bold' }}
+                      >
+                        Cost: ${service.price}
+                      </Typography>
+                      <div>
+                        <IconButton
+                          aria-label='delete'
+                          style={{ color: '#e74c3c' }}
+                          onClick={() => handleRemoveItem(service._id)}
+                        >
+                          <DeleteIcon />
+                          <Typography
+                            variant='body1'
+                            style={{ color: '#333'}}
+                          >
+                            Remove Service
+                          </Typography>
+                        </IconButton>
+                      </div>
+                    </CardContent>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
-          </Grid>
-        ))}
+              </Card>
+              {index < cartItems.length - 1 && <Box mb={2} />}
+            </div>
+          ))}
+        </Grid>
+        <Grid item xs={12} md={4}>
+          {totalCost > 0 && (
+            <>
+              <Box mt={4} textAlign='center'>
+                <Typography
+                  variant='h4'
+                  gutterBottom
+                  style={{ fontWeight: 'bold', color: '#333' }}
+                >
+                  Total Cost: ${totalCost.toFixed(2)}
+                </Typography>
+                <Typography
+                  variant='h5'
+                  style={{ fontStyle: 'italic', color: '#666' }}
+                >
+                  Place your order now!
+                </Typography>
+              </Box>
+
+              <Divider variant='middle' style={{ margin: '20px 0' }} />
+              <Box mt={4} display='flex' justifyContent='center'>
+                <Button
+                  onClick={handleCheckout}
+                  variant='contained'
+                  color='primary'
+                  size='large'
+                >
+                  Checkout
+                </Button>
+              </Box>
+            </>
+          )}
+        </Grid>
       </Grid>
-      {totalCost > 0 && (
-        <>
-          <Box mt={4} display='flex' justifyContent='flex-end'>
-            <Typography variant='h6'>
-              Total Cost: ${totalCost.toFixed(2)}
-            </Typography>
-          </Box>
-          <Box mt={4} display='flex' justifyContent='center'>
-            <Button
-              onClick={handleCheckout}
-              variant='contained'
-              color='primary'
-              size='large'
-            >
-              Checkout
-            </Button>
-          </Box>
-        </>
-      )}
     </Container>
   );
 };

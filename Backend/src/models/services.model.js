@@ -1,7 +1,30 @@
+/**
+ * @author Hiteshkumar
+ * @author Angel
+ * Represents the structure of a service.
+ * @typedef {object} Service
+ * @property {string} title - The title of the service.
+ * @property {string} description - The description of the service.
+ * @property {string} category - The category of the service.
+ * @property {string} [subCategory] - The subcategory of the service (optional).
+ * @property {number} price - The price of the service.
+ * @property {Date} [createdDate] - The date when the service was created (optional).
+ * @property {Date} [updatedDate] - The date when the service was last updated (optional).
+ * @property {boolean} [isActive] - Indicates whether the service is active or not (optional).
+ * @property {string} sellerId - The ID of the seller.
+ * @property {string} [imgUrl] - The URL of the image associated with the service (optional).
+ * @property {number} [currentRating] - The current rating of the service (optional).
+ * @property {number} [numberOfRatings] - The number of ratings received for the service (optional).
+ * @property {boolean} [isPopular] - Indicates whether the service is popular or not (optional).
+ */
+
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
-
+/**
+ * Defines the schema for the Service model.
+ * @type {mongoose.Schema<Service>}
+ */
 const serviceSchema = new Schema({
     title: {
         type: String,
