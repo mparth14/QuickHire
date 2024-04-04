@@ -8,10 +8,11 @@ import Service from "../models/services.model.js";
 // Function to get service details
 async function getServiceDetails(email) {
   const wishlistObj = await Wishlist.find({ email: email });
-  if (!wishlistObj) {
+  if (wishlistObj.length == 0) {
     return [];
   }
   // Fetch service IDs for all the items wishlisted by the current user
+
   const serviceIDs = wishlistObj[0].wishlist;
   console.log(serviceIDs);
 
