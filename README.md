@@ -6,7 +6,8 @@ QuickHire is like an online marketplace where people can offer their skills and 
 
 * *Date Created*: 29 Jan 2024
 * *Last Modification Date*: 19 Feb 2024
-* *Deployed URL*: <https://quickhire-b00954481.netlify.app>
+* *Frontend Deployed URL*: <https://quick-hire.netlify.app/>
+* *Backend Deployed URL*: <https://quickhire-backend-1.onrender.com/api/v1/>
 * *Git URL*: <https://git.cs.dal.ca/gupta2/csci_5709_grp-04>
 
 ## Authors

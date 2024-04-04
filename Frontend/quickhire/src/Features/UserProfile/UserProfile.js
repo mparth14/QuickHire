@@ -67,6 +67,8 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
     const [ visibility, setVisibility ] = useState("invisible");
     const [ selectInfoEdit, setSelectInfoEdit] = useState(false);
     const [ selectLeftMenuEdit, setSelectLeftMenuEdit] = useState(false);
+    const [ firstNameError, setFirstNameError] = useState("");
+    const [ lastNameError, setLastNameError] = useState("");
     const storedToken = localStorage.getItem("token");
     const inputFile = useRef(null) 
 
@@ -184,11 +186,12 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         const file = event.target.files[0];
         if (file) {
             const profilePictureUrl = await uploadImageToFirebase(file);
+            const oldProfilePicture = formData.profilePictureUrl;
             setFormData({
                 ...formData,
                 "profilePictureUrl": profilePictureUrl,
             });
-            updateUserDetails();
+            updateProfilePicture(profilePictureUrl, oldProfilePicture);
         }
     }
 
@@ -211,11 +214,64 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
       };
 
     const updateUserDetails = () => {
+        let isValid = true;
+        if (!formData.first_name || formData.first_name.length <= 0) {
+            setFirstNameError('First name is required');
+            isValid = false;
+          } else {
+            setFirstNameError('');
+        }
+
+        if (!formData.last_name || formData.last_name.length <= 0) {
+            setLastNameError('Last name is required');
+            isValid = false;
+          } else {
+            setLastNameError('');
+        }
+
+        if(!isValid){
+            return;
+        }
+      
+        const newFormData = {...formData};
+        delete newFormData.password;
+        setFormData(newFormData);
+        onUserUpdate(newFormData);
+
         setSelectInfoEdit(false);
         setSelectLeftMenuEdit(false);
-        onUserUpdate(formData);
+        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, newFormData,
+            {
+                headers: {'Authorization': 'Bearer '+ storedToken }
+            } )
+        .then((response) => {
+          console.log(response);
+          if(response.status === 200){
+            console.log("Saved");
+          }
+        })
+        .catch(function (error) {
+            toast.error("Issue while saving user details");
+            setSelectInfoEdit(false);
+            setSelectLeftMenuEdit(false);
+        });
+      }
 
-        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, formData,
+    const clearUserInfoForm = () => {
+        setFirstNameError('');
+        setLastNameError('');
+        setSelectInfoEdit(!selectInfoEdit);
+        setFormData(user);
+      }
+    const updateProfilePicture = (profilePictureUrl, oldProfilePicture) => {
+        const newFormData = {...formData};
+        delete newFormData.password;
+        setFormData(newFormData);
+        onUserUpdate(newFormData);
+
+        axios.post(CONFIG.BASE_PATH + CONFIG.USER_PATH + user._id, 
+            {...newFormData,
+            "profilePictureUrl": profilePictureUrl},
             {
                 headers: {'Authorization': 'Bearer '+ storedToken }
             } )
@@ -226,9 +282,12 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
           }
         })
         .catch(function (error) {
-            toast.error("Issue while saving user details");
-            setSelectInfoEdit(false);
-            setSelectLeftMenuEdit(false);
+            toast.error("Issue while updating profile picture");
+            setFormData({
+                ...formData,
+                "profilePictureUrl": oldProfilePicture,
+            });
+            onUserUpdate(formData);
         });
       }
 
@@ -246,8 +305,14 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 width: { xs: 110, sm: 130, md: 135, lg: 150 },
                                 height: { xs: 110, sm: 130, md: 135, lg: 150 },
                                 borderRadius: 2.5,
-                            }}>
-                            <AccountCircle className='svg_icons' fontSize="large" />
+                            }}
+                            >
+                            {formData.profilePictureUrl && formData.profilePictureUrl !== "" ?
+                                <img src={formData?.profilePictureUrl} 
+                                className="profile-picture"/>
+                                :
+                                <AccountCircle className='svg_icons' fontSize="large" />}
+                            
                             <EditProfilePicButton visibility={visibility}/>
                             <input
                                 id='profilePicture'
@@ -280,7 +345,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 <ToggleButton value="check"
                                         sx={{border:0, marginTop: '27px', marginLeft: 2, padding: 0, float: 'right'}}
                                         selected={!selectInfoEdit}
-                                        onChange={() => setSelectInfoEdit(!selectInfoEdit)}>
+                                        onChange={() => clearUserInfoForm()}>
                                         <ClearIcon fontSize='large'/>
                                 </ToggleButton>
                                 <ToggleButton value="check"
@@ -296,17 +361,23 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         {selectInfoEdit ?
                         <>
                             <TextField label='First name' id='first_name' 
-                                placeholder="Your occupation"
+                                placeholder="Your occupation" required
                                 name="first_name" onChange={handleChange} 
-                                value={formData.first_name === "" ? user?.first_name : formData.first_name} 
-                                margin='normal' style={{marginRight: '20px'}}
+                                value={formData.first_name} 
+                                error={Boolean(firstNameError)}
+                                helperText={firstNameError}
+                                size='small'
+                                sx={{margin: '5px', marginLeft: 0}} style={{marginRight: '20px'}}
                                 /> 
                         
                             <TextField label='Last name' id='last_name' 
-                                placeholder="Your occupation"
+                                placeholder="Your occupation" required
                                 name="last_name" onChange={handleChange} 
-                                value={formData.last_name === "" ? user?.last_name : formData.last_name} 
-                                margin='normal'
+                                value={formData.last_name}
+                                error={Boolean(lastNameError)}
+                                helperText={lastNameError}
+                                size='small'
+                                sx={{margin: '5px', marginLeft: 0}}
                                 /> <br/>
                         </> : <></>}
                         {!selectInfoEdit ?
@@ -317,8 +388,8 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         <TextField label='Your occupation' id='occupation' 
                             placeholder="Your occupation"
                             name="occupation" onChange={handleChange} 
-                            value={formData.occupation === "" ? user?.occupation : formData.occupation} 
-                            margin='normal'
+                            value={formData.occupation} 
+                            sx={{margin: '5px', marginLeft: 0}} size='small'
                             />
                         }
                         {!selectInfoEdit ?
@@ -331,8 +402,8 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                         <TextField fullWidth label='Your professional description'
                             id='description' placeholder="Your desciption"
                             name="description" onChange={handleChange} multiline maxRows={5}
-                            value={formData.description === "" ? user?.description : formData.description} 
-                            margin='normal'/>
+                            value={formData.description} 
+                            sx={{margin: '5px', marginLeft: 0}} size='small'/>
                         }
                         <br/>
                         {/* <Divider/> */}
@@ -362,7 +433,10 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                     <ToggleButton value="check"
                                             sx={{border:0, marginTop: '5px', marginLeft: 2, padding: 0, float: 'right'}}
                                             selected={!selectLeftMenuEdit}
-                                            onChange={() => setSelectLeftMenuEdit(!selectLeftMenuEdit)}>
+                                            onChange={() => {
+                                                setSelectLeftMenuEdit(!selectLeftMenuEdit);
+                                                setFormData(user);
+                                                }}>
                                             <ClearIcon/>
                                     </ToggleButton>
                                     <ToggleButton value="check"
@@ -390,10 +464,10 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 <TextField
                                 id='skillsInput'
                                 onKeyPress={handleSkillKeyPress}
-                                margin='normal'
+                                sx={{margin: '5px', marginLeft: 0}}
                                 label='Skills'
                                 placeholder="Your skills"
-                                name="skills"
+                                name="skills" size='small'
                                 />
                                 <IconButton onClick={handleAddSkill}>
                                     <FaPlus />
@@ -440,10 +514,10 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 <TextField
                                 id='educationInput'
                                 onKeyPress={handleEducationKeyPress}
-                                margin='normal'
+                                sx={{margin: '5px', marginLeft: 0}}
                                 label='Education'
                                 placeholder="Your education"
-                                name="education"
+                                name="education" size='small'
                                 />
                                 <IconButton onClick={handleAddEducation}>
                                     <FaPlus />
@@ -482,14 +556,14 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             <>
                                 <Select
                                     required
-                                    fullWidth
                                     label="Years of Experience"
                                     placeholder="Years of Experience"
                                     id='yearsOfExperience'
                                     name='experience'
                                     value={formData.experience}
                                     onChange={handleChange}
-                                    margin='normal'
+                                    sx={{margin: '5px', marginLeft: 0}}
+                                    size='small'
                                 >
                                     <MenuItem value='' disabled>
                                     Select one
@@ -513,20 +587,22 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             </Typography>
                             {!selectLeftMenuEdit ?
                             <>
+                                {user.linkedInLink ?
                                 <a href={convertLink(user?.linkedInLink)} target="_blank">
                                     <LinkedInIcon fontSize='large'sx={{margin: '2px', marginLeft: 0, paddingLeft: 0}}/>
-                                </a>
+                                </a>: <></>}
+                                {user.instagramLink ?
                                 <a href={convertLink(user?.instagramLink)} target="_blank">
                                     <InstagramIcon fontSize='large'sx={{margin: '2px'}}/>
-                                </a>
+                                </a>: <></>}
+                                {user.facebookLink ?
                                 <a href={convertLink(user?.facebookLink)} target="_blank">
                                     <FacebookIcon fontSize='large'sx={{margin: '2px'}}/>
-                                </a>
+                                </a> : <></>}
                             </>
                             :
                             <>
                             <TextField label='LinkedIn url' id='linkedInLink' 
-                                fullWidth
                                 placeholder="LinkedIn url"
                                 name="linkedInLink" onChange={handleChange} 
                                 size='small'
@@ -534,7 +610,6 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             <TextField label='Instagram url' id='instagramLink' 
-                                fullWidth
                                 placeholder="Instagram url"
                                 size='small'
                                 name="instagramLink" onChange={handleChange} 
@@ -542,7 +617,6 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                 sx={{margin: '5px', marginLeft: 0}}
                                 />
                             <TextField label='Facebook url' id='facebookLink' 
-                                fullWidth
                                 placeholder="Facebook url"
                                 size='small'
                                 name="facebookLink" onChange={handleChange} 
