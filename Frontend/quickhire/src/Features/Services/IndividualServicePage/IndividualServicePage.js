@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
   breadcrumb: {
     marginBottom: "1rem",
+    // position: "sticky",
+    // top: "0",
+    // alignSelf: "start",
   },
   homeIcon: {
     width: 20,
@@ -97,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
   },
   checkoutOption: {
     marginTop: "3rem",
+    position: "sticky",
+    top: "0",
+    alignSelf: "start",
     [theme.breakpoints.down("sm")]: {
       marginLeft: 0,
       marginTop: "2rem",
