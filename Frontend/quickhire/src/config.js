@@ -11,6 +11,7 @@ export const CONFIG = {
   VALIDATE_TOKEN_PATH: "auth/validate-token/",
   USER_PATH: "user/",
   SERVICES_PATH: "services/",
+  ORDERS_PATH: "orders/",
   SUB_CATEGORY: "subcategory/",
   NO_DATA_IMAGE_PATH: "https://www.gitaa.in/img/NoRecordFound.png",
 };
