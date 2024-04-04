@@ -10,9 +10,14 @@ import "./Hero.css";
 import rightImg from "./hero-assets/10353047.png";
 import bgImg from "./hero-assets/hero-bg.png";
 import Type from "../../../CommonComponents/Header/Type";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 
 const Hero = () => {
+  const navigate = useHistory();
+  const routeToLoginPage = () => {
+    navigate.push("/login");
+  }
   return (
     <div>
       <Parallax bgImage={bgImg} strength={800}>
@@ -22,7 +27,7 @@ const Hero = () => {
               <p className="hero-title">QuickHire</p>
               <p className="hero-type-effect-heading">One Stop Solution for</p>
               <p className="hero-type-effect"><Type/></p>
-              <button className="hero-button">Let's Share Talent!</button>
+              <button className="hero-button" onClick={routeToLoginPage}>Let's Share Talent!</button>
               {/* <p className="hero-subtitle">Let's Share Talent!</p> */}
             </div>
             <div className="image-container">
