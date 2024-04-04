@@ -47,6 +47,24 @@ export const getAllServices = async (req, res) => {
 };
 
 /**
+ * Retrieves all active services including disabled services for that sellerId.
+ * @function
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ * @returns {void}
+ */
+export const getAllServicesIncludingDisabled = async (req, res) => {
+  try {
+      const  sellerId  = req.user._id;
+      const query = sellerId ? { sellerId } : {};
+      const allServices = await services.find(query);
+      res.status(200).json({ success: true, data: allServices });
+  } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+/**
  * Retrieves a service by ID.
  * @function
  * @param {express.Request} req - The request object.
@@ -85,26 +103,29 @@ export const getServiceById = async (req, res) => {
  */
 export const updateService = async (req, res) => {
   try {
-    const service = await services.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const { id } = req.params;
+    const { _id: userId } = req.user; 
+    // Check if the service exists and belongs to the user
+    const service = await services.findOneAndUpdate(
+      { _id: id, sellerId: userId },
+      { ...req.body, updatedDate: Date.now() },
+      { new: true, runValidators: true }
+    );
+
     if (!service) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Service not found" });
+      return res.status(404).json({ success: false, error: "Service not found or unauthorized" });
     }
+
     res.status(200).json({ success: true, data: service });
   } catch (error) {
     let errorMessage = error.message;
     if (error.name === "ValidationError") {
-      errorMessage = Object.values(error.errors)
-        .map((err) => err.message)
-        .join(", ");
+      errorMessage = Object.values(error.errors).map((err) => err.message).join(", ");
     }
     res.status(400).json({ success: false, error: errorMessage });
   }
 };
+
 
 /**
  * Deletes a service by ID.

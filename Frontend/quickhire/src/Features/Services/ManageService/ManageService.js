@@ -1,4 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+/**
+ * @Author Angel Christian
+ * ServiceManagement Component
+ * 
+ * Component for adding a new service by a user.
+ * 
+ * @param {object} user - The user object containing information about the logged-in user.
+ * @param {boolean} onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} ServiceManagement component JSX
+ */
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
@@ -30,21 +40,23 @@ import Pagination from '@material-ui/lab/Pagination';
 import { green } from '@material-ui/core/colors';
 import { Close, Edit, Block } from '@material-ui/icons';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import {  ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { imageStorage } from '../../../utils/firebaseConfig.js';
-
+import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../../AuthContext.js';
+import { CONFIG } from '../../../config.js';
 const useStyles = makeStyles((theme) => ({
     focusedInput: {
         '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#1f91cc',
+            borderColor: '#3F51B5',
         },
         '& .MuiInputLabel-outlined.Mui-focused': {
-            color: '#1f91cc',
+            color: '#3F51B5',
         },
         '&.MuiOutlinedInput-root': {
             '&.Mui-focused fieldset': {
-                borderColor: '#1f91cc',
+                borderColor: '#3F51B5',
             },
         },
         '& .MuiSelect-root.Mui-focused': {
@@ -90,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#1f91cc',
+            main: '#3F51B5',
         },
         secondary: {
             main: '#ff0000',
@@ -119,7 +131,7 @@ const TabPanel = (props) => {
 };
 const cardsPerPage = 16;
 
-const ManageService = () => {
+const ManageService = ({ user, onload }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState(null);
     const [category, setCategory] = useState('');
@@ -136,9 +148,21 @@ const ManageService = () => {
     const fileInputRef = useRef(null);
     const [confirmEnableDialogOpen, setConfirmEnableDialogOpen] = useState(false);
     const [enableServiceId, setEnableServiceId] = useState('');
-
+    const { loading } = useContext(AuthContext);
     const [currentPage, setCurrentPage] = useState(1);
+    const [token, setToken] = useState('');
+    const navigate = useHistory();
 
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        setToken(storedToken);
+        if (!user && onload) {
+            navigate.push("/login");
+        }
+        if (user && onload && !user.isFreelancer) {
+            navigate.push("/profile");
+        }
+    }, [onload, user, navigate])
     const handlePageChange = (event, page) => {
         setCurrentPage(page);
     };
@@ -160,7 +184,7 @@ const ManageService = () => {
 
     // Function to fetch categories from API
     const fetchCategories = () => {
-        fetch('http://localhost:4000/api/v1/categories')
+        fetch(`${CONFIG.BASE_PATH}categories`)
             .then((response) => response.json())
             .then(({ data }) => {
                 setWholeCategoryOptions(data);
@@ -169,10 +193,15 @@ const ManageService = () => {
             })
             .catch((error) => console.error('Error fetching categories:', error));
     };
-
     // Function to fetch services from API
     const fetchServices = () => {
-        fetch('http://localhost:4000/api/v1/services')
+        fetch(`${CONFIG.BASE_PATH}services/all`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            method: 'GET'
+        })
             .then((response) => response.json())
             .then(({ data }) => {
                 setServices(data);
@@ -229,10 +258,11 @@ const ManageService = () => {
     // Function to confirm disabling service
     const handleConfirmDisableService = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/api/v1/services/${disableServiceId}`, {
+            const response = await fetch(`${CONFIG.BASE_PATH}services/${disableServiceId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({
                     isActive: false,
@@ -266,6 +296,10 @@ const ManageService = () => {
             return;
         }
 
+        if (price < 20 || price > 100) {
+            toast.warning('Price must be between $20 and $100.');
+            return;
+        }
         if (description.length < 120) {
             toast.warning('Description should be a minimum of 120 characters.');
             return;
@@ -279,10 +313,11 @@ const ManageService = () => {
                 profilePictureURL = await uploadImageToFirebase(selectedFile);
             }
 
-            const response = await fetch(`http://localhost:4000/api/v1/services/${editedService._id}`, {
+            const response = await fetch(`${CONFIG.BASE_PATH}services/${editedService._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({
                     title,
@@ -290,7 +325,7 @@ const ManageService = () => {
                     category,
                     subCategory: subcategory,
                     price: parseFloat(price),
-                    sellerId: '1',
+                    sellerId: user._id,
                     imgUrl: profilePictureURL,
                 }),
             });
@@ -340,10 +375,11 @@ const ManageService = () => {
 
     const handleConfirmEnableService = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/api/v1/services/${enableServiceId}`, {
+            const response = await fetch(`${CONFIG.BASE_PATH}services/${enableServiceId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({
                     isActive: true,
@@ -362,8 +398,12 @@ const ManageService = () => {
             setConfirmEnableDialogOpen(false);
         }
     };
-    const showActivePagination = services.filter((service) => service.isActive).length > cardsPerPage;
-    const showDisabledPagination = services.filter((service) => !service.isActive).length > cardsPerPage;
+    const showActivePagination = services?.filter((service) => service.isActive).length > cardsPerPage;
+    const showDisabledPagination = services?.filter((service) => !service.isActive).length > cardsPerPage;
+
+    if (!user || loading) {
+        return null;
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -384,14 +424,14 @@ const ManageService = () => {
                     </Tabs>
                 </Box>
                 <TabPanel value={activeTabIndex} index={0} >
-                    {services.filter((service) => service.isActive).length === 0 ? (
+                    {services?.filter((service) => service.isActive).length === 0 ? (
                         <Typography variant="h5" align="center" style={{ marginTop: '20px' }} gutterBottom>
                             No services to show
                         </Typography>
                     ) : (
                         <Grid container spacing={3} >
                             {services
-                                .filter((service) => service.isActive)
+                                ?.filter((service) => service.isActive)
                                 .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
                                 .map((service) => (
                                     <Grid item xs={12} sm={6} md={3} key={service._id}>
@@ -460,7 +500,7 @@ const ManageService = () => {
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                             <div>
                                 <Pagination
-                                    count={Math.ceil(services.filter((service) => service.isActive).length / cardsPerPage)}
+                                    count={Math.ceil(services?.filter((service) => service.isActive).length / cardsPerPage)}
                                     color="primary"
                                     onChange={handlePageChange}
                                 />
@@ -469,14 +509,14 @@ const ManageService = () => {
 
                 </TabPanel>
                 <TabPanel value={activeTabIndex} index={1}>
-                    {services.filter((service) => !service.isActive).length === 0 ? (
+                    {services?.filter((service) => !service.isActive).length === 0 ? (
                         <Typography variant="h5" align="center" style={{ marginTop: '20px' }} gutterBottom>
                             No services to show
                         </Typography>
                     ) : (
                         <Grid container spacing={3}>
                             {services
-                                .filter((service) => !service.isActive)
+                                ?.filter((service) => !service.isActive)
                                 .slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage)
                                 .map((service) => (
                                     <Grid item xs={12} sm={6} md={3} key={service._id}>
@@ -522,7 +562,7 @@ const ManageService = () => {
                             <div>
 
                                 <Pagination
-                                    count={Math.ceil(services.filter((service) => !service.isActive).length / cardsPerPage)}
+                                    count={Math.ceil(services?.filter((service) => !service.isActive).length / cardsPerPage)}
                                     color="primary"
                                     onChange={handlePageChange}
                                 />
@@ -658,7 +698,7 @@ const ManageService = () => {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Button
-                                        style={{ color: 'white', backgroundColor: '#1f91cc' }}
+                                        style={{ color: 'white', backgroundColor: '#3F51B5' }}
                                         type="submit"
                                         variant="contained"
                                         fullWidth

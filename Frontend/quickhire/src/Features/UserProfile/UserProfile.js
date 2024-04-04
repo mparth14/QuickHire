@@ -688,6 +688,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                                       <Button
                                           variant="contained"
                                           style={{ backgroundColor: '#1F91CC', color: '#fff' }}
+                                          onClick={() => navigate.push('/service-manage')}
                                       >
                                           <span role="img" aria-label="manage-service" style={{ fontSize: 30, color: '#ffffff' }}>🛠️</span> Manage Service
                                       </Button>
