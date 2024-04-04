@@ -39,6 +39,7 @@ import categoriesData from "./routes/v1/categories.routes.js";
 import paymentRoutes from "./routes/v1/payment.routes.js";
 import cartRoutes from "./routes/v1/cart.routes.js";
 import wishlistRoute from "./routes/v1/wishlist.routes.js";
+import serviceOrderRoutes from "./routes/v1/order.routes.js";
 
 //routes declaration
 app.use("/api/v1/dummyData", dummyData);
@@ -50,6 +51,7 @@ app.use("/api/v1", paymentRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishlist", wishlistRoute);
 app.post("/api/v1/checkout", paymentController.checkout);
+app.use("/api/v1/orders", serviceOrderRoutes);
 
 connectDB()
   .then(() => {

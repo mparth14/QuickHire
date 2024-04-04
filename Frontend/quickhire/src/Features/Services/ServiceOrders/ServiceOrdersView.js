@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+/**
+ * @Author Yashkumar Khorja
+ * ServiceOrdersView component renders the orders placed and received by and to logged in user.
+ * @param {Object} user - User object containing user details.
+ * @param {boolean} onload - Flag indicating whether the component is loaded.
+ * @returns {JSX.Element} - The rendered JSX element.
+ */
+
+import React, { useContext, useEffect, useState } from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { Box } from "@material-ui/core";
 import ServiceOrdersPlaced from "./ServiceOrdersPlaced";
 import ServiceOrdersReceived from "./ServiceOrdersReceived";
+import { AuthContext } from "../../AuthContext";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
-function Orders() {
+function Orders({ user, onload }) {
   const [value, setValue] = useState(0);
+  const loading = useContext(AuthContext);
+  const history = useHistory();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    if (!user && onload) {
+      history.push("/login");
+    }
+  }, [onload, user, history]);
+
+  if (!user || loading) {
+    return null;
+  }
 
   return (
     <div style={{ padding: "0 2rem" }}>
@@ -32,10 +54,10 @@ function Orders() {
         />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <ServiceOrdersPlaced />
+        <ServiceOrdersPlaced user={user} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ServiceOrdersReceived />
+        <ServiceOrdersReceived user={user} />
       </TabPanel>
     </div>
   );
@@ -50,7 +72,6 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      style={{ backgroundColor: "#e0e0e0" }}
       {...other}>
       {value === index && <Box p={3}>{children}</Box>}
     </div>

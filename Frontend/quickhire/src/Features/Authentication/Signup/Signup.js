@@ -1,18 +1,25 @@
 /**
- * @authors 
+ * @authors
  * Rahul Hambarde
  */
-import React, { useState, useContext } from 'react';
-import { InputLabel, IconButton, InputAdornment } from '@mui/material';
-import { Grid, Paper, Typography, TextField, Button, makeStyles } from "@material-ui/core";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { InputLabel, IconButton, InputAdornment } from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  makeStyles,
+} from "@material-ui/core";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useHistory } from "react-router-dom";
 import { Parallax } from "react-parallax";
 import Background from "../../../assets/BackGround.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import axios from 'axios';
-import { CONFIG } from '../../../config.js';
-import { AuthContext } from '../../AuthContext';
+import axios from "axios";
+import { CONFIG } from "../../../config.js";
+import { AuthContext } from "../../AuthContext";
 import { Link } from "react-router-dom";
 
 import "./Signup.css";
@@ -38,12 +45,12 @@ const Singup = () => {
   const classes = useStyles();
   const navigate = useHistory();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [firstNameError, setFirstNameError] = useState('');
-  const [lastNameError, setLastNameError] = useState('');
-  const [userNameError, setUserNameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [userNameError, setUserNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { setToken } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -52,12 +59,12 @@ const Singup = () => {
     username: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   /**
    * Handle all the input changes in the form
-   * @param {*} e 
+   * @param {*} e
    */
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,34 +89,34 @@ const Singup = () => {
 
     //Check if all the fields are empty
     if (!formData.first_name) {
-      setFirstNameError('First name is required');
+      setFirstNameError("First name is required");
       isValid = false;
     } else {
-      setFirstNameError('');
+      setFirstNameError("");
     }
     if (!formData.last_name) {
-      setLastNameError('Last name is required');
+      setLastNameError("Last name is required");
       isValid = false;
     } else {
-      setLastNameError('');
+      setLastNameError("");
     }
     if (!formData.username) {
-      setUserNameError('Username is required');
+      setUserNameError("Username is required");
       isValid = false;
     } else {
-      setUserNameError('');
+      setUserNameError("");
     }
     if (!formData.email) {
-      setEmailError('Email is required');
+      setEmailError("Email is required");
       isValid = false;
     } else {
-      setEmailError('');
+      setEmailError("");
     }
     if (!formData.password) {
-      setPasswordError('Password is required');
+      setPasswordError("Password is required");
       isValid = false;
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
 
     //Check that the password matches our restrictions
@@ -119,42 +126,46 @@ const Singup = () => {
     const passwordHasSpecialCharacter = /[%^=@#+$&]/.test(formData.password);
     const passwordIsLongEnough = formData.password?.length >= 8;
 
-    if(!passwordHasLowerCase){
-      setPasswordError("Password should contain at least 1 lowercase character.");
+    if (!passwordHasLowerCase) {
+      setPasswordError(
+        "Password should contain at least 1 lowercase character."
+      );
       isValid = false;
     }
 
-    if(!passwordHasUpperCase){
-      setPasswordError("Password should contain at least 1 uppercase character.");
+    if (!passwordHasUpperCase) {
+      setPasswordError(
+        "Password should contain at least 1 uppercase character."
+      );
       isValid = false;
     }
 
-    if(!passwordHasDigit){
+    if (!passwordHasDigit) {
       setPasswordError("Password should contain at least 1 number.");
       isValid = false;
     }
 
-    if(!passwordHasSpecialCharacter){
+    if (!passwordHasSpecialCharacter) {
       setPasswordError("Password should contain at least 1 special character.");
       isValid = false;
     }
 
-    if(!passwordIsLongEnough){
+    if (!passwordIsLongEnough) {
       setPasswordError("Password should contain at least 8 character long.");
       isValid = false;
     }
 
     //Check that confirm password is present and matches with password
     if (!formData.confirmPassword) {
-      setConfirmPasswordError('Confirm password is required');
+      setConfirmPasswordError("Confirm password is required");
       isValid = false;
     } else {
-      setConfirmPasswordError('');
+      setConfirmPasswordError("");
     }
 
-    if(formData.password !== formData.confirmPassword){
+    if (formData.password !== formData.confirmPassword) {
       isValid = false;
-      setConfirmPasswordError('Password does not match');
+      setConfirmPasswordError("Password does not match");
     }
 
     //Everything is valid, signup the user
@@ -173,41 +184,40 @@ const Singup = () => {
       username: formData.username,
       email: formData.email,
       password: formData.password,
-      profilePictureUrl: ""
+      profilePictureUrl: "",
     };
-    axios.post(CONFIG.BASE_PATH + CONFIG.SIGNUP_PATH, signupRequest)
-    .then((response) => {
-      console.log(response);
-      if(response.status == 200 || response.status === 201){
-        //TODO: route to home page
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token);
-        window.location.href = "/profile";
-      }
-    })
-    .catch(function (error) {
-      if(error.response.status == 409){
-        if(error.response.data.message == "Email already registered"){
-          setEmailError(error.response.data.message);
+    axios
+      .post(CONFIG.BASE_PATH + CONFIG.SIGNUP_PATH, signupRequest)
+      .then((response) => {
+        console.log(response);
+        if (response.status == 200 || response.status === 201) {
+          //TODO: route to home page
+          setToken(response.data.token);
+          localStorage.setItem("token", response.data.token);
+          window.location.href = "/profile";
         }
-        if(error.response.data.message == "Username already exists"){
-          setUserNameError(error.response.data.message);
+      })
+      .catch(function (error) {
+        if (error.response.status == 409) {
+          if (error.response.data.message == "Email already registered") {
+            setEmailError(error.response.data.message);
+          }
+          if (error.response.data.message == "Username already exists") {
+            setUserNameError(error.response.data.message);
+          }
+        } else {
+          console.error("Server error");
         }
-      }
-      else{
-        console.error("Server error");
-      }
-    });
-  }
+      });
+  };
 
   return (
     <Parallax
       bgImage={Background}
       strength={10}
-      className='signup-parallax-content'
-    >
+      className="signup-parallax-content">
       <Paper className={classes.parentCard}>
-        <Grid container className='signup-content'>
+        <Grid container className="signup-content">
           <Grid item xs={12} sm={6}>
             <Typography variant="h4" gutterBottom>
               Signup
@@ -286,12 +296,12 @@ const Singup = () => {
                         <IconButton
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
-                          edge="end"
-                        >
+                          edge="end">
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
-                    ),}}
+                    ),
+                  }}
                 />
                 <TextField
                   label="Confirm password"
@@ -307,14 +317,11 @@ const Singup = () => {
                   error={Boolean(confirmPasswordError)}
                   helperText={confirmPasswordError}
                 />
-                <Link to="/login">
-                      Login instead?
-                </Link>
+                <Link to="/login">Login instead?</Link>
                 <Button
                   variant="contained"
-                  className='signup-button'
-                  onClick={handleSubmit}
-                >
+                  className="signup-button"
+                  onClick={handleSubmit}>
                   Submit
                 </Button>
               </form>
@@ -324,6 +331,6 @@ const Singup = () => {
       </Paper>
     </Parallax>
   );
-}
+};
 
 export default Singup;

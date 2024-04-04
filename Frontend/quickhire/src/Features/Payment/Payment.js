@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  Box,
   Button,
   Container,
   Grid,
@@ -8,13 +7,13 @@ import {
   TextField,
   InputAdornment,
   Snackbar,
-} from '@mui/material';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import EventIcon from '@mui/icons-material/Event';
-import LockIcon from '@mui/icons-material/Lock';
-import PersonIcon from '@mui/icons-material/Person';
-import HomeIcon from '@mui/icons-material/Home';
-import Alert from '@mui/material/Alert';
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
+import EventIcon from "@material-ui/icons/Event";
+import LockIcon from "@material-ui/icons/Lock";
+import PersonIcon from "@material-ui/icons/Person";
+import HomeIcon from "@material-ui/icons/Home";
 
 export default function PaymentPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -26,7 +25,7 @@ export default function PaymentPage() {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -43,18 +42,18 @@ export default function PaymentPage() {
 
   return (
     <Container>
-      <Typography variant='h2' align='center' gutterBottom>
+      <Typography variant="h2" align="center" gutterBottom>
         Payment Gateway
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField
-            label='Card Number'
-            variant='outlined'
+            label="Card Number"
+            variant="outlined"
             fullWidth
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   <CreditCardIcon />
                 </InputAdornment>
               ),
@@ -63,12 +62,12 @@ export default function PaymentPage() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label='Expiration Date'
-            variant='outlined'
+            label="Expiration Date"
+            variant="outlined"
             fullWidth
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   <EventIcon />
                 </InputAdornment>
               ),
@@ -77,12 +76,12 @@ export default function PaymentPage() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label='CVV'
-            variant='outlined'
+            label="CVV"
+            variant="outlined"
             fullWidth
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   <LockIcon />
                 </InputAdornment>
               ),
@@ -91,12 +90,12 @@ export default function PaymentPage() {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label='Cardholder Name'
-            variant='outlined'
+            label="Cardholder Name"
+            variant="outlined"
             fullWidth
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   <PersonIcon />
                 </InputAdornment>
               ),
@@ -105,12 +104,12 @@ export default function PaymentPage() {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label='Billing Address'
-            variant='outlined'
+            label="Billing Address"
+            variant="outlined"
             fullWidth
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   <HomeIcon />
                 </InputAdornment>
               ),
@@ -119,11 +118,10 @@ export default function PaymentPage() {
         </Grid>
         <Grid item xs={12}>
           <Button
-            variant='contained'
-            color='primary'
+            variant="contained"
+            color="primary"
             fullWidth
-            onClick={handlePayNow}
-          >
+            onClick={handlePayNow}>
             Pay Now
           </Button>
         </Grid>
@@ -132,14 +130,12 @@ export default function PaymentPage() {
         open={paymentSuccess}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        message='Payment Successful'
-      >
+        message="Payment Successful">
         <Alert
           onClose={handleClose}
-          severity='success'
-          variant='filled'
-          sx={{ width: '100%' }}
-        >
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}>
           Payment Successful!
         </Alert>
       </Snackbar>

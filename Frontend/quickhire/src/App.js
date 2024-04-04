@@ -121,7 +121,7 @@ function App() {
               <ContactUs />
             </Route>
             <Route exact path="/service-orders">
-              <ServiceOrdersView />
+              <ServiceOrdersView user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/service-creation">
               <ServiceCreationPage user={user} onload={userLoaded} />
