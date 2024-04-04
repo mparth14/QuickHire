@@ -23,7 +23,7 @@ import ServiceOrdersView from "./Features/Services/ServiceOrders/ServiceOrdersVi
 import ServiceCreationPage from "./Features/Services/ServiceCreationPage/ServiceCreationPage.js";
 import ManageService from "./Features/Services/ManageService/ManageService.js";
 
-import CategoryCard from "./Features/CategoryCard/CategoryCard";
+import SubCategoryCard from "./Features/SubCategoryCard/SubCategoryCard.js";
 import SubCategoryService from "./Features/SubCategoryService/SubCategoryService";
 import PaymentSuccess from "./Features/Payment/PaymentSuccess.js";
 import PaymentFailure from "./Features/Payment/PaymentFailure.js";
@@ -130,7 +130,7 @@ function App() {
               <IndividualServicePage user={user} onload={userLoaded} />
             </Route>
             <Route exact path="/category/:name">
-              <CategoryCard />
+              <SubCategoryCard />
             </Route>
             <Route exact path="/subcategory/:name">
               <SubCategoryService user={user} onload={userLoaded} />
