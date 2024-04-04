@@ -83,6 +83,11 @@ const CheckoutPage = ({ user, onload }) => {
         setCartItems((prevItems) =>
           prevItems.filter((item) => item._id !== serviceId),
         );
+        // Update total cost
+        const updatedTotalCost = cartItems
+          .filter((item) => item._id !== serviceId)
+          .reduce((total, item) => total + item.price, 0);
+        setTotalCost(updatedTotalCost);
       } else {
         console.error('Failed to remove item from cart');
       }
