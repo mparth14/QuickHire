@@ -1,5 +1,5 @@
 # CSCI_5709_Grp-04
-
+# Assignment 3
 # QuickHire
 
 QuickHire is like an online marketplace where people can offer their skills and services for others to hire or buy. Building an app or a website or even helping a person in developing something for your needs, QuickHire is the ideal platform for everyone.
