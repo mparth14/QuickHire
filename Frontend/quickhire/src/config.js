@@ -2,7 +2,7 @@
  * Configuration for the react app
  */
 export const CONFIG = {
-  BASE_PATH: "http://localhost:4000/api/v1/",
+  BASE_PATH: "https://quickhire-backend-1.onrender.com/api/v1/",
   SIGNUP_PATH: "auth/register",
   LOGIN_PATH: "auth/login",
   FORGOT_PASSWORD_PATH: "auth/forgot-password/",
@@ -11,7 +11,7 @@ export const CONFIG = {
   USER_PATH: "user/",
   SERVICES_PATH: "services/",
   SUB_CATEGORY: "subcategory/",
-  NO_DATA_IMAGE_PATH: "https://www.gitaa.in/img/NoRecordFound.png"
+  NO_DATA_IMAGE_PATH: "https://www.gitaa.in/img/NoRecordFound.png",
 };
 export const profileImages = [
   "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png",
@@ -21,5 +21,5 @@ export const profileImages = [
   "https://www.creativefabrica.com/wp-content/uploads/2023/01/30/Bearded-Man-Avatar-Icon-Graphics-59392089-1.jpg",
   "https://png.pngtree.com/png-vector/20230903/ourmid/pngtree-man-avatar-isolated-png-image_9935818.png",
   "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022161.png",
-  "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022170.png"
+  "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022170.png",
 ];
