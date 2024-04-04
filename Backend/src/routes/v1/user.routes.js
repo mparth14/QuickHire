@@ -1,3 +1,7 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import express from 'express';
 import { getAllUsers, getLoggedInUser, getOneUser, updateUser, deleteUser } from '../../controllers/user.controller.js';
 import { getUser, authenticate } from '../../middleware/auth.js';

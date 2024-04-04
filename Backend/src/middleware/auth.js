@@ -1,6 +1,17 @@
+/**
+ * @authors 
+ * Rahul Hambarde
+ */
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
+/**
+ * Middleware to check if the user is authenticated or not
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const authenticate = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
 

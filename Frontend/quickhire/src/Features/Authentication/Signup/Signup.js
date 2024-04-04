@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Signup page to register a new user
+ * @returns
+ */
 const Singup = () => {
   const classes = useStyles();
   const navigate = useHistory();
@@ -51,6 +55,10 @@ const Singup = () => {
     confirmPassword: ""
   });
 
+  /**
+   * Handle all the input changes in the form
+   * @param {*} e 
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -59,13 +67,20 @@ const Singup = () => {
     });
   };
 
+  /**
+   * Show and hide password
+   */
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  /**
+   * Validates all the input and submit the form
+   */
   const handleSubmit = () => {
     let isValid = true;
 
+    //Check if all the fields are empty
     if (!formData.first_name) {
       setFirstNameError('First name is required');
       isValid = false;
@@ -97,6 +112,39 @@ const Singup = () => {
       setPasswordError('');
     }
 
+    //Check that the password matches our restrictions
+    const passwordHasLowerCase = /[a-z]/.test(formData.password);
+    const passwordHasUpperCase = /[A-Z]/.test(formData.password);
+    const passwordHasDigit = /\d/.test(formData.password);
+    const passwordHasSpecialCharacter = /[%^=@#+$&]/.test(formData.password);
+    const passwordIsLongEnough = formData.password?.length >= 8;
+
+    if(!passwordHasLowerCase){
+      setPasswordError("Password should contain at least 1 lowercase character.");
+      isValid = false;
+    }
+
+    if(!passwordHasUpperCase){
+      setPasswordError("Password should contain at least 1 uppercase character.");
+      isValid = false;
+    }
+
+    if(!passwordHasDigit){
+      setPasswordError("Password should contain at least 1 number.");
+      isValid = false;
+    }
+
+    if(!passwordHasSpecialCharacter){
+      setPasswordError("Password should contain at least 1 special character.");
+      isValid = false;
+    }
+
+    if(!passwordIsLongEnough){
+      setPasswordError("Password should contain at least 8 character long.");
+      isValid = false;
+    }
+
+    //Check that confirm password is present and matches with password
     if (!formData.confirmPassword) {
       setConfirmPasswordError('Confirm password is required');
       isValid = false;
@@ -104,17 +152,20 @@ const Singup = () => {
       setConfirmPasswordError('');
     }
 
-     //TODO: Check password validations
-
     if(formData.password !== formData.confirmPassword){
+      isValid = false;
       setConfirmPasswordError('Password does not match');
     }
 
+    //Everything is valid, signup the user
     if (isValid) {
       signupUser();
     }
   };
 
+  /**
+   * Send a request to backend to register a new user
+   */
   const signupUser = () => {
     const signupRequest = {
       first_name: formData.first_name,
