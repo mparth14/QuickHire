@@ -12,6 +12,7 @@ import { Grid } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { toast } from "react-toastify";
+import {CONFIG} from "../../config.js"
 
 const useStyles = makeStyles((theme) => ({
   gridContainer: {
@@ -49,12 +50,12 @@ export default function SubServiceCard(props) {
 
   const toggleIconColor = (index) => {
     if (!user) {
-      toast.error("Please login first"); // Display toast message if user is not logged in
+      toast.error("Please login first");
       return;
     }
-    const newIconColors = [...iconColors]; // Create a copy of iconColors array
-    newIconColors[index] = newIconColors[index] === "#fff" ? "#f44336" : "#fff"; // Toggle icon color
-    setIconColors(newIconColors); // Update icon colors state
+    const newIconColors = [...iconColors];
+    newIconColors[index] = newIconColors[index] === "#fff" ? "#f44336" : "#fff";
+    setIconColors(newIconColors);
   };
   
   return (
@@ -64,7 +65,7 @@ export default function SubServiceCard(props) {
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Link
               key={index}
-              to={`/services/${data.id}`}
+              to={`/${CONFIG.SERVICES_PATH}${data.id}`}
               className="category-link-deco"
             >
               <Card className={classes.card}>

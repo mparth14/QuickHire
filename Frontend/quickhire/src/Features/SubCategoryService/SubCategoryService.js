@@ -15,9 +15,8 @@ import SubServiceCard from "../SubServiceCard/SubServiceCard"
 import RatingFilter from '../Filters/RatingFilters';
 import BudgetFilter from '../Filters/BudgetFilter';
 import PopularFilter from '../Filters/PopularFilter';
-import { CONFIG } from '../../config';
+import { CONFIG, profileImages } from '../../config';
 import { useHistory } from 'react-router-dom';
-
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -84,16 +83,6 @@ const SubCategoryService = ({user, onload}) => {
         if (data.length > 0) {
           setTotalServices(data.length);
         }
-        const profileImages = [
-          "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png",
-          "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-with-beard-vector-ilustration-png-image_6110777.png",
-          "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-vector-ilustration-png-image_6111064.png",
-          "https://static.vecteezy.com/system/resources/previews/024/183/502/non_2x/male-avatar-portrait-of-a-young-man-with-a-beard-illustration-of-male-character-in-modern-color-style-vector.jpg",
-          "https://www.creativefabrica.com/wp-content/uploads/2023/01/30/Bearded-Man-Avatar-Icon-Graphics-59392089-1.jpg",
-          "https://png.pngtree.com/png-vector/20230903/ourmid/pngtree-man-avatar-isolated-png-image_9935818.png",
-          "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022161.png",
-          "https://png.pngtree.com/png-clipart/20230930/original/pngtree-man-avatar-isolated-png-image_13022170.png"
-        ];
         console.log(data);
         const newData = data.map((service, index) => {
           let trimmedDescription = service.description.split(' ').slice(0, 21).join(' ');
@@ -180,7 +169,6 @@ const SubCategoryService = ({user, onload}) => {
       popular: value,
     }));
   };
-  // Calculate current items based on pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filterState.slice(indexOfFirstItem, indexOfLastItem);
@@ -221,7 +209,7 @@ const SubCategoryService = ({user, onload}) => {
                 <SubServiceCard state={state} cardData={currentItems} user={user} onload={onload}/>
               ) : (
                 <div style={{ textAlign: 'center' }}>
-                  <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711127194~exp=1711130794~hmac=1229dd34750bfe08aa5b1ead640f1dfb81bd096024f35b53f4e97025df00c596&w=1380" alt="No data found"
+                  <img src={CONFIG.NO_DATA_IMAGE_PATH} alt="No data found"
                     style={{ maxWidth: '100%', height: 'auto', width: '500px' }} />
                   <h2>Sorry, no service found</h2>
                 </div>

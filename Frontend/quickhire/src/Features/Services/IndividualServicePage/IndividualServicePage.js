@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
     position: "sticky",
     top: "0",
     alignSelf: "start",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("600")]: {
       marginLeft: 0,
       marginTop: "3rem",
       position: "static",
