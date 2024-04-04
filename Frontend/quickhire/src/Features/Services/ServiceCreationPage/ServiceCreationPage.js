@@ -196,7 +196,7 @@ const ServiceCreationPage = ({ user, onload }) => {
       <div style={{ height: '100vh' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '5%' }}>
           <Container maxWidth="md" style={{ backgroundColor: 'white', padding: 20, borderRadius: 8 }}>
-            <Typography style={{color:'#3f51b5'}} variant="h4" align="center" gutterBottom>
+            <Typography  variant="h4" align="center" gutterBottom>
               Add New Service
             </Typography>
             <form id='creationForm' onSubmit={handleSubmit}>
