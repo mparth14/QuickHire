@@ -379,6 +379,7 @@ const ManageService = ({ user, onload }) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({
                     isActive: true,
