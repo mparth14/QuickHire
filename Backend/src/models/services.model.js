@@ -52,6 +52,14 @@ const serviceSchema = new Schema({
       message: "Price must be a number",
     },
   },
+  sellerName: {
+    type: String,
+    required: true,
+  },
+  jobTitle: {
+    type: String,
+    required: true,
+  },
   createdDate: { type: Date, default: Date.now },
   updatedDate: { type: Date, default: Date.now },
   isActive: { type: Boolean, default: true },
