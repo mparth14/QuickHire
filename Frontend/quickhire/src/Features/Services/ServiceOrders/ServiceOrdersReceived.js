@@ -62,7 +62,7 @@ function ServiceOrdersReceived({ user }) {
     const getAllServices = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/api/v1/${CONFIG.ORDERS_PATH}`,
+          `${CONFIG.BASE_PATH}${CONFIG.ORDERS_PATH}`,
           {
             headers: {
               Authorization: "Bearer " + token,
