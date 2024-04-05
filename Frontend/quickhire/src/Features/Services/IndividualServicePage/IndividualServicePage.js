@@ -21,12 +21,12 @@ import {
   Grid,
   Link,
   Paper,
-  Popover,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
 import UserIcon from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
+import MailIcon from "@material-ui/icons/Mail";
 import RatingsAndReviews from "./RatingsAndReviews";
 import { CONFIG } from "../../../config";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom";
@@ -141,7 +141,6 @@ const useStyles = makeStyles((theme) => ({
 const IndividualServicePage = ({ user, onload }) => {
   const classes = useStyles();
   const [service, setService] = useState(null);
-  const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
   const { id } = useParams();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("600")); // Checking if screen size is small
@@ -182,14 +181,6 @@ const IndividualServicePage = ({ user, onload }) => {
         position: "bottom-center",
       });
     }
-  };
-
-  const handleOpenPopOver = (e) => {
-    setPopoverAnchorEl(e.currentTarget);
-  };
-
-  const handleClosePopOver = () => {
-    setPopoverAnchorEl(null);
   };
 
   return (
@@ -238,9 +229,7 @@ const IndividualServicePage = ({ user, onload }) => {
                   <Card>
                     <CardHeader title="Place Your Order" />
                     <CardContent>
-                      <Typography>
-                        Price: CAD{service?.data?.price}/hr
-                      </Typography>
+                      <Typography>${service?.data?.price} per hour</Typography>
                     </CardContent>
                     <CardActions>
                       <Button className={classes.checkoutButton}>
@@ -265,10 +254,6 @@ const IndividualServicePage = ({ user, onload }) => {
                     </Typography>
                   </div>
                   <div className={classes.userIntroRating}>
-                    <Typography>Ratings: 4.9</Typography>
-                    <Typography className={classes.sellerSeparator}>
-                      |
-                    </Typography>
                     <Typography>
                       Experience: {service?.data?.seller?.experience}
                     </Typography>
@@ -286,9 +271,13 @@ const IndividualServicePage = ({ user, onload }) => {
                 </Button>
               ) : (
                 <Button
+                  startIcon={<MailIcon />}
                   variant="contained"
                   className={classes.contactButton}
-                  onClick={handleOpenPopOver}>
+                  onClick={(e) => {
+                    window.location.href =
+                      "mailto:" + service?.data?.seller?.email;
+                  }}>
                   Contact Me
                 </Button>
               )}
@@ -337,7 +326,7 @@ const IndividualServicePage = ({ user, onload }) => {
                 <Card>
                   <CardHeader title="Place Your Order" />
                   <CardContent>
-                    <Typography>Price: CAD{service?.data?.price}/hr</Typography>
+                    <Typography>${service?.data?.price} per hour</Typography>
                   </CardContent>
                   <CardActions>
                     {/* Render different button based on user authentication */}
@@ -362,35 +351,8 @@ const IndividualServicePage = ({ user, onload }) => {
           )}
         </Grid>
       </div>
-      <ContactPopOver
-        anchorEl={popoverAnchorEl}
-        handleClose={handleClosePopOver}
-      />
     </div>
   );
 };
 
-function ContactPopOver({ anchorEl, handleClose }) {
-  const classes = useStyles();
-
-  return (
-    <Popover
-      open={Boolean(anchorEl)}
-      anchorEl={anchorEl}
-      onClose={handleClose}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "center",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "center",
-      }}>
-      <Typography className={classes.typography}>
-        This button will redirect to the seller's chat whenever that feature
-        will be completely ready. As of now, there's nothing to redirect to.
-      </Typography>
-    </Popover>
-  );
-}
 export default IndividualServicePage;

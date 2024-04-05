@@ -15,6 +15,8 @@ import {
   Grid,
   Typography,
   CircularProgress,
+  Card,
+  CardMedia,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core";
@@ -97,6 +99,24 @@ function ServiceOrdersReceived({ user }) {
         }}>
         <CircularProgress />
         <Typography>Fetching Orders...</Typography>
+      </div>
+    );
+  }
+
+  if (!loading && orders.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}>
+        <img
+          src="https://icons.veryicon.com/png/o/application/map-app/no-order-3.png"
+          alt="No orders"
+          style={{ width: "20rem", height: "20rem" }}
+        />
+        <Typography variant="h5">No orders found!</Typography>
       </div>
     );
   }
