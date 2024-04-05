@@ -112,6 +112,24 @@ function ServiceOrdersPlaced({ user }) {
     );
   }
 
+  if (!loading && orders.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}>
+        <img
+          src="https://icons.veryicon.com/png/o/application/map-app/no-order-3.png"
+          alt="No orders"
+          style={{ width: "20rem", height: "20rem" }}
+        />
+        <Typography variant="h5">No orders found!</Typography>
+      </div>
+    );
+  }
+
   return (
     <Container maxWidth="md">
       <Typography variant="h4" align="center" gutterBottom></Typography>
@@ -130,7 +148,7 @@ function ServiceOrdersPlaced({ user }) {
                 <Typography style={{ fontWeight: "700" }}>
                   Total Price:
                 </Typography>
-                <Typography>{order.totalPrice}</Typography>
+                <Typography>${order.totalPrice} per hour</Typography>
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Typography style={{ fontWeight: "700" }}>

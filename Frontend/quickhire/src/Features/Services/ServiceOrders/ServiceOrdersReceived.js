@@ -15,6 +15,8 @@ import {
   Grid,
   Typography,
   CircularProgress,
+  Card,
+  CardMedia,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core";
@@ -101,6 +103,24 @@ function ServiceOrdersReceived({ user }) {
     );
   }
 
+  if (!loading && orders.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}>
+        <img
+          src="https://icons.veryicon.com/png/o/application/map-app/no-order-3.png"
+          alt="No orders"
+          style={{ width: "20rem", height: "20rem" }}
+        />
+        <Typography variant="h5">No orders found!</Typography>
+      </div>
+    );
+  }
+
   return (
     <Container maxWidth="md">
       <Typography variant="h4" align="center" gutterBottom></Typography>
@@ -125,7 +145,7 @@ function ServiceOrdersReceived({ user }) {
                   className={classes.serviceTitle}>
                   {order.service[0].title}
                 </Typography>
-                <Typography>CAD$ {order.service[0].price}/hr</Typography>
+                <Typography>${order.service[0].price} per hour</Typography>
                 <Typography>Order Placed: {order.createdAt}</Typography>
               </Grid>
             </Grid>
