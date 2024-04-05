@@ -4,7 +4,6 @@
  * @param {Object} user - User object containing user details.
  * @returns {JSX.Element} - The rendered JSX element.
  */
-
 import React, { useEffect, useState } from "react";
 import RatingPopup from "../../../utils/RatingDialogPopUp";
 import {
@@ -17,12 +16,14 @@ import {
   Grid,
   Typography,
   AccordionActions,
+  CircularProgress,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core";
 import { CONFIG } from "../../../config";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
+// Define styles using makeStyles hook
 const useStyles = makeStyles((theme) => ({
   order: {
     marginBottom: theme.spacing(2),
@@ -32,16 +33,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   serviceImage: {
-    width: "8rem",
-    height: "8rem",
+    width: "6rem",
+    height: "6rem",
     borderRadius: "5px",
     marginRight: theme.spacing(2),
   },
   orderDetails: {
     flexGrow: 1,
-  },
-  sellerDetails: {
-    marginTop: theme.spacing(2),
   },
   serviceTitle: {
     color: "rgb(63, 81, 181)",
@@ -56,14 +54,16 @@ function ServiceOrdersPlaced({ user }) {
   const [orders, setOrders] = useState([]);
   const [serviceId, setServiceID] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
   const history = useHistory();
 
+  // Fetch orders when component mounts
   useEffect(() => {
     const getAllServices = async () => {
       try {
         const response = await fetch(
-          `${CONFIG.BASE_PATH}${CONFIG.ORDERS_PATH}buyer/${user._id}`,
+          `http://localhost:4000/api/v1/${CONFIG.ORDERS_PATH}${user._id}`,
           {
             headers: {
               Authorization: "Bearer " + token,
@@ -72,6 +72,7 @@ function ServiceOrdersPlaced({ user }) {
         );
         const responseData = await response.json();
         setOrders(responseData);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -82,7 +83,6 @@ function ServiceOrdersPlaced({ user }) {
 
   const handleOpenPopup = (e, id) => {
     e.stopPropagation();
-    console.log("Open pop up called!");
     setServiceID(id);
     setShowPopup(true);
   };
@@ -91,10 +91,26 @@ function ServiceOrdersPlaced({ user }) {
     setShowPopup(false);
   };
 
-  const onServiceTitleClick = (e, order) => {
+  const onServiceTitleClick = (e, serviceId) => {
     e.stopPropagation();
-    history.push(`/services/${order.service._id}`);
+    history.push(`/services/${serviceId}`);
   };
+
+  // Render loading spinner if data is loading
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "5rem",
+        }}>
+        <CircularProgress />
+        <Typography>Fetching Orders...</Typography>
+      </div>
+    );
+  }
 
   return (
     <Container maxWidth="md">
@@ -104,62 +120,86 @@ function ServiceOrdersPlaced({ user }) {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`order-details-${index}`}
-            id={`order-summary-${index}`}
-          >
-            <Grid container alignItems="center">
-              <Grid item>
-                <img
-                  src={order.service.imgUrl}
-                  alt={order.service.title}
-                  className={classes.serviceImage}
-                />
+            id={`order-summary-${index}`}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={3}>
+                <Typography style={{ fontWeight: "700" }}>Order ID:</Typography>
+                <Typography>{order._id}</Typography>
               </Grid>
-              <Grid item className={classes.orderDetails}>
-                <Typography
-                  variant="h5"
-                  onClick={(e) => onServiceTitleClick(e, order)}
-                  className={classes.serviceTitle}
-                >
-                  {order.service.title}
+              <Grid item xs={12} sm={3}>
+                <Typography style={{ fontWeight: "700" }}>
+                  Total Price:
                 </Typography>
-                <Typography>CAD$ {order.service.price}/hr</Typography>
-                <Typography>Order Placed: {order.date}</Typography>
+                <Typography>{order.totalPrice}</Typography>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Typography style={{ fontWeight: "700" }}>
+                  Placed On:
+                </Typography>
+                <Typography>
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Typography style={{ fontWeight: "700" }}>
+                  Total Items:
+                </Typography>
+                <Typography>{order.service.length}</Typography>
               </Grid>
             </Grid>
           </AccordionSummary>
           <AccordionDetails>
-            <Grid container alignItems="center">
-              <Typography variant="body1">
-                {order.service?.description}
-              </Typography>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <Typography variant="h5" style={{ marginTop: "1rem" }}>
-                  Seller
-                </Typography>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Avatar
-                    src={order.buyer.photoUrl}
-                    alt={order.buyer.first_name}
-                    style={{ width: "2rem", height: "2rem" }}
-                  />
-                  <Typography style={{ marginLeft: "5px" }}>
-                    {order.buyer.first_name}
-                  </Typography>
-                </div>
-              </div>
+            <Grid container spacing={2} direction="column">
+              {order.service.map((service, serviceIndex) => (
+                <Grid item key={serviceIndex}>
+                  <Grid container alignItems="flex-start">
+                    <Grid item xs={12} sm={2}>
+                      <img
+                        src={service.imgUrl}
+                        alt={service.title}
+                        className={classes.serviceImage}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={8}>
+                      <Typography
+                        variant="h6"
+                        className={classes.serviceTitle}
+                        onClick={(e) => onServiceTitleClick(e, service._id)}>
+                        {service.title}
+                      </Typography>
+                      <Typography>CAD$ {service.price}/hr</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <Typography variant="h5">Seller</Typography>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <Avatar
+                            src={service.seller.photoUrl}
+                            alt={service.seller.first_name}
+                            style={{ width: "2rem", height: "2rem" }}
+                          />
+                          <Typography style={{ marginLeft: "5px" }}>
+                            {service.seller.first_name}
+                          </Typography>
+                        </div>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              ))}
             </Grid>
           </AccordionDetails>
           <AccordionActions>
             <Button
               variant="contained"
               onClick={(e) => handleOpenPopup(e, order.service._id)}
-              style={{ color: "#fff", backgroundColor: "#000" }}
-            >
+              style={{ color: "#fff", backgroundColor: "#000" }}>
               Give Service Review
             </Button>
           </AccordionActions>
         </Accordion>
       ))}
+      <Typography variant="h4" align="center" gutterBottom></Typography>
       {showPopup && (
         <RatingPopup
           serviceID={serviceId}

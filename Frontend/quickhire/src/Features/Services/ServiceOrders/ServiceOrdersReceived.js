@@ -11,17 +11,17 @@ import {
   AccordionSummary,
   AccordionDetails,
   Avatar,
-  Button,
   Container,
   Grid,
   Typography,
-  AccordionActions,
+  CircularProgress,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core";
 import { CONFIG } from "../../../config";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
+// Define styles using makeStyles hook
 const useStyles = makeStyles((theme) => ({
   order: {
     marginBottom: theme.spacing(2),
@@ -53,14 +53,16 @@ const useStyles = makeStyles((theme) => ({
 function ServiceOrdersReceived({ user }) {
   const classes = useStyles();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
   const history = useHistory();
 
+  // Fetch orders when component mounts
   useEffect(() => {
     const getAllServices = async () => {
       try {
         const response = await fetch(
-          `${CONFIG.BASE_PATH}${CONFIG.ORDERS_PATH}seller/${user._id}`,
+          `http://localhost:4000/api/v1/${CONFIG.ORDERS_PATH}`,
           {
             headers: {
               Authorization: "Bearer " + token,
@@ -69,6 +71,7 @@ function ServiceOrdersReceived({ user }) {
         );
         const responseData = await response.json();
         setOrders(responseData);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -79,8 +82,24 @@ function ServiceOrdersReceived({ user }) {
 
   const onServiceTitleClick = (e, order) => {
     e.stopPropagation();
-    history.push(`/services/${order.service._id}`);
+    history.push(`/services/${order.service[0]._id}`);
   };
+
+  // Render loading spinner if data is loading
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "5rem",
+        }}>
+        <CircularProgress />
+        <Typography>Fetching Orders...</Typography>
+      </div>
+    );
+  }
 
   return (
     <Container maxWidth="md">
@@ -94,8 +113,8 @@ function ServiceOrdersReceived({ user }) {
             <Grid container alignItems="center">
               <Grid item>
                 <img
-                  src={order.service.imgUrl}
-                  alt={order.service.title}
+                  src={order.service[0].imgUrl}
+                  alt={order.service[0].title}
                   className={classes.serviceImage}
                 />
               </Grid>
@@ -104,17 +123,17 @@ function ServiceOrdersReceived({ user }) {
                   variant="h5"
                   onClick={(e) => onServiceTitleClick(e, order)}
                   className={classes.serviceTitle}>
-                  {order.service.title}
+                  {order.service[0].title}
                 </Typography>
-                <Typography>CAD$ {order.service.price}/hr</Typography>
-                <Typography>Order Placed: {order.date}</Typography>
+                <Typography>CAD$ {order.service[0].price}/hr</Typography>
+                <Typography>Order Placed: {order.createdAt}</Typography>
               </Grid>
             </Grid>
           </AccordionSummary>
           <AccordionDetails>
             <Grid container alignItems="center">
               <Typography variant="body1">
-                {order.service?.description}
+                {order.service?.[0]?.description}
               </Typography>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <Typography variant="h5" style={{ marginTop: "1rem" }}>
@@ -122,27 +141,20 @@ function ServiceOrdersReceived({ user }) {
                 </Typography>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Avatar
-                    src={order?.buyer?.photoUrl}
-                    alt={order?.buyer?.first_name}
+                    src={order?.user?.photoUrl}
+                    alt={order?.user?.first_name}
                     style={{ width: "2rem", height: "2rem" }}
                   />
                   <Typography style={{ marginLeft: "5px" }}>
-                    {order?.buyer?.first_name}
+                    {order?.user?.first_name}
                   </Typography>
                 </div>
               </div>
             </Grid>
           </AccordionDetails>
-          <AccordionActions>
-            <Button
-              variant="contained"
-              // onClick={handleSubmitFeedback}
-              style={{ color: "#fff", backgroundColor: "#000" }}>
-              Give Service Review
-            </Button>
-          </AccordionActions>
         </Accordion>
       ))}
+      <Typography variant="h4" align="center" gutterBottom></Typography>
     </Container>
   );
 }
