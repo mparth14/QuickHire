@@ -154,6 +154,8 @@ const ServiceCreationPage = ({ user, onload }) => {
           price: parseFloat(price),
           sellerId: user._id, 
           imgUrl: profilePictureURL,
+          sellerName:`${user.first_name} ${user.last_name}`,
+          jobTitle: user.occupation
         }),
       });
 
