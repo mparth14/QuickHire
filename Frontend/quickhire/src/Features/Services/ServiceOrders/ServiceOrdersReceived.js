@@ -137,7 +137,7 @@ function ServiceOrdersReceived({ user }) {
               </Typography>
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <Typography variant="h5" style={{ marginTop: "1rem" }}>
-                  Seller
+                  Buyer
                 </Typography>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Avatar
