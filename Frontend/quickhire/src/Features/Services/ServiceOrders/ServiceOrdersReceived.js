@@ -145,7 +145,7 @@ function ServiceOrdersReceived({ user }) {
                   className={classes.serviceTitle}>
                   {order.service[0].title}
                 </Typography>
-                <Typography>CAD$ {order.service[0].price}/hr</Typography>
+                <Typography>${order.service[0].price} per hour</Typography>
                 <Typography>Order Placed: {order.createdAt}</Typography>
               </Grid>
             </Grid>

@@ -148,7 +148,7 @@ function ServiceOrdersPlaced({ user }) {
                 <Typography style={{ fontWeight: "700" }}>
                   Total Price:
                 </Typography>
-                <Typography>{order.totalPrice}</Typography>
+                <Typography>${order.totalPrice} per hour</Typography>
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Typography style={{ fontWeight: "700" }}>
