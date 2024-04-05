@@ -185,7 +185,13 @@ function ServiceOrdersPlaced({ user }) {
                         onClick={(e) => onServiceTitleClick(e, service._id)}>
                         {service.title}
                       </Typography>
-                      <Typography>CAD$ {service.price}/hr</Typography>
+                      <Typography>${service.price} per hour</Typography>
+                      <Button
+                        variant="outlined"
+                        onClick={(e) => handleOpenPopup(e, service._id)}
+                        style={{ color: "#fff", backgroundColor: "#000" }}>
+                        Give Service Review
+                      </Button>
                     </Grid>
                     <Grid item xs={12} sm={2}>
                       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -207,14 +213,14 @@ function ServiceOrdersPlaced({ user }) {
               ))}
             </Grid>
           </AccordionDetails>
-          <AccordionActions>
+          {/* <AccordionActions>
             <Button
               variant="contained"
               onClick={(e) => handleOpenPopup(e, order.service._id)}
               style={{ color: "#fff", backgroundColor: "#000" }}>
               Give Service Review
             </Button>
-          </AccordionActions>
+          </AccordionActions> */}
         </Accordion>
       ))}
       <Typography variant="h4" align="center" gutterBottom></Typography>
