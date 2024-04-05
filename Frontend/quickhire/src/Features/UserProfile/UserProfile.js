@@ -103,6 +103,25 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
         }
     }, [onload, user])
 
+    useEffect(()=>{
+        const getUserDetails = () => {
+            axios
+              .get(CONFIG.BASE_PATH + CONFIG.USER_PATH, {
+                headers: { Authorization: "Bearer " + storedToken },
+              })
+              .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                  setFormData(response.data);
+                }
+              })
+              .catch(function (error) {
+                toast.error("Issue with authentication");
+              });
+          };
+          getUserDetails();
+    }, [])
+
     if (!user || loading) {
         return null;
     }
@@ -621,15 +640,15 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                             </Typography>
                             {!selectLeftMenuEdit ?
                             <>
-                                {user.linkedInLink ?
+                                {user?.linkedInLink ?
                                 <a href={convertLink(user?.linkedInLink)} target="_blank">
                                     <LinkedInIcon fontSize='large'sx={{margin: '2px', marginLeft: 0, paddingLeft: 0}}/>
                                 </a>: <></>}
-                                {user.instagramLink ?
+                                {user?.instagramLink ?
                                 <a href={convertLink(user?.instagramLink)} target="_blank">
                                     <InstagramIcon fontSize='large'sx={{margin: '2px'}}/>
                                 </a>: <></>}
-                                {user.facebookLink ?
+                                {user?.facebookLink ?
                                 <a href={convertLink(user?.facebookLink)} target="_blank">
                                     <FacebookIcon fontSize='large'sx={{margin: '2px'}}/>
                                 </a> : <></>}
@@ -664,7 +683,7 @@ const UserProfile = ({user, onload, onUserUpdate}) => {
                     </Grid>
                     <Grid item xs={12} sm={9} md={9}>
                         {/* Services section */}
-                        {user?.isFreelancer ?
+                        {formData?.isFreelancer ?
                         <div>
                                   {/* Heading for services */}
                                   <div>
