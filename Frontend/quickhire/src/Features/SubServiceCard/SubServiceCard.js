@@ -50,11 +50,6 @@ export default function SubServiceCard(props) {
   console.log({ cardData }, { user }, { wishlistServices });
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleOpenPopup = () => {
-    console.log("Open pop up called!");
-    setShowPopup(true);
-  };
-
   const handleClosePopup = () => {
     setShowPopup(false);
   };
@@ -87,7 +82,7 @@ export default function SubServiceCard(props) {
     }
     const updateDB = async (color) => {
       console.log(color);
-      if (color === "#000000") {
+      if (color === "#FF5555") {
         // Remove
         console.log("Remove service from wishlist.");
         const dataToSend = {
@@ -103,15 +98,35 @@ export default function SubServiceCard(props) {
         });
         if (response.status === 200) {
           toast.success("Removed from your wishlist!");
-          setWishlistServices((prevState) =>
-            prevState.filter((service) => service._id !== data._id)
+          console.log(wishlistServices);
+          // Make a copy of the current state
+          const updatedWishlist = [...wishlistServices];
+
+          // Find the index of the service with the matching id
+          const indexToRemove = updatedWishlist.findIndex(
+            (service) => service._id === data.id
           );
+
+          // If the service is found, remove it from the copied array
+          if (indexToRemove !== -1) {
+            updatedWishlist.splice(indexToRemove, 1);
+
+            // Set the state with the modified array
+            setWishlistServices(updatedWishlist);
+          } else {
+            // Handle the case where the service is not found
+            console.error("Service not found in wishlist.");
+          }
+
+          console.log(wishlistServices);
         } else {
           toast.error("Failed to update your wishlist.");
         }
       } else {
         // Add
         console.log("Add service to wishlist.");
+        console.log("ADDED; ", data);
+        console.log("ADDED; ", user);
         const dataToSend = {
           email: user.email,
           id: data.id,
@@ -125,15 +140,19 @@ export default function SubServiceCard(props) {
         });
         if (response.status === 200) {
           toast.success("Added to your wishlist!");
-          setWishlistServices((prevState) => [...prevState, data]);
+          setWishlistServices((prevState) => prevState.concat(data));
+          console.log("adeddddd: ", wishlistServices);
         } else {
           toast.error("Failed to update your wishlist.");
         }
+        window.location.reload();
       }
     };
-    const color = isWishlisted(id) ? "#000000" : "#FF5555";
+    const color = isWishlisted(id) ? "#FF5555" : "#000000";
     await updateDB(color);
   };
+
+  console.log(cardData);
 
   return (
     <div style={{ justifyContent: "center" }}>
@@ -151,13 +170,11 @@ export default function SubServiceCard(props) {
                   <FavoriteIcon
                     className={classes.heartIcon}
                     style={{
-                      color: isWishlisted(data._id || data.id)
-                        ? "#FF5555"
-                        : "#000000",
+                      color: isWishlisted(data.id) ? "#FF5555" : "#000000",
                     }}
                     onClick={(e) => {
                       e.preventDefault();
-                      toggleIconColor(data._id || data.id, data);
+                      toggleIconColor(data.id, data);
                     }}
                   />
                   <CardContent>
@@ -169,7 +186,6 @@ export default function SubServiceCard(props) {
           </Grid>
         ))}
       </Grid>
-      {showPopup && <RatingPopup onClose={handleClosePopup} />}
     </div>
   );
 }
