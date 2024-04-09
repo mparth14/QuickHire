@@ -33,8 +33,6 @@ Note: Please give 50 seconds to 2 minutes to UI for loading data. As backend is 
 
 ## Features
 
-# Project Features
-
 1. **Product Wishlist Page**
 2. **Search Result Page**
    - Services List
@@ -50,20 +48,24 @@ Note: Please give 50 seconds to 2 minutes to UI for loading data. As backend is 
    - Sign up page
    - User Profile Page
      - Reviews as well
-6. **Messaging Service between Seller and Customer**
-   - Chat Page
-7. **Payment Gateway for Service**
+6. **Payment Gateway for Service**
    - Payment Processing on the individual service screen
-8. **Become A Seller Setup**
+7. **Become A Seller Setup**
    - Multiple pages, similar to Fiverr
-9. **Service Creation Page for Seller**
-10. **Wishlist for the User, My Services for the Seller**
+8. **Service Creation Page for Seller**
+9. **Wishlist for the User, My Services for the Seller**
     - View
     - Edit
     - Disable
-11. **Subcategory Service Page**
+10. **Subcategory Service Page**
     - When clicked on a broader category
-12. **Orders Page**
+11. **Orders Page**
+
+## SEO, robots.txt and sitemap.xml
+- QuickHire's SEO improve for search engine visibility.
+- Included a robots.txt file to control search engine bot access to the site.
+- Added a sitemap.xml file to aid search engine crawling and indexing.
+
 
 ## Project Structure
 ### Frontend
@@ -1133,7 +1135,7 @@ The code above was created by adapting the code in [How to Build a Custom Pagina
 
 _Lines 1 - 63_
 
-```
+``` js
 import React, { useState } from "react";
 import NavBar from "../utilities/NavBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -1202,7 +1204,7 @@ export default Orders;
 
 The code above was created by adapting the code in [Tabs - Official Material UI Components](https://v4.mui.com/components/tabs/) as shown below:
 
-```
+``` js
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';

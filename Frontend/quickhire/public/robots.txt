@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: 
+Sitemap: https://quick-hire.netlify.app/sitemap.xml

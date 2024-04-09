@@ -32,9 +32,6 @@ Note: Please give 50 seconds to 2 minutes to UI for loading data. As backend is 
 
 
 ## Features
-
-# Project Features
-
 1. **Product Wishlist Page**
 2. **Search Result Page**
    - Services List
@@ -50,20 +47,23 @@ Note: Please give 50 seconds to 2 minutes to UI for loading data. As backend is 
    - Sign up page
    - User Profile Page
      - Reviews as well
-6. **Messaging Service between Seller and Customer**
-   - Chat Page
-7. **Payment Gateway for Service**
+6. **Payment Gateway for Service**
    - Payment Processing on the individual service screen
-8. **Become A Seller Setup**
+7. **Become A Seller Setup**
    - Multiple pages, similar to Fiverr
-9. **Service Creation Page for Seller**
-10. **Wishlist for the User, My Services for the Seller**
+8. **Service Creation Page for Seller**
+9. **Wishlist for the User, My Services for the Seller**
     - View
     - Edit
     - Disable
-11. **Subcategory Service Page**
+10. **Subcategory Service Page**
     - When clicked on a broader category
-12. **Orders Page**
+11. **Orders Page**
+
+## SEO, robots.txt and sitemap.xml
+- QuickHire's SEO improve for search engine visibility.
+- Included a robots.txt file to control search engine bot access to the site.
+- Added a sitemap.xml file to aid search engine crawling and indexing.
 
 ## Project Structure
 
@@ -139,8 +139,7 @@ git clone https://git.cs.dal.ca/gupta2/csci_5709_grp-04.git
 Change directory to app
 ```
 cd csci_5709_grp-04
-cd Frontend
-cd quickhire
+cd Backend
 ```
 Install packages
 ```
