@@ -1141,6 +1141,163 @@ The code above was created by adapting the code in [How to Build a Custom Pagina
 - [How to Build a Custom Pagination Component in React](https://www.freecodecamp.org/news/build-a-custom-pagination-component-in-react/)'s Code was modified by me by altering the components originally used by the author. I made the changes to match my file names as well as to adjust it's functionality tailored to our applications use case.
 
 
+### Orders.js
+
+_Lines 1 - 63_
+
+```
+import React, { useState } from "react";
+import NavBar from "../utilities/NavBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import { Box } from "@material-ui/core";
+import OrdersView from "./OrdersView";
+import SubHeader from "../utilities/SubHeader";
+
+function Orders() {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div style={{ padding: "0 2rem" }}>
+      <NavBar />
+      <SubHeader />
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        indicatorColor="primary"
+        textColor="primary"
+        centered>
+        <Tab
+          label="Service Placed"
+          id="full-width-tab-0"
+          aria-controls="full-width-tabpanel-0"
+        />
+        <Tab
+          label="Service Received"
+          id="full-width-tab-1"
+          aria-controls="full-width-tabpanel-1"
+        />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <OrdersView />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <OrdersView received={true} />
+      </TabPanel>
+    </div>
+  );
+}
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      style={{ backgroundColor: "#e0e0e0" }}
+      {...other}>
+      {value === index && <Box p={3}>{children}</Box>}
+    </div>
+  );
+}
+
+export default Orders;
+
+```
+
+The code above was created by adapting the code in [Tabs - Official Material UI Components](https://v4.mui.com/components/tabs/) as shown below:
+
+```
+import React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+export default function SimpleTabs() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tab label="Item One" {...a11yProps(0)} />
+          <Tab label="Item Two" {...a11yProps(1)} />
+          <Tab label="Item Three" {...a11yProps(2)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        Item One
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        Item Two
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Item Three
+      </TabPanel>
+    </div>
+  );
+}
+```
+
+- [Tabs - Official Material UI Components](https://v4.mui.com/components/tabs/)'s code was used because this is the view I had imagined my Service Orders Page would look like. It was my belief that incorporating well-implemented code from external sources would expedite the development process and help me achieve the desired functionality and efficiency.
+- [Tabs - Official Material UI Components](https://v4.mui.com/components/tabs/)'s code was modified by altering it according to the need of component with major changes in code like adjusting variable names and integrating it with other components. Also the content was modified based on requirement of the module.
+
 ## Getting Started - Backend
 ### Prerequisites
 
